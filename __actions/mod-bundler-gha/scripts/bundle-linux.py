@@ -15,18 +15,18 @@ args = {
 }
 
 # Create our output directory
-if os.path.exists(os.path.join(args.outputDir, "linux")):
+if os.path.exists(os.path.join(args["outputDir"], "linux")):
     print(
         "Expected output directory already exists, clearing it - {}".format(
-            os.path.join(args.outputDir, "linux")
+            os.path.join(args["outputDir"], "linux")
         )
     )
-    os.rmdir(os.path.join(args.outputDir, "linux"))
+    os.rmdir(os.path.join(args["outputDir"], "linux"))
 
-os.makedirs(os.path.join(args.outputDir, "linux"), exist_ok=True)
+os.makedirs(os.path.join(args["outputDir"], "linux"), exist_ok=True)
 
 # Download the Release
-toolingVersion = args.toolingVersion
+toolingVersion = args["toolingVersion"]
 if toolingVersion == "latest":
     # Get the latest open-goal/jak-project release
     toolingVersion = requests.get(
@@ -36,20 +36,20 @@ releaseAssetUrl = "https://github.com/open-goal/jak-project/releases/download/{}
     toolingVersion, toolingVersion
 )
 urllib.request.urlretrieve(
-    releaseAssetUrl, os.path.join(args.outputDir, "linux", "release.tar.gz")
+    releaseAssetUrl, os.path.join(args["outputDir"], "linux", "release.tar.gz")
 )
 
 # Extract it
 with zipfile.ZipFile(
-    os.path.join(args.outputDir, "linux", "release.tar.gz"), "r"
+    os.path.join(args["outputDir"], "linux", "release.tar.gz"), "r"
 ) as zip_ref:
-    zip_ref.extractall(os.path.join(args.outputDir, "linux"))
-os.remove(os.path.join(args.outputDir, "linux", "release.tar.gz"))
+    zip_ref.extractall(os.path.join(args["outputDir"], "linux"))
+os.remove(os.path.join(args["outputDir"], "linux", "release.tar.gz"))
 
 
-if args.toolingBinaryDir != "":
+if args["toolingBinaryDir"] != "":
     # User is specifying the binaries themselves, let's make sure they exist
-    dir = args.toolingBinaryDir
+    dir = args["toolingBinaryDir"]
     if (
         not os.path.exists(os.path.join(dir, "extractor"))
         or not os.path.exists(os.path.join(dir, "goalc"))
@@ -62,49 +62,49 @@ if args.toolingBinaryDir != "":
     # Binaries are all there, let's replace 'em
     shutil.copyfile(
         os.path.join(dir, "extractor"),
-        os.path.join(args.outputDir, "linux", "extractor"),
+        os.path.join(args["outputDir"], "linux", "extractor"),
     )
     shutil.copyfile(
         os.path.join(dir, "goalc"),
-        os.path.join(args.outputDir, "linux", "goalc"),
+        os.path.join(args["outputDir"], "linux", "goalc"),
     )
     shutil.copyfile(
-        os.path.join(dir, "gk"), os.path.join(args.outputDir, "linux", "gk")
+        os.path.join(dir, "gk"), os.path.join(args["outputDir"], "linux", "gk")
     )
 
 # Copy-in Mod Assets
-textureReplacementDir = args.textureReplacementDir
+textureReplacementDir = args["textureReplacementDir"]
 shutil.copytree(
     textureReplacementDir,
-    os.path.join(args.outputDir, "linux", "data", "texture_replacements"),
+    os.path.join(args["outputDir"], "linux", "data", "texture_replacements"),
     dirs_exist_ok=True,
 )
 
-customLevelsDir = args.customLevelsDir
+customLevelsDir = args["customLevelsDir"]
 shutil.copytree(
     customLevelsDir,
-    os.path.join(args.outputDir, "linux", "data", "custom_levels"),
+    os.path.join(args["outputDir"], "linux", "data", "custom_levels"),
     dirs_exist_ok=True,
 )
 
-goalSourceDir = args.goalSourceDir
+goalSourceDir = args["goalSourceDir"]
 shutil.copytree(
     goalSourceDir,
-    os.path.join(args.outputDir, "linux", "data", "goal_src"),
+    os.path.join(args["outputDir"], "linux", "data", "goal_src"),
     dirs_exist_ok=True,
 )
 
 # Rezip it up and prepare it for upload
 shutil.make_archive(
-    "linux-{}".format(args.versionName),
+    "linux-{}".format(args["versionName"]),
     "gztar",
-    os.path.join(args.outputDir, "linux"),
+    os.path.join(args["outputDir"], "linux"),
 )
-os.makedirs(os.path.join(args.outputDir, "dist"), exist_ok=True)
+os.makedirs(os.path.join(args["outputDir"], "dist"), exist_ok=True)
 shutil.move(
-    "linux-{}.tar.gz".format(args.versionName),
-    os.path.join(args.outputDir, "dist", "linux-{}.tar.gz".format(args.versionName)),
+    "linux-{}.tar.gz".format(args["versionName"]),
+    os.path.join(args["outputDir"], "dist", "linux-{}.tar.gz".format(args["versionName"])),
 )
 
 # Cleanup
-shutil.rmtree(os.path.join(args.outputDir, "linux"))
+shutil.rmtree(os.path.join(args["outputDir"], "linux"))
