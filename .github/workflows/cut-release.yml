@@ -19,7 +19,7 @@ on:
 jobs:
   cut_release:
     name: "Cut Release"
-    uses: ./.github/workflows/mod-bundler.yaml
+    uses: ./.github/workflows/mod-bundler.yml
     with:
       # TODO - generate metadata about mod
       semverBump: ${{ inputs.bump }}
