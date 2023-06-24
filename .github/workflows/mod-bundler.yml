@@ -54,7 +54,7 @@ on:
     outputs:
       taggedVersion:
         description: "The version that was tagged and pushed for the mod"
-        value: ${{ jobs.create-tag.outputs.bundleTagName }}
+        value: ${{ jobs.create-release.outputs.bundleTagName }}
 jobs:
   create-release:
     name: "Create Release"
@@ -98,7 +98,7 @@ jobs:
         if: ${{ !inputs.skipWindows }}
         env:
           outputDir: ${{ inputs.outputDir }}
-          versionName: ${{ needs.create-tag.outputs.bundleTagName }}
+          versionName: ${{ needs.create-release.outputs.bundleTagName }}
           toolingVersion: ${{ inputs.toolingVersion }}
           toolingBinaryDir: ${{ inputs.toolingBinaryDir }}
           textureReplacementDir: ${{ inputs.textureReplacementDir }}
@@ -124,19 +124,20 @@ jobs:
         if: ${{ !inputs.skipLinux }}
         uses: actions/checkout@v3
 
-      - name: "Checkout Workflow Scripts"
-        if: ${{ !inputs.skipLinux }}
-        uses: actions/checkout@v3
-        with:
-          repository: "jak-project/mod-bundler-gha"
-          ref: ${{ github.event.inputs.ref }}
-          path: "__actions/mod-bundler-gha"
+      # TODO - disabled because it's currently private, scripts are committed to this repo for now instead
+      # - name: "Checkout Workflow Scripts"
+      #   if: ${{ !inputs.skipLinux }}
+      #   uses: actions/checkout@v3
+      #   with:
+      #     repository: "jak-project/mod-bundler-gha"
+      #     ref: ${{ github.event.inputs.ref }}
+      #     path: "__actions/mod-bundler-gha"
 
       - name: "Create Linux Release"
         if: ${{ !inputs.skipLinux }}
         env:
           outputDir: ${{ inputs.outputDir }}
-          versionName: ${{ needs.create-tag.outputs.bundleTagName }}
+          versionName: ${{ needs.create-release.outputs.bundleTagName }}
           toolingVersion: ${{ inputs.toolingVersion }}
           toolingBinaryDir: ${{ inputs.toolingBinaryDir }}
           textureReplacementDir: ${{ inputs.textureReplacementDir }}
@@ -170,7 +171,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.token }}
         run: |
-          TAG_VAL=${{ needs.create-tag.outputs.bundleTagName }}
+          TAG_VAL=${{ needs.create-release.outputs.bundleTagName }}
           echo $TAG_VAL
           gh release upload "${TAG_VAL}" ${{ github.WORKSPACE }}/${{ inputs.outputDir }}/dist/* --repo ${{ github.repository }} --clobber
 
@@ -178,6 +179,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.token }}
         run: |
-          TAG_VAL=${{ needs.create-tag.outputs.bundleTagName }}
+          TAG_VAL=${{ needs.create-release.outputs.bundleTagName }}
           echo $TAG_VAL
           gh release edit ${TAG_VAL} --draft=false --repo ${{ github.repository }}

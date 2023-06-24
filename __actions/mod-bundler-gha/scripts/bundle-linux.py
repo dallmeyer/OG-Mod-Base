@@ -14,6 +14,8 @@ args = {
     "goalSourceDir": os.getenv("goalSourceDir")
 }
 
+print(args)
+
 # Create our output directory
 if os.path.exists(os.path.join(args["outputDir"], "linux")):
     print(
