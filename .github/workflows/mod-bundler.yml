@@ -81,16 +81,13 @@ jobs:
     needs: create-release
     runs-on: ubuntu-latest
     steps:
-      - name: "going insane"
-        run: echo ${{ inputs.skipWindows }}
-
       - name: "Checkout Repository"
-        if: "${{ inputs.skipWindows == 'false' }}"
+        if: ${{ !inputs.skipWindows }}
         uses: actions/checkout@v3
 
       # TODO - disabled because it's currently private, scripts are committed to this repo for now instead
       # - name: "Checkout Workflow Scripts"
-      #   if: "${{ inputs.skipWindows == 'false' }}"
+      #   if: ${{ !inputs.skipWindows }}
       #   uses: actions/checkout@v3
       #   with:
       #     repository: "jak-project/mod-bundler-gha"
@@ -98,7 +95,7 @@ jobs:
       #     path: "__actions/mod-bundler-gha"
 
       - name: "Create Windows Release"
-        if: "${{ inputs.skipWindows == 'false' }}"
+        if: ${{ !inputs.skipWindows }}
         env:
           outputDir: ${{ inputs.outputDir }}
           versionName: ${{ needs.create-tag.outputs.bundleTagName }}
@@ -111,7 +108,7 @@ jobs:
           python ./__actions/mod-bundler-gha/scripts/bundle-windows.py
 
       - name: Upload Bundle
-        if: "${{ inputs.skipWindows == 'false' }}"
+        if: ${{ !inputs.skipWindows }}
         uses: actions/upload-artifact@v3
         with:
           name: windows
@@ -124,11 +121,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout Repository"
-        if: "${{ inputs.skipLinux == 'false' }}"
+        if: ${{ !inputs.skipLinux }}
         uses: actions/checkout@v3
 
       - name: "Checkout Workflow Scripts"
-        if: "${{ inputs.skipLinux == 'false' }}"
+        if: ${{ !inputs.skipLinux }}
         uses: actions/checkout@v3
         with:
           repository: "jak-project/mod-bundler-gha"
@@ -136,7 +133,7 @@ jobs:
           path: "__actions/mod-bundler-gha"
 
       - name: "Create Linux Release"
-        if: "${{ inputs.skipLinux == 'false' }}"
+        if: ${{ !inputs.skipLinux }}
         env:
           outputDir: ${{ inputs.outputDir }}
           versionName: ${{ needs.create-tag.outputs.bundleTagName }}
@@ -149,7 +146,7 @@ jobs:
           python ./__actions/mod-bundler-gha/scripts/bundle-linux.py
 
       - name: Upload Bundle
-        if: "${{ inputs.skipLinux == 'false' }}"
+        if: ${{ !inputs.skipLinux }}
         uses: actions/upload-artifact@v3
         with:
           name: linux
