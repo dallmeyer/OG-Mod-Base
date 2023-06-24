@@ -156,7 +156,7 @@ jobs:
 
   finalize-release:
     name: "Finalize Release"
-    needs: [create-windows-bundle, create-linux-bundle]
+    needs: [create-release, create-windows-bundle, create-linux-bundle]
     runs-on: ubuntu-latest
     steps:
       - name: Prepare Output Folder
