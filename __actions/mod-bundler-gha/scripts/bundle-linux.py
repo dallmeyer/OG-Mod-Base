@@ -3,6 +3,7 @@ import shutil
 import requests
 import urllib.request
 import zipfile
+import tarfile
 
 args = {
     "outputDir": os.getenv("outputDir"),
@@ -11,7 +12,7 @@ args = {
     "toolingBinaryDir": os.getenv("toolingBinaryDir"),
     "textureReplacementDir": os.getenv("textureReplacementDir"),
     "customLevelsDir": os.getenv("customLevelsDir"),
-    "goalSourceDir": os.getenv("goalSourceDir")
+    "goalSourceDir": os.getenv("goalSourceDir"),
 }
 
 print(args)
@@ -42,10 +43,10 @@ urllib.request.urlretrieve(
 )
 
 # Extract it
-with zipfile.ZipFile(
-    os.path.join(args["outputDir"], "linux", "release.tar.gz"), "r"
-) as zip_ref:
-    zip_ref.extractall(os.path.join(args["outputDir"], "linux"))
+with tarfile.open(
+    os.path.join(args["outputDir"], "linux", "release.tar.gz")
+) as tar_ball:
+    tar_ball.extractall(os.path.join(args["outputDir"], "linux"))
 os.remove(os.path.join(args["outputDir"], "linux", "release.tar.gz"))
 
 
@@ -57,9 +58,7 @@ if args["toolingBinaryDir"] != "":
         or not os.path.exists(os.path.join(dir, "goalc"))
         or not os.path.exists(os.path.join(dir, "gk"))
     ):
-        print(
-            "Tooling binaries not found, expecting extractor, goalc, and gk"
-        )
+        print("Tooling binaries not found, expecting extractor, goalc, and gk")
         exit(1)
     # Binaries are all there, let's replace 'em
     shutil.copyfile(
@@ -93,7 +92,11 @@ if os.path.exists(customLevelsDir):
 
 goalSourceDir = args["goalSourceDir"]
 if not os.path.exists(goalSourceDir):
-    print("Goal source directory not found at {}, not much of a mod without that!".format(goalSourceDir))
+    print(
+        "Goal source directory not found at {}, not much of a mod without that!".format(
+            goalSourceDir
+        )
+    )
     exit(1)
 shutil.copytree(
     goalSourceDir,
@@ -110,7 +113,9 @@ shutil.make_archive(
 os.makedirs(os.path.join(args["outputDir"], "dist"), exist_ok=True)
 shutil.move(
     "linux-{}.tar.gz".format(args["versionName"]),
-    os.path.join(args["outputDir"], "dist", "linux-{}.tar.gz".format(args["versionName"])),
+    os.path.join(
+        args["outputDir"], "dist", "linux-{}.tar.gz".format(args["versionName"])
+    ),
 )
 
 # Cleanup

@@ -11,7 +11,7 @@ args = {
     "toolingBinaryDir": os.getenv("toolingBinaryDir"),
     "textureReplacementDir": os.getenv("textureReplacementDir"),
     "customLevelsDir": os.getenv("customLevelsDir"),
-    "goalSourceDir": os.getenv("goalSourceDir")
+    "goalSourceDir": os.getenv("goalSourceDir"),
 }
 
 print(args)
@@ -71,7 +71,8 @@ if args["toolingBinaryDir"] != "":
         os.path.join(args["outputDir"], "windows", "goalc.exe"),
     )
     shutil.copyfile(
-        os.path.join(dir, "gk.exe"), os.path.join(args["outputDir"], "windows", "gk.exe")
+        os.path.join(dir, "gk.exe"),
+        os.path.join(args["outputDir"], "windows", "gk.exe"),
     )
 
 # Copy-in Mod Assets
@@ -93,7 +94,11 @@ if os.path.exists(customLevelsDir):
 
 goalSourceDir = args["goalSourceDir"]
 if not os.path.exists(goalSourceDir):
-    print("Goal source directory not found at {}, not much of a mod without that!".format(goalSourceDir))
+    print(
+        "Goal source directory not found at {}, not much of a mod without that!".format(
+            goalSourceDir
+        )
+    )
     exit(1)
 shutil.copytree(
     goalSourceDir,
@@ -110,7 +115,9 @@ shutil.make_archive(
 os.makedirs(os.path.join(args["outputDir"], "dist"), exist_ok=True)
 shutil.move(
     "windows-{}.zip".format(args["versionName"]),
-    os.path.join(args["outputDir"], "dist", "windows-{}.zip".format(args["versionName"])),
+    os.path.join(
+        args["outputDir"], "dist", "windows-{}.zip".format(args["versionName"])
+    ),
 )
 
 # Cleanup
