@@ -52,9 +52,9 @@ on:
         description: "GitHub token used to create the release and push assets to it."
         required: true
     outputs:
-      version:
+      taggedVersion:
         description: "The version that was tagged and pushed for the mod"
-        value: ${{ steps.random-number-generator.outputs.random-number }}
+        value: ${{ jobs.create-tag.outputs.bundleTagName }}
 jobs:
   create-tag:
     runs-on: ubuntu-latest
