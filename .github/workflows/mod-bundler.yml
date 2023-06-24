@@ -81,6 +81,9 @@ jobs:
     needs: create-release
     runs-on: ubuntu-latest
     steps:
+      - name: "going insane"
+        run: echo ${{ inputs.skipWindows }}
+
       - name: "Checkout Repository"
         if: "${{ inputs.skipWindows == 'false' }}"
         uses: actions/checkout@v3
