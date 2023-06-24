@@ -30,7 +30,7 @@ on:
       customLevelsDir:
         description: "The directory containing custom levels, defaults to `./custom_levels`"
         required: false
-        default: "./texture_replacements"
+        default: "./custom_levels"
         type: "string"
       goalSourceDir:
         description: "The directory containing the OpenGOAL source code, defaults to `./goal_src`"
@@ -82,13 +82,14 @@ jobs:
         if: (inputs.skipWindows == 'false')
         uses: actions/checkout@v3
 
-      - name: "Checkout Workflow Scripts"
-        if: (inputs.skipWindows == 'false')
-        uses: actions/checkout@v3
-        with:
-          repository: "jak-project/mod-bundler-gha"
-          ref: ${{ github.event.inputs.ref }}
-          path: "__actions/mod-bundler-gha"
+      # TODO - disabled because it's currently private, scripts are committed to this repo for now instead
+      # - name: "Checkout Workflow Scripts"
+      #   if: (inputs.skipWindows == 'false')
+      #   uses: actions/checkout@v3
+      #   with:
+      #     repository: "jak-project/mod-bundler-gha"
+      #     ref: ${{ github.event.inputs.ref }}
+      #     path: "__actions/mod-bundler-gha"
 
       - name: "Create Windows Release"
         if: (inputs.skipWindows == 'false')
