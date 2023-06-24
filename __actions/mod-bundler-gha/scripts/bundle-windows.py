@@ -74,20 +74,25 @@ if args["toolingBinaryDir"] != "":
 
 # Copy-in Mod Assets
 textureReplacementDir = args["textureReplacementDir"]
-shutil.copytree(
-    textureReplacementDir,
-    os.path.join(args["outputDir"], "windows", "data", "texture_replacements"),
-    dirs_exist_ok=True,
-)
+if os.path.exists(textureReplacementDir):
+    shutil.copytree(
+        textureReplacementDir,
+        os.path.join(args["outputDir"], "windows", "data", "texture_replacements"),
+        dirs_exist_ok=True,
+    )
 
 customLevelsDir = args["customLevelsDir"]
-shutil.copytree(
-    customLevelsDir,
-    os.path.join(args["outputDir"], "windows", "data", "custom_levels"),
-    dirs_exist_ok=True,
-)
+if os.path.exists(customLevelsDir):
+    shutil.copytree(
+        customLevelsDir,
+        os.path.join(args["outputDir"], "windows", "data", "custom_levels"),
+        dirs_exist_ok=True,
+    )
 
 goalSourceDir = args["goalSourceDir"]
+if not os.path.exists(goalSourceDir):
+    print("Goal source directory not found at {}, not much of a mod without that!".format(goalSourceDir))
+    exit(1)
 shutil.copytree(
     goalSourceDir,
     os.path.join(args["outputDir"], "windows", "data", "goal_src"),
