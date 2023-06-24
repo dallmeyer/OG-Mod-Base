@@ -165,7 +165,17 @@ jobs:
       - name: Download all Artifacts
         uses: actions/download-artifact@v3
         with:
-          path: ${{ inputs.outputDir }}/dist
+          path: ${{ inputs.outputDir }}/artifacts
+
+      - name: Display structure of downloaded files
+        run: ls -Rl ${{ inputs.outputDir }}
+
+      - name: Prepare Release Assets
+        run: |
+          mv ${{ inputs.outputDir }}/artifacts/linux/* ${{ inputs.outputDir }}/dist
+          mv ${{ inputs.outputDir }}/artifacts/windows/* ${{ inputs.outputDir }}/dist
+
+      # TODO - generate metadata JSON file to describe the mod
 
       - name: Upload Assets
         env:
