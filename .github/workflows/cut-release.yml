@@ -16,6 +16,9 @@ on:
           - minor
           - major
 
+permissions:
+  contents: write
+
 jobs:
   cut_release:
     name: "Cut Release"

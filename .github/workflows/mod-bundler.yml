@@ -68,6 +68,7 @@ jobs:
           github_token: ${{ secrets.token }}
           tag_prefix: v
           default_bump: ${{ inputs.semverBump }}
+          append_to_pre_release_tag: ""
 
       - name: Create Release
         env:
