@@ -23,4 +23,5 @@ jobs:
     with:
       # TODO - generate metadata about mod
       semverBump: ${{ inputs.bump }}
+    secrets:
       token: ${{ secrets.GITHUB_TOKEN }}
