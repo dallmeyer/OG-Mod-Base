@@ -80,7 +80,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout Repository"
-        if: (inputs.skipWindows == 'false')
+        if: (inputs.skipWindows == 'true')
         uses: actions/checkout@v3
 
       # TODO - disabled because it's currently private, scripts are committed to this repo for now instead
@@ -93,7 +93,7 @@ jobs:
       #     path: "__actions/mod-bundler-gha"
 
       - name: "Create Windows Release"
-        if: (inputs.skipWindows == 'false')
+        if: (inputs.skipWindows == 'true')
         env:
           outputDir: ${{ inputs.outputDir }}
           versionName: ${{ needs.create-tag.outputs.bundleTagName }}
@@ -117,11 +117,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout Repository"
-        if: (inputs.skipLinux == 'false')
+        if: (inputs.skipLinux == 'true')
         uses: actions/checkout@v3
 
       - name: "Checkout Workflow Scripts"
-        if: (inputs.skipLinux == 'false')
+        if: (inputs.skipLinux == 'true')
         uses: actions/checkout@v3
         with:
           repository: "jak-project/mod-bundler-gha"
@@ -129,7 +129,7 @@ jobs:
           path: "__actions/mod-bundler-gha"
 
       - name: "Create Linux Release"
-        if: (inputs.skipLinux == 'false')
+        if: (inputs.skipLinux == 'true')
         env:
           outputDir: ${{ inputs.outputDir }}
           versionName: ${{ needs.create-tag.outputs.bundleTagName }}
