@@ -56,7 +56,8 @@ on:
         description: "The version that was tagged and pushed for the mod"
         value: ${{ jobs.create-tag.outputs.bundleTagName }}
 jobs:
-  create-tag:
+  create-release:
+    name: "Create Release"
     runs-on: ubuntu-latest
     outputs:
       bundleTagName: ${{ steps.tag_version.outputs.new_tag }}
@@ -76,16 +77,17 @@ jobs:
         run: gh release create ${{ steps.tag_version.outputs.new_tag }} --generate-notes --draft --repo ${{ github.repository }}
 
   create-windows-bundle:
-    needs: create-tag
+    name: "Windows Bundle"
+    needs: create-release
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout Repository"
-        if: inputs.skipWindows == 'false'
+        if: "${{ inputs.skipWindows == 'false' }}"
         uses: actions/checkout@v3
 
       # TODO - disabled because it's currently private, scripts are committed to this repo for now instead
       # - name: "Checkout Workflow Scripts"
-      #   if: inputs.skipWindows == 'false'
+      #   if: "${{ inputs.skipWindows == 'false' }}"
       #   uses: actions/checkout@v3
       #   with:
       #     repository: "jak-project/mod-bundler-gha"
@@ -93,7 +95,7 @@ jobs:
       #     path: "__actions/mod-bundler-gha"
 
       - name: "Create Windows Release"
-        if: inputs.skipWindows == 'false'
+        if: "${{ inputs.skipWindows == 'false' }}"
         env:
           outputDir: ${{ inputs.outputDir }}
           versionName: ${{ needs.create-tag.outputs.bundleTagName }}
@@ -106,6 +108,7 @@ jobs:
           python ./__actions/mod-bundler-gha/scripts/bundle-windows.py
 
       - name: Upload Bundle
+        if: "${{ inputs.skipWindows == 'false' }}"
         uses: actions/upload-artifact@v3
         with:
           name: windows
@@ -113,15 +116,16 @@ jobs:
           path: ${{ inputs.outputDir }}/dist
 
   create-linux-bundle:
-    needs: create-tag
+    name: "Linux Bundle"
+    needs: create-release
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout Repository"
-        if: inputs.skipLinux == 'false'
+        if: "${{ inputs.skipLinux == 'false' }}"
         uses: actions/checkout@v3
 
       - name: "Checkout Workflow Scripts"
-        if: inputs.skipLinux == 'false'
+        if: "${{ inputs.skipLinux == 'false' }}"
         uses: actions/checkout@v3
         with:
           repository: "jak-project/mod-bundler-gha"
@@ -129,7 +133,7 @@ jobs:
           path: "__actions/mod-bundler-gha"
 
       - name: "Create Linux Release"
-        if: inputs.skipLinux == 'false'
+        if: "${{ inputs.skipLinux == 'false' }}"
         env:
           outputDir: ${{ inputs.outputDir }}
           versionName: ${{ needs.create-tag.outputs.bundleTagName }}
@@ -142,6 +146,7 @@ jobs:
           python ./__actions/mod-bundler-gha/scripts/bundle-linux.py
 
       - name: Upload Bundle
+        if: "${{ inputs.skipLinux == 'false' }}"
         uses: actions/upload-artifact@v3
         with:
           name: linux
@@ -149,6 +154,7 @@ jobs:
           path: ${{ inputs.outputDir }}/dist
 
   finalize-release:
+    name: "Finalize Release"
     needs: [create-windows-bundle, create-linux-bundle]
     runs-on: ubuntu-latest
     steps:
