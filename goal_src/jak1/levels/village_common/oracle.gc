@@ -271,7 +271,6 @@
         (fax (new 'static 'fact-info :options (fact-options skip-jump-anim)))
         )
     (ja-post)
-    ;; (logior! (-> fax options) )
     (when (not (task-closed? (the-as game-task (-> obj first-task)) (task-status need-resolution)))
       (vector<-cspace! s4-0 (-> obj node-list data 5))
       (set! (-> obj right-eye-cell)
