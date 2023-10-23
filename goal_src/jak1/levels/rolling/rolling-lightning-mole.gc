@@ -1192,14 +1192,13 @@
     )
   )
   
-(define-extern static-vector-meters (function float float float vector))
 (defun peeper-cell-check ((self peeper))
   (when (and (not (-> self child))  ;; havent already spawned cell
              (task-closed? (game-task rolling-moles) (task-status need-hint))
              (not (task-closed? (game-task rolling-moles) (task-status need-resolution)))
              )
       (birth-pickup-at-point
-          (static-vector-meters -64.33  10.0 -1562.12)
+          (new 'static 'vector :x (meters -64.33) :y (meters 10.0) :z (meters -1562.12) :w 1.0)
           (pickup-type fuel-cell)
           (the float (game-task rolling-moles))
           #f
