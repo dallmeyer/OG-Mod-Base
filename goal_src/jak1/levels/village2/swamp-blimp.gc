@@ -664,13 +664,15 @@
         )
       (set! (-> self tension) 0.0)
       (close-specific-task! (-> self entity extra perm task) (task-status need-reminder))
-      (birth-pickup-at-point
-        (-> self root-override trans)
-        (pickup-type fuel-cell)
-        (the float (-> self entity extra perm task))
-        #f
-        self
-        (the-as fact-info #f)
+      (when (not (-> self child 0))
+        (birth-pickup-at-point
+          (-> self root-override trans)
+          (pickup-type fuel-cell)
+          (the float (-> self entity extra perm task))
+          #f
+          self
+          (the-as fact-info #f)
+          )
         )
       (let ((a1-12 (new 'stack-no-clear 'event-message-block)))
         (set! (-> a1-12 from) self)
@@ -925,7 +927,7 @@
      (go swamp-tetherrock-hide)
      )
     (else
-    (birth-pickup-at-point
+      (birth-pickup-at-point
        (-> obj root-override trans)
        (pickup-type fuel-cell)
        (the float (-> obj entity extra perm task))
