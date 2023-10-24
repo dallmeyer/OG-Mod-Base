@@ -310,7 +310,6 @@ yakow-default-event-handler
              (not (and (-> self entity) (logtest? (-> self entity extra perm status) (entity-perm-status complete))))
              )
     (set! (-> self in-pen) #t)
-    (format 0 "~A in pen~%" self)
     (when (name= (-> self name) 'yakow-10)
       (process-entity-status! (process-by-ename "yakow-11") (entity-perm-status complete) #t)
       (process-entity-status! (process-by-ename "yakow-12") (entity-perm-status complete) #t)
