@@ -634,7 +634,28 @@
   )
 
 (defstate pelican-spit (pelican)
-  :event (-> pelican-circle event)
+  :event (behavior ((proc process) (arg1 int) (event-type symbol) (event event-message-block))
+    (the-as
+      object
+      (case event-type
+        (('dive)
+         (let ((v0-0 (the-as structure #t)))
+           (set! (-> self state-object) (the-as symbol v0-0))
+           v0-0
+           )
+         )
+        (('fuel-cell)
+         (handle->process (-> self fuel-cell))
+         )
+        (('position)
+         (set! (-> self path-pos) (the-as float (-> event param 0)))
+         (let ((a1-3 (path-control-method-12 (-> self path) (new 'stack-no-clear 'vector) (-> self path-pos))))
+           (set-heading-vec! (-> self root-override) a1-3)
+           )
+         )
+        )
+      )
+    )
   :code (behavior ()
     (local-vars (v1-21 symbol) (v1-31 symbol))
     (let ((gp-1
