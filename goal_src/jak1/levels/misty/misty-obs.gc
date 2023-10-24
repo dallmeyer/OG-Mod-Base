@@ -1850,7 +1850,7 @@
     )
   ;; immediately switch to spawn state, but don't set play-cutscene? to #t
   :enter (behavior ()
-    (process-entity-status! self (entity-perm-status complete) #t)
+    ;; (process-entity-status! self (entity-perm-status complete) #t)
     (go boat-fuelcell-spawn)
     )
   :code (the-as (function none :behavior boat-fuelcell) anim-loop)
