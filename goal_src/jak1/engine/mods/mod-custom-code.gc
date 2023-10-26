@@ -332,6 +332,7 @@ an orb |#
                  (string= (-> *game-info* current-continue name) "ogre-race")
                  )
         ;; LTSS - if you hit the nick: ogr and ogre-race load boundaries with zoomer IJs, have a free LTS
+        (level-status-set! (level-get *level* 'rolling) 'loaded)  ;; deload basin so we dont get *load-state*-ed back there
         (set! (-> *game-info* current-continue) (get-continue-by-name *game-info* "lavatube-middle"))
         )
       )
