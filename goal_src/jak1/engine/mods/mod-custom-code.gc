@@ -251,7 +251,7 @@ an orb |#
   ;; if robbers not complete, check if any robbers are dead, if so spawn cell
   (when (and (= (level-status *level* 'rolling) 'active)
              (not (task-closed? (game-task rolling-robbers) (task-status need-resolution)))
-             (not (handle->process *robber-cell*))
+             (or (not (handle->process *robber-cell*)) (not (-> (handle->process *robber-cell*) state)))
              )
     (let ((robber2 (entity-by-name "robber-2"))
           (robber3 (entity-by-name "robber-3"))
