@@ -244,14 +244,14 @@ an orb |#
   (none)
   )
 
-(define *robber-cell* (the process-tree #f))
+(define *robber-cell* (the handle #f))
 (defun runs-on-jak-spawn ()
   ;; Code here runs every time jak spawns (loading a file new game or death)
   
   ;; if robbers not complete, check if any robbers are dead, if so spawn cell
   (when (and (= (level-status *level* 'rolling) 'active)
              (not (task-closed? (game-task rolling-robbers) (task-status need-resolution)))
-             (not *robber-cell*)
+             (not (handle->process *robber-cell*))
              )
     (let ((robber2 (entity-by-name "robber-2"))
           (robber3 (entity-by-name "robber-3"))
@@ -263,7 +263,7 @@ an orb |#
         ((logtest? (-> robber2 extra perm status) (entity-perm-status complete))
           (vector-copy! v (-> robber2 extra trans))
           (+! (-> v y) (meters 2))
-          (set! *robber-cell* (ppointer->process
+          (set! *robber-cell* (ppointer->handle
             (birth-pickup-at-point
               v
               (pickup-type fuel-cell)
@@ -277,7 +277,7 @@ an orb |#
         ((logtest? (-> robber3 extra perm status) (entity-perm-status complete))
           (vector-copy! v (-> robber3 extra trans))
           (+! (-> v y) (meters 2))
-          (set! *robber-cell* (ppointer->process
+          (set! *robber-cell* (ppointer->handle
             (birth-pickup-at-point
               v
               (pickup-type fuel-cell)
@@ -291,7 +291,7 @@ an orb |#
         ((logtest? (-> robber4 extra perm status) (entity-perm-status complete))
           (vector-copy! v (-> robber4 extra trans))
           (+! (-> v y) (meters 2))
-          (set! *robber-cell* (ppointer->process
+          (set! *robber-cell* (ppointer->handle
             (birth-pickup-at-point
               v
               (pickup-type fuel-cell)
@@ -305,7 +305,7 @@ an orb |#
         ((logtest? (-> robber5 extra perm status) (entity-perm-status complete))
           (vector-copy! v (-> robber5 extra trans))
           (+! (-> v y) (meters 2))
-          (set! *robber-cell* (ppointer->process
+          (set! *robber-cell* (ppointer->handle
             (birth-pickup-at-point
               v
               (pickup-type fuel-cell)
