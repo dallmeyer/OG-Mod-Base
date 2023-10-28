@@ -433,15 +433,15 @@
      (#when PC_PORT
         (define *play-anim-time* (current-time)))
      (cond
-      ((or (string= (-> (the-as spool-anim arg1) name) "green-sagecage-outro-big-finish"))
-        ;; custom cutscene, no skips for audio desync
-        (ja-play-spooled-anim
-          (the-as spool-anim arg1)
-          arg0
-          (-> self blend-on-exit)
-          (the-as (function process-drawable symbol) false-func)
-          )
-        )
+      ;; ((or (string= (-> (the-as spool-anim arg1) name) "green-sagecage-outro-big-finish"))
+      ;;   ;; custom cutscene, no skips for audio desync
+      ;;   (ja-play-spooled-anim
+      ;;     (the-as spool-anim arg1)
+      ;;     arg0
+      ;;     (-> self blend-on-exit)
+      ;;     (the-as (function process-drawable symbol) false-func)
+      ;;     )
+      ;;   )
       ((#if PC_PORT
             (= (-> *pc-settings* skip-movies?) #t)
             (and *debug-segment* *cheat-mode*))
