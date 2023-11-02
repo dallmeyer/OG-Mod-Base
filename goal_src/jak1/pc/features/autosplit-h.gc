@@ -164,6 +164,17 @@
    (int-finalboss-movies uint8)
    (unk-finalboss-movies uint8)
    (int-jungle-fishgame uint8)
+   (training-warp-button uint8)
+   (village2-warp-button uint8)
+   (village3-warp-button uint8)
+   (lavatube-warp-button uint8)
+   (training-warp-count uint8)
+   (village1-warp-count uint8)
+   (village2-warp-count uint8)
+   (village3-warp-count uint8)
+   (lavatube-warp-count uint8)
+   (geyser-skip uint8)
+   (lts-skip uint8)
    ;; end marker just to make things look nice in a memory view
    (end-marker uint8 4)))
 

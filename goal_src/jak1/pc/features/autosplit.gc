@@ -174,4 +174,17 @@
 
 (defun update-autosplit-jak1-new-game ()
   (set! (-> *autosplit-info-jak1* game-hash) (pc-get-unix-timestamp))
+
+  (set! (-> *autosplit-info-jak1* training-warp-button) 0)
+  (set! (-> *autosplit-info-jak1* village2-warp-button) 0)
+  (set! (-> *autosplit-info-jak1* village3-warp-button) 0)
+  (set! (-> *autosplit-info-jak1* lavatube-warp-button) 0)
+  (set! (-> *autosplit-info-jak1* training-warp-count) 0)
+  (set! (-> *autosplit-info-jak1* village1-warp-count) 0)
+  (set! (-> *autosplit-info-jak1* village2-warp-count) 0)
+  (set! (-> *autosplit-info-jak1* village3-warp-count) 0)
+  (set! (-> *autosplit-info-jak1* lavatube-warp-count) 0)
+  (set! (-> *autosplit-info-jak1* geyser-skip) 0)
+  (set! (-> *autosplit-info-jak1* lts-skip) 0)
+
   (none))

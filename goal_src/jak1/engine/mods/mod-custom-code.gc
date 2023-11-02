@@ -116,6 +116,7 @@ an orb |#
   ;; geyser > origin warp
   (when (in-bubble-meters? -1185.37 10.80 893.62 2.0)
     (set-vector! (-> *target* root trans) 0.0 0.0 0.0 1.0)
+    (set! (-> *autosplit-info-jak1* geyser-skip) 1)
     )
 
   (when (and (cpad-hold? 0 l1) (cpad-hold? 0 r1) (cpad-hold? 0 l2) (cpad-hold? 0 r2)
@@ -332,6 +333,7 @@ an orb |#
                  (string= (-> *game-info* current-continue name) "ogre-race")
                  )
         ;; LTSS - if you hit the nick: ogr and ogre-race load boundaries with zoomer IJs, have a free LTS
+        (set! (-> *autosplit-info-jak1* lts-skip) 1)
         (level-status-set! (level-get *level* 'rolling) 'loaded)  ;; deload basin so we dont get *load-state*-ed back there
         (set! (-> *game-info* current-continue) (get-continue-by-name *game-info* "lavatube-middle"))
         )

@@ -173,6 +173,9 @@ startup {
   AddOption(vars.trainingResolutions, "res_training_door", jak1_need_res_offset + 1, typeof(byte), 1, false, "Open the Precursor Door", false);
   AddOption(vars.trainingResolutions, "res_training_climb", jak1_need_res_offset + 2, typeof(byte), 1, false, "Climb up the Cliff", false);
   AddOption(vars.trainingResolutions, "res_training_buzzer", jak1_need_res_offset + 3, typeof(byte), 1, false, "Free 7 Scout Flies", false);
+  AddOption(vars.trainingResolutions, "int_training_warp_button", jak1_need_res_offset + 108, typeof(byte), 1, false, "Geyser Warp Button", false);
+  AddOption(vars.trainingResolutions, "int_training_warp_count", jak1_need_res_offset + 112, typeof(byte), 1, false, "Geyser Warp Out", false);
+  AddOption(vars.trainingResolutions, "int_geyser_skip", jak1_need_res_offset + 117, typeof(byte), 1, false, "Geyser Skip", false);
   settings.Add("jak1_need_res_training", true, "Geyser Rock", "jak1_need_res");
   AddToSettings(vars.trainingResolutions, "jak1_need_res_training");
   vars.optionLists.Add(vars.trainingResolutions);
@@ -185,6 +188,7 @@ startup {
   AddOption(vars.village1Resolutions, "res_village1_oracle_money1", jak1_need_res_offset + 15, typeof(byte), 1, false, "Bring 120 orbs to the Oracle", false);
   AddOption(vars.village1Resolutions, "res_village1_oracle_money2", jak1_need_res_offset + 16, typeof(byte), 1, false, "Bring another 120 orbs to the Oracle", false);
   AddOption(vars.village1Resolutions, "res_village1_buzzer", jak1_need_res_offset + 17, typeof(byte), 1, false, "Free 7 Scout Flies", false);
+  AddOption(vars.village1Resolutions, "int_village1_warp_count", jak1_need_res_offset + 113, typeof(byte), 1, false, "Sandover Warp Out", false);
   settings.Add("jak1_need_res_village1", true, "Sandover Village", "jak1_need_res");
   AddToSettings(vars.village1Resolutions, "jak1_need_res_village1");
   vars.optionLists.Add(vars.village1Resolutions);
@@ -250,6 +254,8 @@ startup {
   AddOption(vars.village2Resolutions, "res_village2_oracle_money1", jak1_need_res_offset + 37, typeof(byte), 1, false, "Bring 120 Orbs to the oracle", false);
   AddOption(vars.village2Resolutions, "res_village2_oracle_money2", jak1_need_res_offset + 38, typeof(byte), 1, false, "Bring another 120 Orbs to the oracle", false);
   AddOption(vars.village2Resolutions, "res_village2_buzzer", jak1_need_res_offset + 39, typeof(byte), 1, false, "Free 7 Scout Flies", false);
+  AddOption(vars.village2Resolutions, "int_village2_warp_button", jak1_need_res_offset + 109, typeof(byte), 1, false, "Rock Village Warp Button", false);
+  AddOption(vars.village2Resolutions, "int_village2_warp_count", jak1_need_res_offset + 114, typeof(byte), 1, false, "Rock Village Warp Out", false);
   settings.Add("jak1_need_res_village2", true, "Rock Village", "jak1_need_res");
   AddToSettings(vars.village2Resolutions, "jak1_need_res_village2");
   vars.optionLists.Add(vars.village2Resolutions);
@@ -294,6 +300,7 @@ startup {
   AddOption(vars.rollingResolutions, "res_rolling_buzzer", jak1_need_res_offset + 62, typeof(byte), 1, false, "Free 7 Scout Flies", false);
   AddOption(vars.rollingResolutions, "res_rolling_ring_chase_1", jak1_need_res_offset + 63, typeof(byte), 1, false, "Navigate the Purple Precursor Rings", false);
   AddOption(vars.rollingResolutions, "res_rolling_ring_chase_2", jak1_need_res_offset + 64, typeof(byte), 1, false, "Navigate the Blue Precursor Rings", false);
+  AddOption(vars.rollingResolutions, "int_lts_skip", jak1_need_res_offset + 118, typeof(byte), 1, false, "LTS Skip", false);
   settings.Add("jak1_need_res_rolling", true, "Precursor Basin", "jak1_need_res");
   AddToSettings(vars.rollingResolutions, "jak1_need_res_rolling");
   vars.optionLists.Add(vars.rollingResolutions);
@@ -318,6 +325,8 @@ startup {
   AddOption(vars.village3Resolutions, "res_village3_miner_money4", jak1_need_res_offset + 86, typeof(byte), 1, false, "Bring 90 Orbs to the Miners four times", false);
   AddOption(vars.village3Resolutions, "res_village3_oracle_money1", jak1_need_res_offset + 87, typeof(byte), 1, false, "Bring 120 Orbs to the Oracle", false);
   AddOption(vars.village3Resolutions, "res_village3_oracle_money2", jak1_need_res_offset + 88, typeof(byte), 1, false, "Bring another 120 Orbs to the Oracle", false);
+  AddOption(vars.village3Resolutions, "int_village3_warp_button", jak1_need_res_offset + 110, typeof(byte), 1, false, "Volcanic Crater Warp Button", false);
+  AddOption(vars.village3Resolutions, "int_village3_warp_count", jak1_need_res_offset + 115, typeof(byte), 1, false, "Volcanic Crater Warp Out", false);
   settings.Add("jak1_need_res_village3", true, "Volcanic Crater", "jak1_need_res");
   AddToSettings(vars.village3Resolutions, "jak1_need_res_village3");
   vars.optionLists.Add(vars.village3Resolutions);
@@ -359,6 +368,8 @@ startup {
   AddOption(vars.lavatubeResolutions, "res_lavatube_buzzer", jak1_need_res_offset + 102, typeof(byte), 1, false, "Free 7 Scout Flies", false);
   //This task below does not go with a in game Power Cell
   AddOption(vars.lavatubeResolutions, "res_lavatube_balls", jak1_need_res_offset + 103, typeof(byte), 1, false, "Finish Oranges", false);
+  AddOption(vars.lavatubeResolutions, "int_lavatube_warp_button", jak1_need_res_offset + 111, typeof(byte), 1, false, "Lava Tube/Citadel Warp Button", false);
+  AddOption(vars.lavatubeResolutions, "int_lavatube_warp_count", jak1_need_res_offset + 116, typeof(byte), 1, false, "Lava Tube/Citadel Warp Out", false);
   settings.Add("jak1_need_res_lavatube", true, "Lava Tube", "jak1_need_res");
   AddToSettings(vars.lavatubeResolutions, "jak1_need_res_lavatube");
   vars.optionLists.Add(vars.lavatubeResolutions);
