@@ -188,7 +188,7 @@
         )
       v0-1
       )
-      (when (and (and (= pm-extra-shot-option #t) (= pm-extra-shot-int 4)(rand-vu-percent? 0.5))) ;chanced-extra-peacemaker-shot
+      (when (and (and (= pm-extra-shot-option #t) (= pm-extra-shot-int 4)(rand-vu-percent? 0.15))) ;chanced-extra-peacemaker-shot
         (let ((s5-0 (-> self gun))
           (gp-0 (new 'stack-no-clear 'projectile-init-by-other-params))
           )

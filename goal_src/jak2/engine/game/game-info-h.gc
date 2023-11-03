@@ -288,10 +288,17 @@ CURRENT BUGS:
 (define trip-start #f)
 (define trip-cooldown 0)
 
+(define bomb-setoffp3 "C:/Users/thepi/Desktop/jakiemod/ModBaseFork/OG-Mod-Base/goal_src/jak2/pc/csounds/bomb-setoff3.mp3")
+(define bomb-setoffp2 "C:/Users/thepi/Desktop/jakiemod/ModBaseFork/OG-Mod-Base/goal_src/jak2/pc/csounds/bomb-setoff2.mp3")
+(define bomb-setoffp "C:/Users/thepi/Desktop/jakiemod/ModBaseFork/OG-Mod-Base/goal_src/jak2/pc/csounds/bomb-setoff.mp3")
+(define bomb-explodep "C:/Users/thepi/Desktop/jakiemod/ModBaseFork/OG-Mod-Base/goal_src/jak2/pc/csounds/ww2-explode.mp3")
 (define target-explode #f) ;toggle on for jak to explode upon taking damage, but dark-jak lasts much longer.
 (define target-explode-start #f)
 (define explode-frames 0)
 (define explode-frame-start #f)
+(define explode-fstart #f)
+(define explode-f 0)
+(define r-bomb-setoff 0)
 (define dark-jacked? #f)
 (define dark-jacked! #f)
 

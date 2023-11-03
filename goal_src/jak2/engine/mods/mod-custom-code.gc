@@ -10,12 +10,17 @@
     ;; What is this file for.
     ;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-    #| This file contains function defenitions that are pre placed in the mod base,
-    so if you place custom code inside of these functions, it will exectue based on
-    the name of the function, for example, if you place (set! (-> *game-info* fuel) (+ (-> *game-info* fuel) 1))
-    to the function named runs-on-orb-pickup, then jaks powercell count will increase each time you collect
-    an orb |#
+    #| This is the brains of the operation, all modifiers, menus, variables, etc. are defined in this script
+    Then, the script changes attributes based on the already existing functions in the game|#
 
+
+(defpartgroup group-guard-grenade
+  :id 138
+  :duration (seconds 0.5)
+  :flags (use-local-clock)
+  :bounds (static-bspherem 0 0 0 2)
+  :parts ((sp-item 618 :fade-after (meters 200) :falloff-to (meters 200)))
+  )
 
 (deftype vehicle-grenade (projectile-bounce)
   ((blast-radius float  :offset-assert 496)
@@ -246,6 +251,10 @@
     (none)
   )
 
+
+
+
+
  (define-extern dark-traffic symbol)
  (define orb-count1 50)
     ;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -436,7 +445,7 @@
     (set! weapon-mod-toggle #t)
     (set! trip-metalheads #f)
     (set! target-explode #f)
-    (set! modifier-string "On-Death TP-FB Challenge")
+    (set! modifier-string "TP-FB Challenge")
   )
   (when (and (= (-> *game-info* fuel) 3.0)(= hover-damage #f)) ;if 3, hover-damage
     (set! hell-mode-option #f)
@@ -448,7 +457,7 @@
     (set! weapon-mod-toggle #t)
     (set! trip-metalheads #f)
     (set! target-explode #f)
-    (set! modifier-string "Increased Hov Speed / X5 Health Enemies")
+    (set! modifier-string "Boosted Hov Speed / Boosted Enemy HP")
   )
   (when (and (= (-> *game-info* fuel) 4.0)(= dark-traffic #f)) ;if 4, dark-traffic
     (set! hell-mode-option #f)
@@ -1429,7 +1438,6 @@
     (+! frame-count 1)
   )
   (when (and (and (and (= stored-cp? #f)(= tp-fb #t)(rand-vu-percent? 0.0009)(< (-> *target* fact health) 1)))) ;looks for teleport percentage upon death, if so, init new game.
-    (auto-save-user)
     (set! start-frame-count #t)
     (set! stored-cp? #t)
     (set! new-game-s? #t)
@@ -1579,15 +1587,42 @@
     )
   )
 
-
-
 ;target-explode
 
 (when (= target-explode-start #t)
-  (sound-play "explosion")
-  (send-event *target* 'draw #f)
-  (send-event *target* 'attack-invinc #f (static-attack-info ((id (new-attack-id)) (mode 'big-explosion))))
+  (set! explode-fstart #t)
   (set! target-explode-start #f)
+)
+
+(when (= explode-fstart #t)
+  (+! explode-f 1)
+  (when (= (-> *target* fact health) 0.0)
+    (set! explode-fstart #f)
+    (set! explode-f 0)
+    (stop-sound-file)
+  )
+  (when (= explode-f 1)
+    (set! r-bomb-setoff (rand-vu-int-range 1 3))
+  )
+  (when (= explode-f 10)
+  (when (= r-bomb-setoff 1)
+    (play-sound-file bomb-setoffp 100)
+  )
+  (when (= r-bomb-setoff 2)
+    (play-sound-file bomb-setoffp2 100)
+  )
+  (when (= r-bomb-setoff 3)
+    (play-sound-file bomb-setoffp3 100)
+  )
+  )
+  (when (= explode-f 70)
+    (stop-sound-file)
+    (play-sound-file bomb-explodep 100)
+    (send-event *target* 'draw #f)
+  (send-event *target* 'attack-invinc #f (static-attack-info ((id (new-attack-id)) (mode 'big-explosion))))
+  (set! explode-fstart #f)
+  (set! explode-f 0)
+  )
 )
 
 (when (= dark-jacked? #t)
@@ -1682,6 +1717,25 @@
     (set! spawned-turret-vin? #f) 
     (print "VIN TURRET SET TO FALSE")
   )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1832,12 +1886,12 @@
   (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
     (format *temp-string* "
-    <COLOR_WHITE>Welcome to HeroMode+!
-    ~%<COLOR_BLUE>Made by Kraken
+    <COLOR_WHITE>Welcome to<COLOR_RED> HeroMode+!
+    ~%<COLOR_BLUE>  Made by Kraken
     ~%
     ~%
     <COLOR_WHITE>~%Everything in the game is out to get you.
-    ~%You can gain an edge by enabling weapon mods for you to find and acquire,
+    ~%You can gain an edge by enabling weapon mods for you to acquire and find,
     ~%but in doing so, you also enable a random modifier.
     ~%These can last the whole game.
     ~%All modifiers have a give and a take
@@ -1859,12 +1913,12 @@
   (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
     (format *temp-string* "
-    <COLOR_WHITE>Welcome to HeroMode+!
-    ~%<COLOR_BLUE>Made by Kraken
+    <COLOR_WHITE>Welcome to<COLOR_RED> HeroMode+!
+    ~%<COLOR_BLUE>  Made by Kraken
     ~%
     ~%
     <COLOR_WHITE>~%Everything in the game is out to get you.
-    ~%You can gain an edge by enabling weapon mods for you to find and acquire,
+    ~%You can gain an edge by enabling weapon mods for you to acquire and find,
     ~%but in doing so, you also enable a random modifier.
     ~%These can last the whole game.
     ~%All modifiers have a give and a take
@@ -2766,13 +2820,13 @@
     (format *temp-string* "
     <COLOR_WHITE>HELL MODE INFO:
     ~%<COLOR_YELLOW>All modifiers are active:
-    ~%<COLOR_RED>On-Death TP-FB Challenge
+    ~%<COLOR_RED>TP-FB Challenge
     ~%<COLOR_WHITE>Upon death, jak teleports to the final boss, but its extremely unfair.
     ~%Beat the boss to gain a powerful weapon mod (even more powerful in hero-mode)
     ~%<COLOR_RED>Peacemaker Ability / 1 Hit Boss
     ~%<COLOR_WHITE>At all times, have a chance to fire 100 peacemaker shots,
     ~%but you must fight every boss with 1 HP
-    ~%<COLOR_RED>Increased Hov Speed / X5 Health Enemies
+    ~%<COLOR_RED>Boosted Hov Speed / Boosted Enemy HP
     ~%<COLOR_WHITE>Hoverboard is the fast
     ~%but enemies have X5 HP
     ~%<COLOR_RED>Chanced Max Eco collect / Traffic Max alert
@@ -2998,12 +3052,20 @@
       (-! sub-menu-slot 1)
       (set! menu-activate #t)
       )
-    (when (and (= menu-pressed? #f) (or (> menu-slot 6)(< menu-slot 0))) ;max options for menu left
+    (when (and (= menu-pressed? #f) (< menu-slot 0)) ;max options for menu left
       (set! menu-slot 0)
       (set! menu-activate #t)
     )
-    (when (and (= menu-pressed? #t) (or (> sub-menu-slot 4)(< sub-menu-slot 0))) ;max options for sub-menu left
+     (when (and (= menu-pressed? #f) (> menu-slot 6)) ;max options for menu left
+      (set! menu-slot 6)
+      (set! menu-activate #t)
+    )
+    (when (and (= menu-pressed? #f) (> sub-menu-slot 4)) ;max options for menu right
       (set! sub-menu-slot 0)
+      (set! menu-activate #t)
+    )
+     (when (and (= menu-pressed? #f) (< sub-menu-slot 0)) ;max options for menu right
+      (set! sub-menu-slot 4)
       (set! menu-activate #t)
     )
   )
@@ -3019,12 +3081,20 @@
       (+! sub-menu-slot 1)
       (set! menu-activate #t)
 
-      (when (and (= menu-pressed? #f) (or (> menu-slot 6)(< menu-slot 0))) ;max options for menu right
+      (when (and (= menu-pressed? #f) (< menu-slot 0)) ;max options for menu left
       (set! menu-slot 0)
       (set! menu-activate #t)
     )
-    (when (and (= menu-pressed? #t) (or (> sub-menu-slot 4)(< sub-menu-slot 0))) ;max options for sub-menu right
+     (when (and (= menu-pressed? #f) (> menu-slot 6)) ;max options for menu left
+      (set! menu-slot 6)
+      (set! menu-activate #t)
+    )
+    (when (and (= menu-pressed? #f) (> sub-menu-slot 4)) ;max options for menu right
       (set! sub-menu-slot 0)
+      (set! menu-activate #t)
+    )
+     (when (and (= menu-pressed? #f) (< sub-menu-slot 0)) ;max options for menu right
+      (set! sub-menu-slot 4)
       (set! menu-activate #t)
     )
     )

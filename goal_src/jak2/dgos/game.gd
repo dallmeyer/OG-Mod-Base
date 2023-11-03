@@ -466,4 +466,26 @@
   "mod-common-functions.o" ;; added
   "mod-custom-code.o" ;; added
   "crimson-guard-level.o";;;;;;;;;;;;;;;;; added for guard-grenade
+  "guard-conversation.o"
+  "hover-nav-control-h.o" ;added
+  "gstate.o"
+  "dig-digger.o"
+  "dig-obs.o"
+  "dig1-obs.o"
+  "dig2-obs.o"
+  "dig3-obs.o"
+  "grenadier.o"
+  "dig-texture.o"
+  "dig-scenes.o"
+  "dig-part.o"
+  "tpage-2282.go"
+  "tpage-2284.go"
+  "tpage-2283.go"
+  "tpage-2419.go"
+  "tpage-2844.go"
+  "dig-digger-ag.go"
+  "crimson-guard-ag.go"
+  "dig-bomb-crate-ag.go"
+  "dig-bomb-crate-cylinder-ag.go"
+  "dig1-vis.go"
  ))
