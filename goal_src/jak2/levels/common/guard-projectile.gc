@@ -7,6 +7,7 @@
 
 ;; DECOMP BEGINS
 
+
 (defpart 605
   :init-specs ((:texture (new 'static 'texture-id :index #x9b :page #xb))
     (:num 10.0 1.0)
@@ -992,4 +993,25 @@
   (set! (-> this root dynam gravity-max) 0.0)
   0
   (none)
+  )
+
+  (defun fire-guard-grenade ((arg0 process-drawable) (arg1 vector) (arg2 vector))
+  (let ((a1-9 (new 'stack-no-clear 'projectile-init-by-other-params)))
+          (set! (-> a1-9 ent) (-> arg0 entity))
+          (set! (-> a1-9 charge) 1.0)
+          (set! (-> a1-9 options) (projectile-options account-for-target-velocity proj-options-8000))
+          (set! (-> a1-9 pos quad) (-> arg1 quad))
+          (set! (-> a1-9 notify-handle) (the-as handle #f))
+          (set! (-> a1-9 owner-handle) (the-as handle #f))
+          (set! (-> a1-9 ignore-handle) (process->handle arg0))
+          (let* ((v1-24 *game-info*)
+                 (a0-23 (+ (-> v1-24 attack-id) 1))
+                 )
+            (set! (-> v1-24 attack-id) a0-23)
+            (set! (-> a1-9 attack-id) a0-23)
+            )
+          (set! (-> a1-9 timeout) (seconds 4))
+          (vector-normalize-copy! (-> a1-9 vel) arg2 819200.0)
+          (spawn-projectile vehicle-grenade a1-9 arg0 *default-dead-pool*)
+          )
   )

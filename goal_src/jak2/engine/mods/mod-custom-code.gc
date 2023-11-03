@@ -17,20 +17,3160 @@
     an orb |#
 
 
+(deftype vehicle-grenade (projectile-bounce)
+  ((blast-radius float  :offset-assert 496)
+   )
+  :method-count-assert 42
+  :size-assert         #x1f4
+  :flag-assert         #x2a018001f4
+  (:methods
+    )
+  )
+(defskelgroup skel-vehicle-grenade eco-canister eco-canister-dark-lod0-jg eco-canister-dark-idle-ja
+              ((eco-canister-dark-lod0-mg (meters 999999)))
+              :bounds (static-spherem 0 0 0 0.3)
+              :texture-level 6
+              )
+
+(defmethod play-impact-sound vehicle-grenade ((this vehicle-grenade) (arg0 projectile-options))
+  (let ((v1-0 arg0))
+    (cond
+      ((zero? v1-0)
+       (sound-play "grenade-fire")
+       )
+      ((= v1-0 (projectile-options lose-altitude))
+       (sound-play "grenade-explode")
+       )
+      )
+    )
+  0
+  (none)
+  )
+
+  (defmethod init-proj-collision! vehicle-grenade ((this vehicle-grenade))
+  "Init the [[projectile]]'s [[collide-shape]]"
+  (let ((s5-0 (new 'process 'collide-shape-moving this (collide-list-enum hit-by-player))))
+    (set! (-> s5-0 dynam) (copy *standard-dynamics* 'process))
+    (set! (-> s5-0 reaction) projectile-bounce-reaction)
+    (set! (-> s5-0 no-reaction)
+          (the-as (function collide-shape-moving collide-query vector vector object) nothing)
+          )
+    (set! (-> s5-0 penetrate-using) (penetrate explode))
+    (let ((v1-7 (new 'process 'collide-shape-prim-sphere s5-0 (the-as uint 0))))
+      (set! (-> v1-7 prim-core action) (collide-action solid))
+      (set-vector! (-> v1-7 local-sphere) 0.0 0.0 0.0 819.2)
+      (set! (-> s5-0 total-prims) (the-as uint 1))
+      (set! (-> s5-0 root-prim) v1-7)
+      )
+    (set! (-> s5-0 nav-radius) (* 0.75 (-> s5-0 root-prim local-sphere w)))
+    (let ((v1-10 (-> s5-0 root-prim)))
+      (set! (-> s5-0 backup-collide-as) (-> v1-10 prim-core collide-as))
+      (set! (-> s5-0 backup-collide-with) (-> v1-10 prim-core collide-with))
+      )
+    (set! (-> s5-0 max-iteration-count) (the-as uint 2))
+    (set! (-> s5-0 event-self) 'touched)
+    (set! (-> this root) s5-0)
+    )
+  (set-collide-with!
+    (-> this root)
+    (collide-spec backgnd jak crate civilian enemy obstacle vehicle-sphere hit-by-others-list player-list pusher)
+    )
+  (set-collide-as! (-> this root) (collide-spec enemy))
+  (set! (-> this root pat-ignore-mask)
+        (new 'static 'pat-surface :noentity #x1 :nojak #x1 :probe #x1 :noproj #x1 :noendlessfall #x1)
+        )
+  (none)
+  )
+
+(defmethod init-proj-settings! vehicle-grenade ((this vehicle-grenade))
+  "Init relevant settings for the [[projectile]] such as gravity, speed, timeout, etc"
+  (set! (-> this attack-mode) 'eco-dark)
+  (initialize-skeleton
+    this
+    (the-as skeleton-group (art-group-get-by-name *level* "skel-vehicle-grenade" (the-as (pointer uint32) #f)))
+    (the-as pair 0)
+    )
+  (let ((t9-2 (method-of-type projectile-bounce init-proj-settings!)))
+    (t9-2 this)
+    )
+  (set! (-> this part) (create-launch-control (-> *part-group-id-table* 138) this))
+  (set! (-> this blast-radius) 16384.0)
+  (set! (-> this max-speed) 90112.0)
+  (set! (-> this timeout) (seconds 4))
+  0
+  (none)
+  )
+
+(defmethod spawn-impact-particles vehicle-grenade ((this vehicle-grenade))
+  "Spawns associated particles with the projectile if applicable"
+  (spawn (-> this part) (-> this root trans))
+  (ja-post)
+  0
+  (none)
+  )
+
+(defmethod noop vehicle-grenade ((this vehicle-grenade))
+  "Does nothing"
+  (spawn (-> this part) (-> this root trans))
+  0
+  (none)
+  )
+
+;; WARN: Return type mismatch sound-id vs none.
+(defmethod play-impact-sound! vehicle-grenade ((this vehicle-grenade))
+  "Plays impact sound"
+  (let* ((a2-0 (-> this root))
+         (v1-0 (-> a2-0 status))
+         )
+    (if (logtest? v1-0 (collide-status touch-surface))
+        (vector-float*! (-> a2-0 transv) (-> a2-0 transv) 0.2)
+        )
+    (when (and (logtest? v1-0 (collide-status impact-surface))
+               (time-elapsed? (-> this played-bounce-time) (seconds 0.3))
+               )
+      (set-time! (-> this played-bounce-time))
+      (sound-play "grenade-bounce")
+      )
+    )
+  (none)
+  )
+
+(defstate impact (vehicle-grenade)
+  :virtual #t
+  :event (behavior ((proc process) (argc int) (message symbol) (block event-message-block))
+    (case message
+      (('touched)
+       (if (send-event proc 'attack (-> block param 0) (static-attack-info ((id (-> self attack-id)) (mode 'explode))))
+           #t
+           )
+       )
+      )
+    )
+  :code (behavior ()
+    (let ((gp-0 (new 'stack-no-clear 'explosion-init-params)))
+      (set! (-> gp-0 spawn-point quad) (-> self root trans quad))
+      (quaternion-copy! (-> gp-0 spawn-quat) (-> self root quat))
+      (set! (-> gp-0 radius) (-> self blast-radius))
+      (set! (-> gp-0 group) (-> *part-group-id-table* 76))
+      (set! (-> gp-0 collide-with)
+            (collide-spec backgnd jak crate civilian enemy obstacle vehicle-sphere hit-by-others-list player-list pusher)
+            )
+      (set! (-> gp-0 penetrate-using) (penetrate explode))
+      (explosion-spawn self explosion gp-0)
+      )
+    (logior! (-> self draw status) (draw-control-status no-draw))
+    (let ((v1-11 (-> self root root-prim)))
+      (set! (-> v1-11 prim-core collide-as) (collide-spec))
+      (set! (-> v1-11 prim-core collide-with) (collide-spec))
+      )
+    0
+    (while (-> self child)
+      (suspend)
+      )
+    (deactivate self)
+    )
+  )
+
+  (defun fire-guard-grenade ((arg0 process-drawable) (arg1 vector) (arg2 vector))
+  (let ((a1-9 (new 'stack-no-clear 'projectile-init-by-other-params)))
+          (set! (-> a1-9 ent) (-> arg0 entity))
+          (set! (-> a1-9 charge) 1.0)
+          (set! (-> a1-9 options) (projectile-options account-for-target-velocity proj-options-8000))
+          (set! (-> a1-9 pos quad) (-> arg1 quad))
+          (set! (-> a1-9 notify-handle) (the-as handle #f))
+          (set! (-> a1-9 owner-handle) (the-as handle #f))
+          (set! (-> a1-9 ignore-handle) (process->handle arg0))
+          (let* ((v1-24 *game-info*)
+                 (a0-23 (+ (-> v1-24 attack-id) 1))
+                 )
+            (set! (-> v1-24 attack-id) a0-23)
+            (set! (-> a1-9 attack-id) a0-23)
+            )
+          (set! (-> a1-9 timeout) (seconds 4))
+          (vector-normalize-copy! (-> a1-9 vel) arg2 819200.0)
+          (spawn-projectile vehicle-grenade a1-9 arg0 *default-dead-pool*)
+          )
+  )
+
+(deftype cty-guard-turret (process-focusable)
+  (
+    (incoming-attack-id uint32        :offset-assert 204)
+    (jm-turret          joint-mod        :offset-assert 208)
+    (jm-gunsL           joint-mod        :offset-assert 212)
+    (jm-gunsR           joint-mod        :offset-assert 216)
+    (angle-turret       degrees       :offset-assert 220)
+    (angle-guns         degrees       :offset-assert 224)
+    (last-no-zero       int64         :offset-assert 232)
+    (next-time-shot     time-frame    :offset-assert 240)
+    (num-shots          uint32        :offset-assert 248)
+    (focus              focus :inline :offset-assert 256)
+    (id                 int32         :offset-assert 268)
+    (destroyed          symbol        :offset-assert 272)
+    (button-down?       symbol        :offset-assert 276)
+    (hit-points         int32         :offset-assert 280)
+  )
+  :method-count-assert 36
+  :size-assert         #x11c ;; 284
+  :flag-assert         #x2400a0011c
+  (:methods
+    (idle () _type_ :state 27)
+    (hostile () _type_ :state 28)
+    (explode () _type_ :state 29)
+    (wait-for-pushing () _type_ :state 30)
+    (pushed () _type_ :state 31)
+    (cty-guard-turret-method-32 (_type_) none 32)
+    (cty-guard-turret-method-33 (_type_) none 33)
+    (cty-guard-turret-method-34 (_type_) none 34)
+    (cty-guard-turret-method-35 (_type_) quaternion 35))
+  )
+
+  (defbehavior cty-guard-turret-init-by-other cty-guard-turret ((vec vector))
+    (cty-guard-turret-method-32 self)
+    (vector-copy! (-> self root trans) vec)
+    (vector-identity! (-> self root scale))
+    (initialize-skeleton
+      self
+      (the skeleton-group (art-group-get-by-name *level* "skel-cty-guard-turret" (the (pointer uint32) #f)))
+      (the pair 0)
+      )
+    (cty-guard-turret-method-33 self)
+    (reset-to-collide-spec (-> self focus) (collide-spec jak player-list))
+    (set! (-> self jm-turret) (new 'process 'joint-mod (joint-mod-mode joint-set*) self 6))
+    (set! (-> self jm-gunsL) (new 'process 'joint-mod (joint-mod-mode joint-set*) self 7))
+    (set! (-> self jm-gunsR) (new 'process 'joint-mod (joint-mod-mode joint-set*) self 8))
+    (set! (-> self part) (create-launch-control (-> *part-group-id-table* 186) self))
+    (set! (-> self id) 0)
+    (set! (-> self destroyed) #f)
+    (set! (-> self hit-points) 6)
+    (go (method-of-object self idle))
+    (none)
+  )
+
+ (define-extern dark-traffic symbol)
+ (define orb-count1 50)
     ;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;; Begin function defintions.
     ;;;;;;;;;;;;;;;;;;;;;;;;;;
 
     (defun runs-every-frame ()
-      ;; (increase-power-cell-by-one) This is a call to increase-power-cell-by-one defined in mod-common-functions.gc
 
-      ;; Sample code to turn jak pink whenever he's doing the jetboard hover glitch
-      ;; (when *target* 
-      ;;   (if (board-hovering?)
-      ;;     (draw-pink *target*)
-      ;;     (draw-normal *target*)
-      ;;     )
-      ;;   )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;WEAPON MOD SPAWNS, REWARDS, AND SAVES
+;Once a legendary is spawned it unlocks it for you. Later ill figure how to do it upon pickup, but for now I have no fucking clue. :L
+;Right now all gun mods are set towards mod-default-gun, which is the yellow gun atm, until Mod-Base updates with the updated misc menu in "game-options" then you can select it yourself.
+
+
+(when (= mod-reroll #t)
+  (when (and (not (logtest? (-> *game-info* secrets) (game-secrets hero-mode)))(< (-> *game-info* gem) 10.0))
+    (print "[MOD] NOT ENOUGH GEMS, REQUIRE 10 TO REROLL
+")
+    (set! mod-reroll-string "NOT ENOUGH GEMS")
+    (set! mod-reroll #f)
+  )
+  (when (and (not (logtest? (-> *game-info* secrets) (game-secrets hero-mode)))(>= (-> *game-info* gem) 10.0))
+    (set! (-> *game-info* gem) (- (-> *game-info* gem) 10.0))
+    (set! mod-pick #t)
+    (print "[MOD] SUCCESSFULLY REROLLED >:)
+")
+    (set! mod-reroll-string "Successfully Re-Rolled.")
+    (set! mod-reroll #f)
+  )
+  (when (logtest? (-> *game-info* secrets) (game-secrets hero-mode))
+    (print "[MOD] YOU'RE NOT ALLOWED TO RE-ROLL WHILE IN HELL-MODE }:]
+")
+    (set! mod-reroll #f)
+  )
+)
+
+
+(when (and (= (-> *game-info* fuel) 0.0)(= weapon-mod-toggle #t)) ;checks for if you have weapon mod toggle on, then gives you a modifier
+  (set! mod-pick #t)
+)
+
+(when (= mod-pick #t)
+  (set! mod-rand (rand-vu-int-range 1 6))
+  (when (= mod-rand 1)
+    (set! (-> *game-info* fuel) 1.0)
+    (set! mod-pick #f)
+    (print "[MOD] rolled for Peacemaker Ability!
+")
+  (auto-save-user)
+  )
+  (when (and (or (!= (-> *game-info* buzzer-total) 2.0)(!= (-> *game-info* buzzer-total) 1.0))(= mod-rand 2))
+    (set! (-> *game-info* fuel) 2.0)
+    (set! mod-pick #f)
+          (print "[MOD] rolled for Teleport to Final Boss!
+")
+(auto-save-user)
+    (when (or (= (-> *game-info* buzzer-total) 2.0)(= (-> *game-info* buzzer-total) 1.0))
+      (print "[MOD] You already beat tp-fb! rerolling...
+")
+      (set! mod-pick #t)
+    )
+  )
+  (when (= mod-rand 3)
+    (set! (-> *game-info* fuel) 3.0)
+    (set! mod-pick #f)
+    (print "[MOD] rolled for Hoverboard/Enemy Health!
+")
+(auto-save-user)
+  )
+  (when (= mod-rand 4)
+    (set! (-> *game-info* fuel) 4.0)
+    (set! mod-pick #f)
+    (print "[MOD] rolled for Dark Eco / Threatening Traffic
+")
+(auto-save-user)
+  )
+  (when (= mod-rand 5)
+    (set! (-> *game-info* fuel) 5.0)
+    (set! mod-pick #f)
+    (print "[MOD] rolled for Trip Jak / Metalheads!
+")
+(auto-save-user)
+  )
+  (when (= mod-rand 6)
+    (set! (-> *game-info* fuel) 6.0)
+    (set! mod-pick #f)
+    (print "[MOD] rolled for Target Explode / DarkJakLonger!
+")
+(auto-save-user)
+  )
+)
+
+
+
+(when (and (!= (-> *game-info* fuel) 0.0)(= weapon-mod-toggle #f))
+  (set! weapon-mod-toggle #t)
+)
+
+(when (= weapon-mod-toggle #t)
+  ;set params for init game
+  (when (= weapon-toggle-false? #f)
+    (set! weapon-toggle-false? #t)
+  )
+
+  ;Legendary Weapon Mod Saves
+  (when (and (= (-> *game-info* buzzer-total) 0.0)(or (= leg-random-shot #f)(= pm-extra-shot-option #f))) ;if none
+    (set! pm-extra-shot-option #f)
+    (set! leg-random-shot #f)
+    (set! leg-got? #f)
+  )
+  (when (and (= (-> *game-info* buzzer-total) 1.0)(= pm-extra-shot-option #f)) ;if 1, legendary extra chanced peacemaker-shot
+    (set! pm-extra-shot-option #t)
+    (set! leg-got? #t)
+    (set! tp-fb-win #t)
+    (set! recieved-gm-s6 "Chanced Peacemaker Shot!")
+    (sound-play "ammo-pickup")
+    (sound-play "board-boost")
+    (set! recieved-gm6 #t)
+    (set! tp-fb #f)
+  )
+
+  (when (and (= (-> *game-info* buzzer-total) 2.0)(= leg-random-shot #f)) ;if 2, legendary random shot
+    (set! leg-random-shot #t)
+    (set! leg-got? #t)
+    (set! tp-fb-win #t)
+    (set! recieved-gm-s5 "Random Shot!")
+    (sound-play "ammo-pickup")
+    (sound-play "board-boost")
+    (set! recieved-gm5 #t)
+    (set! tp-fb #f)
+  )
+
+
+
+  ;Modifier Saves
+(when (= stored-cp? #f)
+  (when (and (= (-> *game-info* fuel) 0.0)(= all-modifiers-off? #f)) ;if none
+    (set! hell-mode-option #f)
+    (set! peacemaker-ability #f)
+    (set! hover-damage #f)
+    (set! dark-traffic #f)
+    (set! tp-fb #f)
+    (set! all-modifiers-off? #t)
+    (set! weapon-mod-toggle #f)
+    (set! trip-metalheads #f)
+    (set! target-explode #f)
+    (set! modifier-string "None")
+  )
+
+  (when (and (= (-> *game-info* fuel) 1.0)(= peacemaker-ability #f)) ;if 1, peacemaker ability
+    (set! hell-mode-option #f)
+    (set! peacemaker-ability #t)
+    (set! tp-fb #f)
+    (set! hover-damage #f)
+    (set! dark-traffic #f)
+    (set! all-modifiers-off? #f)
+    (set! weapon-mod-toggle #t)
+    (set! trip-metalheads #f)
+    (set! target-explode #f)
+    (set! modifier-string "Peacemaker Ability / 1 Hit Boss")
+  )
+
+
+  (when (and (= (-> *game-info* fuel) 2.0)(= tp-fb #f)) ;if 2, tp-fb
+    (set! hell-mode-option #f)
+    (set! tp-fb #t)
+    (set! hover-damage #f)
+    (set! dark-traffic #f)
+    (set! peacemaker-ability #f)
+    (set! all-modifiers-off? #f)
+    (set! weapon-mod-toggle #t)
+    (set! trip-metalheads #f)
+    (set! target-explode #f)
+    (set! modifier-string "On-Death TP-FB Challenge")
+  )
+  (when (and (= (-> *game-info* fuel) 3.0)(= hover-damage #f)) ;if 3, hover-damage
+    (set! hell-mode-option #f)
+    (set! hover-damage #t)
+    (set! dark-traffic #f)
+    (set! peacemaker-ability #f)
+    (set! tp-fb #f)
+    (set! all-modifiers-off? #f)
+    (set! weapon-mod-toggle #t)
+    (set! trip-metalheads #f)
+    (set! target-explode #f)
+    (set! modifier-string "Increased Hov Speed / X5 Health Enemies")
+  )
+  (when (and (= (-> *game-info* fuel) 4.0)(= dark-traffic #f)) ;if 4, dark-traffic
+    (set! hell-mode-option #f)
+    (set! dark-traffic #t)
+    (set! hover-damage #f)
+    (set! peacemaker-ability #f)
+    (set! tp-fb #f)
+    (set! all-modifiers-off? #f)
+    (set! weapon-mod-toggle #t)
+    (set! trip-metalheads #f)
+    (set! target-explode #f)
+    (set! modifier-string "Chanced Max Eco collect / Traffic Max alert")
+  )
+  (when (and (= (-> *game-info* fuel) 5.0)(= trip-metalheads #f)) ;if 5, trip-metalheads
+    (set! hell-mode-option #f)
+    (set! dark-traffic #f)
+    (set! hover-damage #f)
+    (set! peacemaker-ability #f)
+    (set! tp-fb #f)
+    (set! all-modifiers-off? #f)
+    (set! weapon-mod-toggle #t)
+    (set! trip-metalheads #t)
+    (set! target-explode #f)
+    (set! modifier-string "Chanced Trip / Gain 10 Metalheads")
+  )
+  (when (and (= (-> *game-info* fuel) 6.0)(= target-explode #f)) ;if 6, target-explode
+    (set! hell-mode-option #f)
+    (set! dark-traffic #f)
+    (set! hover-damage #f)
+    (set! peacemaker-ability #f)
+    (set! tp-fb #f)
+    (set! all-modifiers-off? #f)
+    (set! weapon-mod-toggle #t)
+    (set! trip-metalheads #f)
+    (set! target-explode #t)
+    (set! modifier-string "Target Explode / DJak Longer Duration")
+  )
+  (when (and (= (-> *game-info* fuel) 10.0)(= hell-mode-option #f)) ;if 10, hell mode }:)
+    (set! hell-mode-option #t)
+    (set! trip-metalheads #t)
+    (set! dark-traffic #t)
+    (set! hover-damage #t)
+    (set! peacemaker-ability #t)
+    (when (= tp-fb-win #f)
+      (set! tp-fb #t)
+      (set! modifier-string "HELL MODE")
+    )
+    (when (= tp-fb-win #t)
+      (set! tp-fb #f)
+      (set! modifier-string "| HELL MODE |")
+    )
+    (set! all-modifiers-off? #f)
+    (set! weapon-mod-toggle #t)
+    (set! target-explode #t)
+  )
+)
+
+
+
+
+
+
+
+
+
+
+
+
+  ;Mission-Based Weapon Mod Gets
+  (when (and (task-node-closed? (game-task-node city-krew-delivery-resolution))(= mission-grab-1 #f)) ;after red gun, get rapid fire
+    (set! mission-grab-1 #t)
+    (set! rapid-fire-option #t)
+    (print "[GUN-MOD] Rapid Fire Acquired! Weapon Mod set to mod-default-gun
+")
+    (set! recieved-gm-s "Rapid Fire!")
+    (sound-play "ammo-pickup")
+    (sound-play "board-boost")
+    (set! recieved-gm #t) ;sets the draw func on
+  )
+
+  (when (and (task-node-closed? (game-task-node sewer-enemy-resolution))(= mission-grab-2 #f)) ;after yellow gun, get double tap
+    (set! mission-grab-2 #t)
+    (set! double-tap-option #t)
+    (print "[GUN-MOD] Chanced Double Tap Acquired! Weapon Mod set to mod-default-gun
+")
+    (set! recieved-gm-s2 "Double-tap!")
+    (sound-play "ammo-pickup")
+    (sound-play "board-boost")
+    (set! recieved-gm2 #t)  ;sets the draw func on
+  )
+
+  (when (and (task-node-closed? (game-task-node ruins-enemy-introduction))(= mission-grab-3 #f)) ;after blue gun, get chanced guard shot
+    (set! mission-grab-3 #t)
+    (set! guard-shot-option #t)
+    (print "[GUN-MOD] Chanced Guard Shot Acquired! Weapon Mod set to mod-default-gun
+")
+    (set! recieved-gm-s3 "Guard Shot!")
+    (sound-play "ammo-pickup")
+    (sound-play "board-boost")
+    (set! recieved-gm3 #t)  ;sets the draw func on
+  )
+
+  (when (and (task-node-closed? (game-task-node sewer-escort-get-gun))(= mission-grab-4 #f)) ;after dark gun, get chanced predator shot
+    (set! mission-grab-4 #t)
+    (set! guard-grenade-option #t)
+    (print "[GUN-MOD] Chanced Predator Shot Acquired! Weapon Mod set to mod-default-gun
+")
+    (set! recieved-gm-s4 "Boom Stick!")
+    (sound-play "ammo-pickup")
+    (sound-play "board-boost")
+    (set! recieved-gm4 #t)  ;sets the draw func on
+  )
+  (when (and (= orb-grab-1 #f)(>= (-> *game-info* skill) orb-count1)) ;when a certain amount of orbs or higher, get mag-bag
+    (set! mag-bag-option #t)
+    (set! recieved-gm-s7 "Mag Bag!")
+    (set! recieved-gm7 #t)
+    (sound-play "ammo-pickup")
+    (sound-play "board-boost")
+    (set! orb-grab-1 #t)
+  )
+  ;looks for if their missions become un-completed after setting them, then takes away mission gun mods respectively
+  (when (and (not (task-node-closed? (game-task-node city-krew-delivery-resolution)))(= mission-grab-1 #t))
+    (set! mission-grab-1 #f)
+    (set! rapid-fire-option #f)
+  )
+
+  (when (and (not (task-node-closed? (game-task-node sewer-enemy-resolution)))(= mission-grab-2 #t))
+    (set! mission-grab-2 #f)
+    (set! double-tap-option #f)
+  )
+
+  (when (and (not (task-node-closed? (game-task-node ruins-enemy-introduction)))(= mission-grab-3 #t))
+    (set! mission-grab-3 #f)
+    (set! guard-shot-option #f)
+    (set! guard-shot-int 0)
+  )
+
+  (when (and (not (task-node-closed? (game-task-node sewer-escort-get-gun)))(= mission-grab-4 #t))
+    (set! mission-grab-4 #f)
+    (set! guard-grenade-option #f)
+    (set! guard-grenade-int 0)
+  )
+    (when (and (= orb-grab-1 #t)(< (-> *game-info* skill) orb-count1))
+    (set! mag-bag-option #f)
+    (set! mag-bag-int 0)
+    (set! orb-grab-1 #f)
+  )
+)
+
+
+
+
+
+;Roll for a random legenedary gun mod
+(when (= wm-roll-rand #t) ;this runs the roll for a random weapon mod to be unlocked. Super inefficient, i love it :)
+
+  (when (and (rand-vu-percent? 0.2)(= wm-roll-numb 1)) ;checks if rolled for integer 1
+    (set! wm-roll-rand #f)
+    (set! wm-roll-numb 0)
+    (set! (-> *game-info* buzzer-total) 1.0)
+    (print "[GUN-MOD] | LEGENDARY |  Chanced Peacemaker Shot Acquired! Weapon Mod set to mod-default-gun
+")
+    (set! recieved-gm-s6 "Chanced Peacemaker Shot!")
+    (sound-play "ammo-pickup")
+    (sound-play "board-boost")
+    (set! recieved-gm5 #t)  ;sets the draw func on
+  )
+  (when (and (rand-vu-percent? 0.2)(= wm-roll-numb 2)) ;checks if rolled for integer 2
+    (set! wm-roll-rand #f)
+    (set! wm-roll-numb 0)
+    (set! (-> *game-info* buzzer-total) 1.0)
+    (print "[GUN-MOD] | LEGENDARY |  Chanced Peacemaker Shot Acquired! Weapon Mod set to mod-default-gun
+")
+    (set! recieved-gm-s5 "Random Shot!")
+    (sound-play "ammo-pickup")
+    (sound-play "board-boost")
+    (set! recieved-gm6 #t) ;sets the draw func on
+  )
+  (when (= wm-roll-rand #t) ;rolls the integer
+    (+! wm-roll-numb 1)
+    (when (> wm-roll-numb 2)
+      (set! wm-roll-numb 0)
+    )
+  )
+
+)
+
+
+
+(when (and (logtest? (-> *game-info* secrets) (game-secrets hero-mode))(!= (-> *game-info* fuel) 10.0)) ;if you're in hero-mode, sets to have hell-mode enabled in your save.
+    (set! (-> *game-info* fuel) 10.0)
+)
+(when (= stored-cp? #f)
+  (when (and (not (logtest? (-> *game-info* secrets) (game-secrets hero-mode)))(= hell-mode-option #t)) ;if you're not in hero-mode, but you have set hell-mode on prior, set all to off.
+      (set! hell-mode-option #f)
+      (set! peacemaker-ability #f)
+      (set! hover-damage #f)
+      (set! dark-traffic #f)
+      (set! tp-fb #f)
+      (set! all-modifiers-off? #t)
+      (set! weapon-mod-toggle #f)
+      (set! trip-metalheads #f)
+      (set! target-explode #f)
+  )
+)
+
+
+(when (= wm-rand-shot #t) ;this rolls through a random shot and shoots it out of jaks weapon. Activated in gun-(color)-shot.gc. Oh boy is this a list.
+        (set! wm-roll-shot (rand-vu-int-range 1 6))
+        (when (= wm-roll-shot 1)
+          (let ((s5-0 (-> *target* gun))
+          (gp-0 (new 'stack-no-clear 'projectile-init-by-other-params))
+          )
+      (set! (-> gp-0 ent) (-> *target* entity))
+      (set! (-> gp-0 charge) (-> s5-0 fire-charge))
+      (set! (-> gp-0 options) (projectile-options))
+      (set! (-> gp-0 pos quad) (-> s5-0 fire-point quad))
+      (set! (-> gp-0 vel quad) (-> s5-0 fire-dir-out quad))
+      (set! (-> gp-0 notify-handle) (the-as handle #f))
+      (set! (-> gp-0 owner-handle) (the-as handle #f))
+      (set! (-> gp-0 ignore-handle) (process->handle (the-as process (send-event *target* 'get-vehicle))))
+      (let* ((v1-8 *game-info*)
+            (a0-11 (+ (-> v1-8 attack-id) 1))
+            )
+        (set! (-> v1-8 attack-id) a0-11)
+        (set! (-> gp-0 attack-id) a0-11)
+        )
+      (set! (-> gp-0 timeout) (seconds 4))
+      (let ((v0-1 (spawn-projectile gun-dark-shot gp-0 (ppointer->process (-> s5-0 gun)) *default-dead-pool*)))
+        (when v0-1
+          (set! (-> (the-as gun-dark-shot (-> v0-1 0)) track-target) (-> *target* gun track-target 0 handle))
+          (set! (-> *target* gun charge-active?) (ppointer->handle v0-1))
+          )
+        v0-1
+      )
+        )
+        (set! wm-roll-shot 0)
+        (set! wm-rand-shot #f)
+        )
+
+    
+        (when (= wm-roll-shot 2)
+        (let ((gp-0 (-> *target* gun))
+        (s4-0 (-> *target* gun fire-dir-out))
+        (s5-0 (new 'stack-no-clear 'vector))
+        )
+    (let ((s3-0 (new 'stack-no-clear 'quaternion)))
+      (quaternion-vector-angle! s3-0 s4-0 (* 182.04445 (rand-vu-float-range 0.0 360.0)))
+      (vector-rotate-y! s5-0 s4-0 (* 182.04445 (rand-vu-float-range 0.0 1.1)))
+      (vector-orient-by-quat! s5-0 s5-0 s3-0)
+      )
+    (let ((s4-1 (new 'stack-no-clear 'projectile-init-by-other-params)))
+      (set! (-> s4-1 ent) (-> *target* entity))
+      (set! (-> s4-1 charge) 1.0)
+      (set! (-> s4-1 options) (projectile-options account-for-target-velocity deal-damage proj-options-8000))
+      (set! (-> s4-1 pos quad) (-> gp-0 fire-point quad))
+      (set! (-> s4-1 vel quad) (-> s5-0 quad))
+      (set! (-> s4-1 notify-handle) (the-as handle #f))
+      (set! (-> s4-1 owner-handle) (the-as handle #f))
+      (set! (-> s4-1 ignore-handle) (process->handle (the-as process (send-event *target* 'get-vehicle))))
+      (let* ((v1-13 *game-info*)
+             (a0-15 (+ (-> v1-13 attack-id) 1))
+             )
+        (set! (-> v1-13 attack-id) a0-15)
+        (set! (-> s4-1 attack-id) a0-15)
+        )
+      (set! (-> s4-1 timeout) (seconds 4))
+      (spawn-projectile gun-blue-shot s4-1 (ppointer->process (-> gp-0 gun)) *default-dead-pool*)
+        (set! wm-roll-shot 0)
+        (set! wm-rand-shot #f)
+        )
+        )
+        )
+        (when (= wm-roll-shot 3)
+        (set! inv-frame-start #t)
+        (when (or (= (-> (level-get-target-inside *level*) name) 'caspad)(= (-> (level-get-target-inside *level*) name) 'castle))
+          (set! leg-dont-fire? #t)
+          (set! wm-roll-shot (rand-vu-int-range 1 6))
+        )
+        (when (= leg-dont-fire? #f)
+        (let ((s5-0 (-> *target* gun))
+          (gp-0 (new 'stack-no-clear 'projectile-init-by-other-params))
+          )
+          (set! (-> gp-0 ent) (-> *target* entity))
+          (set! (-> gp-0 charge) (-> s5-0 fire-charge))
+          (set! (-> gp-0 options) (projectile-options))
+          (set! (-> gp-0 pos quad) (-> *target* gun fire-point quad))
+          (set! (-> gp-0 vel quad) (-> *target* gun fire-dir-out quad))
+          (set! (-> gp-0 notify-handle) (the-as handle #f))
+          (set! (-> gp-0 owner-handle) (the-as handle #f))
+          (set! (-> gp-0 ignore-handle) (process->handle (the-as process (send-event *target* 'get-vehicle))))
+          (set! (-> gp-0 timeout) (seconds 4))
+          (set! inv-frame-start-g #t)
+          (when (not (logtest? (-> *game-info* secrets) (game-secrets hero-mode)))
+            (set! (-> *game-info* secrets) (game-secrets invulnerable)) ;this also makes it so that theres no game secrets allowed when using predator/guard shot. I could be lazy and make it for all of them
+          )
+          (when (logtest? (-> *game-info* secrets) (game-secrets hero-mode))
+            (set! (-> *game-info* secrets) (game-secrets invulnerable hero-mode)) ;this also makes it so that theres no game secrets allowed when using predator/guard shot. I could be lazy and make it for all of them
+          )
+          (spawn-projectile metalhead-predator-shot gp-0 (ppointer->process (-> *target* gun gun)) *default-dead-pool*)
+          (set! wm-roll-shot 0)
+        (set! wm-rand-shot #f)
+        )
+        )
+        )
+        (when (= wm-roll-shot 4)
+          (let ((s4-1 (new 'stack-no-clear 'projectile-init-by-other-params)))
+            (set! (-> s4-1 ent) (-> *target* entity))
+            (set! (-> s4-1 charge) 1.0)
+            (set! (-> s4-1 options) (projectile-options account-for-target-velocity proj-options-8000))
+            (set! (-> s4-1 pos quad) (-> *target* gun fire-point quad))
+            (set! (-> s4-1 vel quad) (-> *target* gun fire-dir-out quad))
+            (set! (-> s4-1 notify-handle) (the-as handle #f))
+            (set! (-> s4-1 owner-handle) (the-as handle #f))
+            (set! (-> s4-1 ignore-handle) (the-as handle #f))
+            (let* ((a0-13 *game-info*)
+            (a1-12 (+ (-> a0-13 attack-id) 1))
+            )
+        (set! (-> a0-13 attack-id) a1-12)
+        (set! (-> s4-1 attack-id) a1-12)
+        )
+      (set! (-> s4-1 timeout) (seconds 4))
+      (vector-normalize! (-> s4-1 vel) 819200.0)
+      (set! inv-frame-start-g #t)
+      (when (not (logtest? (-> *game-info* secrets) (game-secrets hero-mode)))
+    (set! (-> *game-info* secrets) (game-secrets invulnerable)) ;this also makes it so that theres no game secrets allowed when using predator/guard shot. I could be lazy and make it for all of them
+  )
+  (when (logtest? (-> *game-info* secrets) (game-secrets hero-mode))
+    (set! (-> *game-info* secrets) (game-secrets invulnerable hero-mode)) ;this also makes it so that theres no game secrets allowed when using predator/guard shot. I could be lazy and make it for all of them
+  )
+      (spawn-projectile guard-shot s4-1 (ppointer->process (-> *target* gun gun)) *default-dead-pool*)
+      (set! wm-roll-shot 0)
+        (set! wm-rand-shot #f)
+      )
+        )
+        (when (= wm-roll-shot 5)
+          (rlet ((acc :class vf)
+         (vf0 :class vf)
+         (vf4 :class vf)
+         (vf5 :class vf)
+         (vf6 :class vf)
+         (vf7 :class vf)
+         )
+    (init-vf0-vector)
+    (let ((gp-0 (-> *target* gun)))
+      (let ((s5-0 (-> *part-id-table* 190)))
+        (get-field-spec-by-id s5-0 (sp-field-id spt-omega))
+        (let ((s5-1 (get-field-spec-by-id s5-0 (sp-field-id spt-rotate-y))))
+          (if s5-1
+              (set! (-> s5-1 initial-valuef) (y-angle (-> *target* control)))
+              )
+          )
+        )
+      (let ((t9-3 sp-launch-particles-var)
+            (a0-3 *sp-particle-system-2d*)
+            (a1-2 (-> *part-id-table* 190))
+            (a2-0 *launch-matrix*)
+            )
+        (set! (-> a2-0 trans quad) (-> gp-0 fire-point quad))
+        (t9-3 a0-3 a1-2 a2-0 (the-as sparticle-launch-state #f) (the-as sparticle-launch-control #f) 1.0)
+        )
+      (let ((s5-2 (new 'stack-no-clear 'vector)))
+        (let ((v1-10 (-> gp-0 fire-point)))
+          (let ((a0-4 (-> gp-0 fire-dir-out)))
+            (let ((a1-4 24576.0))
+              (.mov vf7 a1-4)
+              )
+            (.lvf vf5 (&-> a0-4 quad))
+            )
+          (.lvf vf4 (&-> v1-10 quad))
+          )
+        (.add.x.vf vf6 vf0 vf0 :mask #b1000)
+        (.mul.x.vf acc vf5 vf7 :mask #b111)
+        (.add.mul.w.vf vf6 vf4 vf0 acc :mask #b111)
+        (.svf (&-> s5-2 quad) vf6)
+        (set! (-> s5-2 w) 24576.0)
+        (when (and (sphere-in-view-frustum? (the-as sphere s5-2))
+                   (< 24576.0 (vector-vector-distance s5-2 (math-camera-pos)))
+                   )
+          (let ((s5-3 (process-spawn
+                        manipy
+                        :init manipy-init
+                        (-> gp-0 fire-point)
+                        (-> *target* entity)
+                        (art-group-get-by-name *level* "skel-gun-red-cone" (the-as (pointer uint32) #f))
+                        #f
+                        0
+                        :to *target*
+                        )
+                      )
+                )
+            (when s5-3
+              (send-event (ppointer->process s5-3) 'anim-mode 'play1)
+              (send-event (ppointer->process s5-3) 'anim "idle")
+              (forward-up->quaternion
+                (-> (the-as process-drawable (-> s5-3 0)) root quat)
+                (-> gp-0 fire-dir-out)
+                *up-vector*
+                )
+              (let ((f30-1 (vector-dot
+                             (-> gp-0 fire-dir-out)
+                             (vector-! (new 'stack-no-clear 'vector) (-> gp-0 fire-point) (math-camera-pos))
+                             )
+                           )
+                    (f0-5 (vector-vector-xz-distance (-> gp-0 fire-point) (math-camera-pos)))
+                    )
+                (when (and (< f30-1 0.0) (< f0-5 32768.0))
+                  (set! (-> (the-as process-drawable (-> s5-3 0)) root scale z)
+                        (lerp-scale 0.2 1.0 (fabs f0-5) 20480.0 32768.0)
+                        )
+                  (set! (-> (the-as process-drawable (-> s5-3 0)) root scale x)
+                        (-> (the-as process-drawable (-> s5-3 0)) root scale z)
+                        )
+                  )
+                )
+              )
+            )
+          )
+        )
+      (process-spawn gun-red-shot (-> gp-0 fire-point) (-> gp-0 fire-dir-out) :to (ppointer->process (-> gp-0 gun)))
+      (set! wm-roll-shot 0)
+        (set! wm-rand-shot #f)
+        )
+        )
+        )
+        (when (= wm-roll-shot 6)
+        (let ((s5-0 (-> *target* gun))
+        (gp-0 (new 'stack-no-clear 'projectile-init-by-other-params))
+        )
+    (set! (-> gp-0 ent) (-> *target* entity))
+    (set! (-> gp-0 charge) 1.0)
+    (set! (-> gp-0 options) (projectile-options account-for-target-velocity deal-damage proj-options-8000))
+    (set! (-> gp-0 pos quad) (-> s5-0 fire-point quad))
+    (set! (-> gp-0 notify-handle) (the-as handle #f))
+    (set! (-> gp-0 owner-handle) (the-as handle #f))
+    (set! (-> gp-0 ignore-handle) (process->handle (the-as process (send-event *target* 'get-vehicle))))
+    (let* ((v1-9 *game-info*)
+           (a0-9 (+ (-> v1-9 attack-id) 1))
+           )
+      (set! (-> v1-9 attack-id) a0-9)
+      (set! (-> gp-0 attack-id) a0-9)
+      )
+    (set! (-> gp-0 timeout) (seconds 4))
+    (vector-float*! (-> gp-0 vel) (-> s5-0 fire-dir-out) 819200.0)
+    (spawn-projectile gun-yellow-shot gp-0 (ppointer->process (-> s5-0 gun)) *default-dead-pool*)
+    (set! wm-roll-shot 0)
+        (set! wm-rand-shot #f)
+        )
+      )
+      (when (= wm-roll-shot 7)
+        (fire-guard-grenade *target* (-> *target* gun fire-point) (-> *target* gun fire-dir-out))
+      )
+)
+
+
+
+;DOUBLE TAP
+;This is called from setting dt-frame-start to true, firing another projectile based on what weapon jak has it on, and whether or not guard-shot is taking its place.
+;---------------------------------------------------------------------------------------------
+
+(when (= dt-frame-start #t)
+  (+! dt-count 1)
+)
+
+(when (> dt-count 5)
+    ;-------------------------------------------YELLOW SHOT-----------------------------------------------------------
+    (when (and (= guard-grenade-option #t)(= double-tap-int 1)(!= guard-shot-int 1)(= guard-grenade-int 1))
+     (fire-guard-grenade *target* (-> *target* gun fire-point) (-> *target* gun fire-dir-out))
+    )
+    (when (and (!= guard-shot-int 1)(!= guard-grenade-int 1)(= double-tap-int 1))
+      (let ((s5-0 (-> *target* gun))
+        (gp-0 (new 'stack-no-clear 'projectile-init-by-other-params))
+        )
+    (set! (-> gp-0 ent) (-> *target* entity))
+    (set! (-> gp-0 options) (projectile-options account-for-target-velocity deal-damage proj-options-8000))
+    (set! (-> gp-0 pos quad) (-> s5-0 fire-point quad))
+    (set! (-> gp-0 notify-handle) (the-as handle #f))
+    (set! (-> gp-0 owner-handle) (the-as handle #f))
+    (set! (-> gp-0 ignore-handle) (process->handle (the-as process (send-event *target* 'get-vehicle))))
+    (let* ((v1-9 *game-info*)
+           (a0-9 (+ (-> v1-9 attack-id) 1))
+           )
+      (set! (-> v1-9 attack-id) a0-9)
+      (set! (-> gp-0 attack-id) a0-9)
+      )
+    (set! (-> gp-0 timeout) (seconds 4))
+    (vector-float*! (-> gp-0 vel) (-> s5-0 fire-dir-out) 819200.0)
+          (spawn-projectile gun-yellow-shot gp-0 (ppointer->process (-> s5-0 gun)) *default-dead-pool*)
+        )
+    )
+    (when (and (= double-tap-int 1)(!= guard-grenade-int 1)(= guard-shot-int 1))
+          (let ((s4-1 (new 'stack-no-clear 'projectile-init-by-other-params)))
+            (set! (-> s4-1 ent) (-> *target* entity))
+            (set! (-> s4-1 charge) 1.0)
+            (set! (-> s4-1 options) (projectile-options account-for-target-velocity proj-options-8000))
+            (set! (-> s4-1 pos quad) (-> *target* gun fire-point quad))
+            (set! (-> s4-1 vel quad) (-> *target* gun fire-dir-out quad))
+            (set! (-> s4-1 notify-handle) (the-as handle #f))
+            (set! (-> s4-1 owner-handle) (the-as handle #f))
+            (set! (-> s4-1 ignore-handle) (the-as handle #f))
+            (let* ((a0-13 *game-info*)
+            (a1-12 (+ (-> a0-13 attack-id) 1))
+            )
+        (set! (-> a0-13 attack-id) a1-12)
+        (set! (-> s4-1 attack-id) a1-12)
+        )
+      (set! (-> s4-1 timeout) (seconds 4))
+      (vector-normalize! (-> s4-1 vel) 819200.0)
+      (set! (-> *game-info* secrets) (game-secrets invulnerable))
+      (spawn-projectile guard-shot s4-1 (ppointer->process (-> *target* gun gun)) *default-dead-pool*)
+      (set! inv-frame-start-g #t)
+      (when (not (logtest? (-> *game-info* secrets) (game-secrets hero-mode)))
+    (set! (-> *game-info* secrets) (game-secrets invulnerable)) ;this also makes it so that theres no game secrets allowed when using predator/guard shot. I could be lazy and make it for all of them
+  )
+  (when (logtest? (-> *game-info* secrets) (game-secrets hero-mode))
+    (set! (-> *game-info* secrets) (game-secrets invulnerable hero-mode)) ;this also makes it so that theres no game secrets allowed when using predator/guard shot. I could be lazy and make it for all of them
+  )
+      )
+        )
+        ;---------------------------------------------RED SHOT---------------------------------------------------
+        (when (and (= guard-grenade-option #t)(!= guard-shot-int 2)(= double-tap-int 2)(= guard-grenade-int 2))
+     (fire-guard-grenade *target* (-> *target* gun fire-point) (-> *target* gun fire-dir-out))
+    )
+    (when (and (!= guard-shot-int 2)(!= guard-grenade-int 2)(= double-tap-int 2))
+      (rlet ((acc :class vf)
+         (vf0 :class vf)
+         (vf4 :class vf)
+         (vf5 :class vf)
+         (vf6 :class vf)
+         (vf7 :class vf)
+         )
+    (init-vf0-vector)
+    (let ((gp-0 (-> *target* gun)))
+      (let ((s5-0 (-> *part-id-table* 190)))
+        (get-field-spec-by-id s5-0 (sp-field-id spt-omega))
+        (let ((s5-1 (get-field-spec-by-id s5-0 (sp-field-id spt-rotate-y))))
+          (if s5-1
+              (set! (-> s5-1 initial-valuef) (y-angle (-> *target* control)))
+              )
+          )
+        )
+      (let ((t9-3 sp-launch-particles-var)
+            (a0-3 *sp-particle-system-2d*)
+            (a1-2 (-> *part-id-table* 190))
+            (a2-0 *launch-matrix*)
+            )
+        (set! (-> a2-0 trans quad) (-> gp-0 fire-point quad))
+        (t9-3 a0-3 a1-2 a2-0 (the-as sparticle-launch-state #f) (the-as sparticle-launch-control #f) 1.0)
+        )
+      (let ((s5-2 (new 'stack-no-clear 'vector)))
+        (let ((v1-10 (-> gp-0 fire-point)))
+          (let ((a0-4 (-> gp-0 fire-dir-out)))
+            (let ((a1-4 24576.0))
+              (.mov vf7 a1-4)
+              )
+            (.lvf vf5 (&-> a0-4 quad))
+            )
+          (.lvf vf4 (&-> v1-10 quad))
+          )
+        (.add.x.vf vf6 vf0 vf0 :mask #b1000)
+        (.mul.x.vf acc vf5 vf7 :mask #b111)
+        (.add.mul.w.vf vf6 vf4 vf0 acc :mask #b111)
+        (.svf (&-> s5-2 quad) vf6)
+        (set! (-> s5-2 w) 24576.0)
+        (when (and (sphere-in-view-frustum? (the-as sphere s5-2))
+                   (< 24576.0 (vector-vector-distance s5-2 (math-camera-pos)))
+                   )
+          (let ((s5-3 (process-spawn
+                        manipy
+                        :init manipy-init
+                        (-> gp-0 fire-point)
+                        (-> *target* entity)
+                        (art-group-get-by-name *level* "skel-gun-red-cone" (the-as (pointer uint32) #f))
+                        #f
+                        0
+                        :to *target*
+                        )
+                      )
+                )
+            (when s5-3
+              (send-event (ppointer->process s5-3) 'anim-mode 'play1)
+              (send-event (ppointer->process s5-3) 'anim "idle")
+              (forward-up->quaternion
+                (-> (the-as process-drawable (-> s5-3 0)) root quat)
+                (-> gp-0 fire-dir-out)
+                *up-vector*
+                )
+              (let ((f30-1 (vector-dot
+                             (-> gp-0 fire-dir-out)
+                             (vector-! (new 'stack-no-clear 'vector) (-> gp-0 fire-point) (math-camera-pos))
+                             )
+                           )
+                    (f0-5 (vector-vector-xz-distance (-> gp-0 fire-point) (math-camera-pos)))
+                    )
+                (when (and (< f30-1 0.0) (< f0-5 32768.0))
+                  (set! (-> (the-as process-drawable (-> s5-3 0)) root scale z)
+                        (lerp-scale 0.2 1.0 (fabs f0-5) 20480.0 32768.0)
+                        )
+                  (set! (-> (the-as process-drawable (-> s5-3 0)) root scale x)
+                        (-> (the-as process-drawable (-> s5-3 0)) root scale z)
+                        )
+                  )
+                )
+              )
+            )
+          )
+        )
+      (process-spawn gun-red-shot (-> gp-0 fire-point) (-> gp-0 fire-dir-out) :to (ppointer->process (-> gp-0 gun)))
+        )
+        )
+    )
+    (when (and (= double-tap-int 2)(!= guard-grenade-int 2)(= guard-shot-int 2))
+          (let ((s4-1 (new 'stack-no-clear 'projectile-init-by-other-params)))
+            (set! (-> s4-1 ent) (-> *target* entity))
+            (set! (-> s4-1 charge) 1.0)
+            (set! (-> s4-1 options) (projectile-options account-for-target-velocity proj-options-8000))
+            (set! (-> s4-1 pos quad) (-> *target* gun fire-point quad))
+            (set! (-> s4-1 vel quad) (-> *target* gun fire-dir-out quad))
+            (set! (-> s4-1 notify-handle) (the-as handle #f))
+            (set! (-> s4-1 owner-handle) (the-as handle #f))
+            (set! (-> s4-1 ignore-handle) (the-as handle #f))
+            (let* ((a0-13 *game-info*)
+            (a1-12 (+ (-> a0-13 attack-id) 1))
+            )
+        (set! (-> a0-13 attack-id) a1-12)
+        (set! (-> s4-1 attack-id) a1-12)
+        )
+      (set! (-> s4-1 timeout) (seconds 4))
+      (vector-normalize! (-> s4-1 vel) 819200.0)
+      (set! inv-frame-start-g #t)
+      (when (not (logtest? (-> *game-info* secrets) (game-secrets hero-mode)))
+    (set! (-> *game-info* secrets) (game-secrets invulnerable)) ;this also makes it so that theres no game secrets allowed when using predator/guard shot. I could be lazy and make it for all of them
+  )
+  (when (logtest? (-> *game-info* secrets) (game-secrets hero-mode))
+    (set! (-> *game-info* secrets) (game-secrets invulnerable hero-mode)) ;this also makes it so that theres no game secrets allowed when using predator/guard shot. I could be lazy and make it for all of them
+  )
+      (spawn-projectile guard-shot s4-1 (ppointer->process (-> *target* gun gun)) *default-dead-pool*)
+      )
+
+  )
+  ;--------------------------------------------BLUE SHOT--------------------------------------------------
+  (when (and (= guard-grenade-option #t)(!= guard-shot-int 3)(= double-tap-int 3)(= guard-grenade-int 3))
+     (fire-guard-grenade *target* (-> *target* gun fire-point) (-> *target* gun fire-dir-out))
+    )
+  (when (and (!= double-tap-int 3)(!= guard-grenade-int 3)(= guard-shot-int 3))
+    (let ((gp-0 (-> *target* gun))
+        (s4-0 (-> *target* gun fire-dir-out))
+        (s5-0 (new 'stack-no-clear 'vector))
+        )
+    (let ((s3-0 (new 'stack-no-clear 'quaternion)))
+      (quaternion-vector-angle! s3-0 s4-0 (* 182.04445 (rand-vu-float-range 0.0 360.0)))
+      (vector-rotate-y! s5-0 s4-0 (* 182.04445 (rand-vu-float-range 0.0 1.1)))
+      (vector-orient-by-quat! s5-0 s5-0 s3-0)
+      )
+    (let ((s4-1 (new 'stack-no-clear 'projectile-init-by-other-params)))
+      (set! (-> s4-1 ent) (-> *target* entity))
+      (set! (-> s4-1 charge) 1.0)
+      (set! (-> s4-1 options) (projectile-options account-for-target-velocity deal-damage proj-options-8000))
+      (set! (-> s4-1 pos quad) (-> gp-0 fire-point quad))
+      (set! (-> s4-1 vel quad) (-> s5-0 quad))
+      (set! (-> s4-1 notify-handle) (the-as handle #f))
+      (set! (-> s4-1 owner-handle) (the-as handle #f))
+      (set! (-> s4-1 ignore-handle) (process->handle (the-as process (send-event *target* 'get-vehicle))))
+      (let* ((v1-13 *game-info*)
+             (a0-15 (+ (-> v1-13 attack-id) 1))
+             )
+        (set! (-> v1-13 attack-id) a0-15)
+        (set! (-> s4-1 attack-id) a0-15)
+        )
+      (set! (-> s4-1 timeout) (seconds 4))
+      (spawn-projectile gun-blue-shot s4-1 (ppointer->process (-> gp-0 gun)) *default-dead-pool*)
+        )
+        )
+  )
+  (when (and (= double-tap-int 3) (!= guard-grenade-int 3)(= guard-shot-int 3))
+    (let ((s4-1 (new 'stack-no-clear 'projectile-init-by-other-params)))
+            (set! (-> s4-1 ent) (-> *target* entity))
+            (set! (-> s4-1 charge) 1.0)
+            (set! (-> s4-1 options) (projectile-options account-for-target-velocity proj-options-8000))
+            (set! (-> s4-1 pos quad) (-> *target* gun fire-point quad))
+            (set! (-> s4-1 vel quad) (-> *target* gun fire-dir-out quad))
+            (set! (-> s4-1 notify-handle) (the-as handle #f))
+            (set! (-> s4-1 owner-handle) (the-as handle #f))
+            (set! (-> s4-1 ignore-handle) (the-as handle #f))
+            (let* ((a0-13 *game-info*)
+            (a1-12 (+ (-> a0-13 attack-id) 1))
+            )
+        (set! (-> a0-13 attack-id) a1-12)
+        (set! (-> s4-1 attack-id) a1-12)
+        )
+      (set! (-> s4-1 timeout) (seconds 4))
+      (vector-normalize! (-> s4-1 vel) 819200.0)
+      (set! inv-frame-start-g #t)
+      (when (not (logtest? (-> *game-info* secrets) (game-secrets hero-mode)))
+    (set! (-> *game-info* secrets) (game-secrets invulnerable)) ;this also makes it so that theres no game secrets allowed when using predator/guard shot. I could be lazy and make it for all of them
+  )
+  (when (logtest? (-> *game-info* secrets) (game-secrets hero-mode))
+    (set! (-> *game-info* secrets) (game-secrets invulnerable hero-mode)) ;this also makes it so that theres no game secrets allowed when using predator/guard shot. I could be lazy and make it for all of them
+  )
+      (spawn-projectile guard-shot s4-1 (ppointer->process (-> *target* gun gun)) *default-dead-pool*)
+      )
+  )
+  
+  (set! dt-count 0)
+  (set! dt-frame-start #f)
+)
+
+;(fire-guard-grenade *target* (-> *target* gun fire-point) (-> *target* gun fire-dir-out))
+
+
+
+(when (and (= guard-shot-int 1)(= guard-grenade-int 1))
+  (set! error-hint #t)
+  (set! error-start #t)
+  (set! guard-shot-int 0)
+  (set! guard-grenade-int 0)
+)
+(when (and (= guard-shot-int 2)(= guard-grenade-int 2))
+  (set! error-hint #t)
+  (set! error-start #t)
+  (set! guard-shot-int 0)
+  (set! guard-grenade-int 0)
+)
+(when (and (= guard-shot-int 3)(= guard-grenade-int 3))
+  (set! error-hint #t)
+  (set! error-start #t)
+  (set! guard-shot-int 0)
+  (set! guard-grenade-int 0)
+)
+(when (and (= guard-shot-int 4)(= guard-grenade-int 4))
+  (set! error-hint #t)
+  (set! error-start #t)
+  (set! guard-shot-int 0)
+  (set! guard-grenade-int 0)
+)
+
+
+
+
+ ;This counts invulnerable frames for when jak fires a projectile that could damage him. This is for predator shot.
+(when (= inv-frame-start #t)
+  (+! inv-frame-counter 1)
+  (when (> inv-frame-counter 2)
+    (set! (-> *game-info* secrets) (game-secrets ))
+    (set! inv-frame-counter 0)
+    (set! inv-frame-start #f)
+  )
+)
+;same thing as above, but for guard shot
+(when (= inv-frame-start-g #t)
+  (+! inv-frame-counter-g 1)
+  (when (> inv-frame-counter-g 2)
+    (when (not (logtest? (-> *game-info* secrets) (game-secrets hero-mode)))
+      (set! (-> *game-info* secrets) (game-secrets ))
+      (when (and (not (logtest? (-> *game-info* secrets) (game-secrets hero-mode)))(= (-> *game-info* fuel) 10.0))
+      (set! (-> *game-info* secrets) (game-secrets hero-mode))
+    )
+    )
+    (when (logtest? (-> *game-info* secrets) (game-secrets hero-mode))
+      (set! (-> *game-info* secrets) (game-secrets hero-mode))
+    )
+    (set! inv-frame-counter-g 0)
+    (set! inv-frame-start-g #f)
+  )
+)
+
+
+
+    (when (= mod-all-yellow #t) ;these chunks will set all gun mods to one weapon. Be careful lol         EXAMPLE:         (set! mod-all-yellow #t)
+      (set! rapid-fire-option #t)
+      (set! rapid-fire-int 1)
+      (set! double-tap-option #t)
+      (set! double-tap-int 1)
+      (set! infinite-range-option #t)
+      (set! infinite-range-int 1)
+      (set! pm-extra-shot-option #t)
+      (set! pm-extra-shot-int 1)
+      (set! predator-shot-option #t)
+      (set! predator-shot-int 1)
+      (set! guard-shot-option #t)
+      (set! guard-shot-int 1)
+      (set! mod-all-off #f)
+      (set! mod-all-blue #f)
+      (set! mod-all-red #f)
+      (set! mod-all-dark #f)
+      (set! mod-all-yellow #f)
+      (set! mod-turning-off #t)
+    )
+    (when (= mod-all-blue #t)
+      (set! rapid-fire-option #t)
+      (set! rapid-fire-int 3)
+      (set! double-tap-option #t)
+      (set! double-tap-int 3)
+      (set! infinite-range-option #t)
+      (set! infinite-range-int 3)
+      (set! pm-extra-shot-option #t)
+      (set! pm-extra-shot-int 3)
+      (set! predator-shot-option #t)
+      (set! predator-shot-int 3)
+      (set! guard-shot-option #t)
+      (set! guard-shot-int 3)
+      (set! mod-all-off #f)
+      (set! mod-all-yellow #f)
+      (set! mod-all-red #f)
+      (set! mod-all-dark #f)
+      (set! mod-all-blue #f)
+      (set! mod-turning-off #t)
+    )
+    (when (= mod-all-red #t)
+      (set! rapid-fire-option #t)
+      (set! rapid-fire-int 2)
+      (set! double-tap-option #t)
+      (set! double-tap-int 2)
+      (set! infinite-range-option #t)
+      (set! infinite-range-int 2)
+      (set! pm-extra-shot-option #t)
+      (set! pm-extra-shot-int 2)
+      (set! predator-shot-option #t)
+      (set! predator-shot-int 2)
+      (set! guard-shot-option #t)
+      (set! guard-shot-int 2)
+      (set! mod-all-off #f)
+      (set! mod-all-blue #f)
+      (set! mod-all-yellow #f)
+      (set! mod-all-dark #f)
+      (set! mod-all-red #f)
+      (set! mod-turning-off #t)
+    )
+    (when (= mod-all-dark #t)
+      (set! rapid-fire-option #t)
+      (set! rapid-fire-int 4)
+      (set! double-tap-option #t)
+      (set! double-tap-int 4)
+      (set! infinite-range-option #t)
+      (set! infinite-range-int 4)
+      (set! pm-extra-shot-option #t)
+      (set! pm-extra-shot-int 4)
+      (set! predator-shot-option #t)
+      (set! predator-shot-int 4)
+      (set! guard-shot-option #t)
+      (set! guard-shot-int 4)
+      (set! mod-all-off #f)
+      (set! mod-all-blue #f)
+      (set! mod-all-red #f)
+      (set! mod-all-yellow #f)
+      (set! mod-all-dark #f)
+      (set! mod-turning-off #t)
+    )
+    (when (and (= mod-all-off #t) (= mod-turning-off #t))
+      (set! rapid-fire-option #f)
+      (set! rapid-fire-int 0)
+      (set! double-tap-option #f)
+      (set! double-tap-int 0)
+      (set! infinite-range-option #f)
+      (set! infinite-range-int 0)
+      (set! pm-extra-shot-option #f)
+      (set! pm-extra-shot-int 0)
+      (set! predator-shot-option #f)
+      (set! predator-shot-int 0)
+      (set! guard-shot-option #t)
+      (set! guard-shot-int 0)
+      (set! mod-all-blue #f)
+      (set! mod-all-red #f)
+      (set! mod-all-dark #f)
+      (set! mod-all-yellow #f)
+      (set! mod-turning-off #f)
+    )
+
+
+#|
+(let ((s4-0 (vector<-cspace! (new 'stack-no-clear 'vector) (-> this node-list data 14))))
+    (new 'stack-no-clear 'vector)
+    (let ((s5-0 (new 'stack-no-clear 'traj3d-params)))
+      (let ((s3-1 (vector-! (new 'stack-no-clear 'vector) (-> this target-pos-predict) s4-0)))
+        (set! (-> s3-1 y) 0.0)
+        (vector-rotate-around-y! s3-1 s3-1 (* 182.04445 (+ (if (zero? (rand-vu-int-count 2))
+                                                               90.0
+                                                               -90.0
+                                                               )
+                                                           (rand-vu-float-range -45.0 45.0)
+                                                           )
+                                              )
+                                 )
+        (if (logtest? (-> this draw status) (draw-control-status on-screen))
+            (vector-normalize! s3-1 (* 4096.0 (rand-vu-float-range 1.0 4.0)))
+            (vector-normalize! s3-1 (* 4096.0 (rand-vu-float-range 4.0 15.0)))
+            )
+        (set! (-> s5-0 dest quad)
+              (-> (vector+! (new 'stack-no-clear 'vector) s3-1 (-> this target-pos-predict)) quad)
+              )
+        )
+      (set! (-> s5-0 src quad) (-> s4-0 quad))
+      (set! (-> s5-0 initial-tilt) 8192.0)
+      (set! (-> s5-0 gravity) 184320.0)
+      (when (traj3d-calc-initial-velocity-using-tilt s5-0)
+        (let ((a1-9 (new 'stack-no-clear 'projectile-init-by-other-params)))
+          (set! (-> a1-9 ent) (-> *target* entity))
+          (set! (-> a1-9 charge) 1.0)
+          (set! (-> a1-9 options) (projectile-options account-for-target-velocity proj-options-8000))
+          (set! (-> a1-9 pos quad) (-> *target* gun fire-point quad))
+          (set! (-> a1-9 vel quad) (-> *target* gun fire-dir-out quad))
+          (set! (-> a1-9 notify-handle) (the-as handle #f))
+          (set! (-> a1-9 owner-handle) (the-as handle #f))
+          (set! (-> a1-9 ignore-handle) (process->handle (the-as process (send-event *target* 'get-vehicle))))
+          (let* ((v1-24 *game-info*)
+                 (a0-23 (+ (-> v1-24 attack-id) 1))
+                 )
+            (set! (-> v1-24 attack-id) a0-23)
+            (set! (-> a1-9 attack-id) a0-23)
+            )
+          (set! (-> a1-9 timeout) (seconds 4))
+          (spawn-projectile vehicle-grenade a1-9 (ppointer->process (-> *target* gun gun)) *default-dead-pool*)
+          )
+          )
+    )
+)
+    |#
+
+      (when (and (= test-option #t) (rand-vu-percent? 0.05)) ;debug projectile, you can enable to do absolutely nothing but have a chance to shoot a projectile every frame or so
+        (fire-guard-grenade *target* (-> *target* gun fire-point) (-> *target* gun fire-dir-out))
+        )
+
+
+
+
+;                    Peacemaker Ability
+;---------------------------------------------------------
+;(vector-rotate-y! svec-pos svec-pos 3.0) ;possible line for enlarging the radius of gun-point, possible fix for invulnerability turning off game secrets.
+      
+  (when (and (and (= peacemaker-ability #t)(rand-vu-percent? 0.000006)(> (-> *target* fact health) 0.0)))
+    (set! pm-shot-trigger #t)
+  )
+
+  (if (and (and (= peacemaker-ability #t)(rand-vu-percent? 0.25)(= pm-shot-trigger #t))) ;
+    (let ((svec-pos (new-stack-vector0))
+    (tpoz (-> *target* gun fire-point)))
+    (vector-rotate-y! svec-pos svec-pos 90.0)
+      (let ((s5-0 (-> *target* gun))
+        (gp-0 (new 'stack-no-clear 'projectile-init-by-other-params))
+        )
+        (vector-copy! (-> gp-0 pos) (vector+! svec-pos tpoz pm-offset-y))
+        (set! (-> gp-0 ent) (-> *target* entity))
+        (set! (-> gp-0 charge) (-> s5-0 fire-charge))
+        (set! (-> gp-0 options) (projectile-options))
+        (set! (-> gp-0 pos quad) (-> svec-pos quad))
+        (set! (-> gp-0 vel quad) (-> svec-pos quad))
+        (set! (-> gp-0 notify-handle) (the-as handle #f))
+        (set! (-> gp-0 owner-handle) (the-as handle #f))
+        (set! (-> gp-0 ignore-handle) (process->handle (the-as process (send-event *target* 'get-vehicle))))
+        (set! (-> gp-0 timeout) (seconds 4))
+        (let ((v0-1 (spawn-projectile gun-dark-shot gp-0 (ppointer->process (-> s5-0 gun)) *default-dead-pool*)))
+          (when v0-1
+            (set! (-> (the-as gun-dark-shot (-> v0-1 0)) track-target) (-> *target* gun track-target 0 handle))
+            (+! pm-shot-counter 1)
+            (when (= pm-shot-counter 30)
+              (set! pm-shot-trigger #f)
+              (set! pm-shot-counter 0)
+              (if (= gun-dark-present? #t)
+                (set! (-> *game-info* features) (game-feature gun board sidekick gun-dark gun-yellow gun-red gun-blue))
+                    )
+                  
+                )
+              )
+              v0-1
+            )
+          )
+        )
+    )
+      
+;                    Teleport to final boss
+;---------------------------------------------------------
+      ;INFO
+;tp-fb is the whole TeleportJakToFinalBoss Mod.
+;All of the variables set are for time-based events based off of frames |
+
+
+  (when (= start-frame-count #t)
+    (+! frame-count 1)
+  )
+  (when (and (and (and (= stored-cp? #f)(= tp-fb #t)(rand-vu-percent? 0.0009)(< (-> *target* fact health) 1)))) ;looks for teleport percentage upon death, if so, init new game.
+    (auto-save-user)
+    (set! start-frame-count #t)
+    (set! stored-cp? #t)
+    (set! new-game-s? #t)
+    (print "[MOD] Started tp-fb, Autosaving User...
+")
+  )
+  (when (and (and (= frame-count 10)(= new-game-s? #t)(= stored-cp? #t)))
+    (initialize! *game-info* 'game (the-as game-save #f) (the-as string #f))
+    (set! mission-grab-1 #t)
+    (set! mission-grab-2 #t)
+    (set! mission-grab-3 #t)
+    (set! mission-grab-4 #t)
+    (set! weapon-mod-toggle #f)
+    (set! rapid-fire-option #f)
+    (set! double-tap-option #f)
+    (set! guard-shot-option #f)
+    (set! predator-shot-option #f)
+    (print "[MOD] Set gun-mod parameters, Started NEW GAME.
+")
+  )
+(when (and (and (= frame-count 30)(= new-game-s? #t)(= stored-cp? #t)))
+    (send-event *target* 'continue (get-continue-by-name *game-info* "nestb-boss-pit"))
+    (print "[MOD] Set 'play for nestb-boss-pit")
+  )
+  (when (and (and (= frame-count 40)(= new-game-s? #t)(= stored-cp? #t))) ;starts after a little bit to avoid crashes, teleports jak to final boss spawnpoint and sets the game task
+    (play-task (game-task nest-boss) 'debug #f)
+    (set! pause-menu-blocked? #t)
+    (when (= hell-mode-option #t)
+      (set! (-> *game-info* fuel) 10.0)
+      (print "[MOD] Hellmode #t, good luck during this fight }:)
+")
+    )
+    (when (= hell-mode-option #f)
+      (set! (-> *game-info* fuel) 2.0)
+      (print "[MOD] Hellmode #f, tp-fb by itself is set!
+")
+    )
+    (set! start-frame-count #f)
+    (set! frame-count 0)
+    (set! going-back-tp #t)
+    (set! (-> *setting-control* user-current allow-pause) #f)
+    (print "[MOD] teleport success
+")
+    ;(set! (-> *game-info* features) (game-feature board board-training sidekick gun-yellow gun-red gun-blue gun-dark gun-upgrade-speed gun-upgrade-ammo gun-upgrade-damage pass-red pass-green pass-yellow darkjak-bomb0 darkjak-bomb1 darkjak-invinc))
+  )
+  
+  (when (and (= going-back-tp #t)(= tp-fb-win #f)(= start-frame-count #f)(= tp-fb #t)(< (-> *target* fact health) 1)) ;starts when jak dies again, while in the final boss stage
+    (set! start-frame-count #t)
+    (set! new-game-s? #f)
+    (print "[MOD] started frame-count for game-save load
+")
+  )
+  (when (and (= frame-count 60)(= tp-fb-win #f)(= going-back-tp #t)) ;loads the save you had after 60 frames of DEATH
+    (auto-save-command 'restore 0 0 *default-pool* #f)
+    (print "[MOD] crash?
+")
+  )
+  (when (and (= going-back-tp #t)(= tp-fb-win #f)(> frame-count 80)(= (pause-allowed?) #t)) ;resets everything back to original state AFTER the game-load, to avoid crashes.
+    (set! stored-cp? #f)
+    (set! going-back-tp #f)
+    (set! start-frame-count #f)
+    (set! pause-menu-blocked? #f)
+    (set! frame-count 0)
+    (when (= hell-mode-option #t)
+      (set! (-> *game-info* fuel) 10.0)
+    )
+    (when (= hell-mode-option #f)
+      (set! (-> *game-info* fuel) 2.0)
+    )
+    (set! weapon-mod-toggle #t)
+    (set! mission-grab-1 #f)
+    (set! mission-grab-2 #f)
+    (set! mission-grab-3 #f)
+    (set! mission-grab-4 #f)
+    (print "[MOD] You died!! POGGERS!!! (PLAQUE: I logged 42 hours on this particular problem alone ;-;)
+")
+  )
+
+  (when (and (= stored-cp? #t)(= tp-fb-win #t))   ;runs after winning the final boss fight in tp-fb
+    (set! start-frame-count #t)
+    (set! new-game-s? #f)
+    (when (and (= stored-cp? #t)(= frame-count 1))
+      (auto-save-command 'restore 0 0 *default-pool* #f)
+    )
+    (when (and (= stored-cp? #t)(= frame-count 120)) ;gives you corresponding modifiers from your save, then adding the legendary depending on whether or not in hell-mode.
+      (set! stored-cp? #f)
+      (set! pause-menu-blocked? #f)
+      (set! start-frame-count #f)
+      (set! frame-count 0)
+      (set! going-back-tp #f)
+      (set! weapon-mod-toggle #t)
+      (set! mission-grab-1 #f)
+      (set! mission-grab-2 #f)
+      (set! mission-grab-3 #f)
+      (set! mission-grab-4 #f)
+      (set! auto-save-delayed? #t)
+      (when (= hell-mode-option #f)
+        (print "[MOD] | LEGENDARY | You beat tp-fb on normal and recieved Weapon Mod pm-extra-shot! tp-fb is now disabled, rerolling modifier.
+")
+        (set! (-> *game-info* buzzer-total) 1.0)
+        (+! (-> *game-info* gem) 30.0)
+        (set! mod-pick #t)
+      )
+      (when (= hell-mode-option #t)
+        (set! (-> *game-info* fuel) 10.0)
+        (+! (-> *game-info* gem) 30.0)
+        (print "[MOD] | LEGENDARY | You beat tp-fb in hero mode! Congratulations!! You recieved Weapon Mod random-shot! tp-fb is now disabled.
+")
+        (set! hell-mode-option #f)
+        (set! (-> *game-info* buzzer-total) 2.0)
+      )
+    )
+  )
+
+
+(when (= pause-menu-blocked? #t)
+  (set-master-mode 'game)
+)
+
+(when (= auto-save-delayed? #t)
+  (+! auto-save-frame 1)
+  (when (= auto-save-frame 60)
+    (auto-save-user)
+    (set! auto-save-frame 0)
+    (set! auto-save-delayed? #f)
+  )
+)
+
+
+
+;trip-metalheads function
+;--------------------------------------------
+
+  (when (and (or (cpad-pressed? 0 l1)(cpad-pressed? 0 r1)(cpad-pressed? 0 x)(cpad-pressed? 0 square)(cpad-pressed? 0 circle))(rand-vu-percent? 0.008)(= trip-metalheads #t))
+    (send-event *target* 'loading)
+    (set! trip-start #t)
+    (when (and (send-event *target* 'loading)(= trip-cooldown 0))
+      (+! (-> *game-info* gem) 10.0)
+      (set! trip-start #f)
+      (set! trip-cooldown 8000)
+    )
+  )
+
+  (when (= trip-start #t)
+    (when (> trip-cooldown 0)
+      (-! trip-cooldown 1)
+    )
+  )
+
+
+
+;target-explode
+
+(when (= target-explode-start #t)
+  (sound-play "explosion")
+  (send-event *target* 'draw #f)
+  (send-event *target* 'attack-invinc #f (static-attack-info ((id (new-attack-id)) (mode 'big-explosion))))
+  (set! target-explode-start #f)
+)
+
+(when (= dark-jacked? #t)
+    (when (= target-explode #f)
+          (set! (-> (the-as fact-info-target (-> *target* fact)) darkjak-effect-time) (seconds 20))
+        )
+    (when (= target-explode #t)
+          (set! (-> (the-as fact-info-target (-> *target* fact)) darkjak-effect-time) (seconds 60))
+        )
+    (set! dark-jacked? #f)
+)
+
+
+
+
+
+;start mushroom-movies
+
+
+
+(when *scene-player*
+    (when (and (= mushroom-movies-start #f)(rand-vu-percent? 0.03)(= mushroom-movies #t)
+      (set! mushroom-movies-start #t)
+      (set! mushroom-var (rand-vu-int-range 1 6))
+    )
+  )
+)
+
+
+
+
+
+;(logior! (cpad-pressed 0) (pad-buttons l1))
+;(logior! (cpad-pressed 0) (pad-buttons r1))
+
+
+
+
+
+
+
+
+
+
+;city-guard-turret spawn params
+;----------------------------------------------------------------
+
+  (when (and (not (game-task city-power))(= (-> (level-get-target-inside *level*) name) 'ctysluma) (not spawned-turret-hideout?))
+    (set! spawned-turret-hideout? #t)
+    (print "HIDEOUT TURRET SET TO TRUE")
+    (process-spawn cty-guard-turret (new 'static 'vector :x (meters 1121.6390) :y (meters 8) :z (meters 14.6835) :w 1.0))
+  )
+  (when (and (!= (-> (level-get-target-inside *level*) name) 'ctysluma) spawned-turret-hideout? #t)
+    (set! spawned-turret-hideout? #f) 
+    (print "HIDEOUT TURRET SET TO FALSE")
+  )
+  (when (and (not (game-task city-power))(= (-> (level-get-target-inside *level*) name) 'ctyport) (not spawned-turrets-port?))
+    (set! spawned-turrets-port? #t)
+    (process-spawn cty-guard-turret (new 'static 'vector :x (meters -98.2844) :y (meters 7.9) :z (meters 1381.2529) :w 1.0))
+    (process-spawn cty-guard-turret (new 'static 'vector :x (meters -13.494) :y (meters 7.9) :z (meters 1324.7672) :w 1.0))
+    (print "PORT TURRETS SET TO TRUE")
+  )
+    (when (and (!= (-> (level-get-target-inside *level*) name) 'ctyport) spawned-turrets-port? #t)
+    (set! spawned-turrets-port? #f) 
+    (print "PORT TURRETS SET TO FALSE")
+  )
+  (when (and (not (game-task city-power))(= (-> (level-get-target-inside *level*) name) 'ctypal) (not spawned-turrets-pal?))
+    (set! spawned-turrets-pal? #t)
+    (print "PALACE TURRETS SET TO TRUE")
+    (process-spawn cty-guard-turret (new 'static 'vector :x (meters 191.8888) :y (meters 7.9) :z (meters 888.5129) :w 1.0))
+    (process-spawn cty-guard-turret (new 'static 'vector :x (meters 375.8006) :y (meters 16) :z (meters 696.1273) :w 1.0))
+  )
+    (when (and (!= (-> (level-get-target-inside *level*) name) 'ctypal) spawned-turrets-pal? #t)
+    (set! spawned-turrets-pal? #f) 
+    (print "PALACE TURRETS SET TO FALSE")
+  )
+    (when (and (not (game-task city-power))(= (-> (level-get-target-inside *level*) name) 'ctymarka) (not spawned-turret-market?))
+    (set! spawned-turret-market? #t)
+    (print "MARKET TURRET SET TO TRUE")
+    (process-spawn cty-guard-turret (new 'static 'vector :x (meters -319.4657) :y (meters 7.9) :z (meters 704.0290) :w 1.0))
+  )
+    (when (and (!= (-> (level-get-target-inside *level*) name) 'ctymarka) spawned-turret-market? #t)
+    (set! spawned-turret-market? #f) 
+    (print "MARKET TURRET SET TO FALSE")
+  )
+      (when (and (not (game-task city-power))(= (-> (level-get-target-inside *level*) name) 'ctyinda) (not spawned-turret-vin?))
+    (set! spawned-turret-vin? #t)
+    (print "VIN TURRET SET TO TRUE")
+    (process-spawn cty-guard-turret (new 'static 'vector :x (meters 778.7822) :y (meters 7.9) :z (meters 1100.5985) :w 1.0))
+  )
+    (when (and (!= (-> (level-get-target-inside *level*) name) 'ctyinda) spawned-turret-vin? #t)
+    (set! spawned-turret-vin? #f) 
+    (print "VIN TURRET SET TO FALSE")
+  )
+
+
+
+;this whole block creates the hint to pull up selection for weapon mods
+(when (and *target* (not *scene-player*))
+
+  ;popup text for pressing r3
+  (when (and (= (-> (level-get-target-inside *level*) name) 'prison)(cpad-pressed? 0 r3)(= weapon-mod-toggle #f)(= weapon-toggle-false? #f)(not (task-node-closed? (game-task-node city-help-kid-introduction)))) ;is new game initialized?
+    (set! menu2-wait #t)
+  )
+
+  ;popup selection upon new game for weapon-mod enable
+  (when (and (= (-> (level-get-target-inside *level*) name) 'prison)(= hint-printed? #f)(= weapon-mod-toggle #f)(= weapon-toggle-false? #f)(not (task-node-closed? (game-task-node city-help-kid-introduction)))) ;is new game initialized?
+    (set! popup-hint #t)
+    (set! hint-start #t)
+  )
+  ;waits to set menu on
+  (when (= menu2-wait #t)
+    (+! menu2-frame 1)
+    (when (= menu2-frame 150)
+      (set! pause-menu-blocked? #t)
+      (set! camera-locked #t)
+    )
+    (when (= menu2-frame 160)
+      (set! in-menu-2 #t)
+      (set! menu2-frame 0)
+      (set! menu2-wait #f)
+    )
+  )
+  ;popup menu duration
+  (when (= hint-start #t)
+    (+! hint-numb 1)
+    (when (or (= hint-numb 3000)(cpad-pressed? 0 r3))
+      (set! popup-hint #f)
+      (set! hint-start #f)
+      (set! hint-numb 0)
+      (set! hint-printed? #t)
+    )
+  )
+)
+
+;and this whole block creates the other hint to pull up your inventory
+(when (and *target* (not *scene-player*))
+
+  ;popup text for pressing r3
+  (when (and (= (-> (level-get-target-inside *level*) name) 'prison)(= hint-printed?2 #f)(= weapon-mod-toggle #t)(= weapon-toggle-false? #t)(not (task-node-closed? (game-task-node city-help-kid-introduction)))) ;is new game initialized?
+    (set! hint-start2 #t)
+  )
+
+  ;popup menu duration
+  (when (= hint-start2 #t)
+    (+! hint-numb2 1)
+    (when (or (= hint-numb2 500)(cpad-pressed? 0 r3))
+      (set! popup-hint2 #f)
+      (set! hint-start2 #f)
+      (set! hint-numb2 0)
+      (set! hint-printed?2 #t)
+    )
+  )
+)
+(when (= error-start #t)
+  (+! error-frame 1)
+  (when (= error-frame 200)
+    (set! error-frame 0)
+    (set! error-start #f)
+    (set! error-hint #f)
+  )
+)
+
+;controls
+(when (and (= in-menu-2 #t)(cpad-pressed? 0 right))
+  (set! yes-no #f)
+)
+(when (and (= in-menu-2 #t)(cpad-pressed? 0 left))
+  (set! yes-no #t)
+)
+
+(when (and (= in-menu-2 #t)(= yes-no #t)(cpad-pressed? 0 x))
+  (set! weapon-mod-toggle #t)
+  (set! weapon-toggle-false? #t)
+  (set! in-menu-2 #f)
+  (set! pause-menu-blocked? #f)
+  (set! camera-locked #f)
+  (remove-setting-by-arg0 *setting-control* 'mode-name)
+  (send-event *target* 'draw #t)
+  (process-release? *target*)
+  (initialize! *game-info* 'dead (the-as game-save #f) (the-as string #f))
+)
+(when (and (= in-menu-2 #t)(= yes-no #f)(cpad-pressed? 0 x))
+  (set! weapon-mod-toggle #f)
+  (set! weapon-toggle-false? #t)
+  (set! in-menu-2 #f)
+  (set! pause-menu-blocked? #f)
+  (set! camera-locked #f)
+  (remove-setting-by-arg0 *setting-control* 'mode-name)
+  (send-event *target* 'draw #t)
+  (process-release? *target*)
+  (initialize! *game-info* 'dead (the-as game-save #f) (the-as string #f))
+)
+
+
+(when (and (= hint-printed? #f)(= weapon-mod-toggle #f)(= popup-hint #t)) ;draws the popup hint
+    (clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+    (format *temp-string* "<COLOR_WHITE>INFO ~%Press <COLOR_RED>R3<COLOR_WHITE> to view Mod Information"
+    )
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 200 0.0 (font-color default) (font-flags shadow kerning large))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+)
+
+(when (and (= hint-printed?2 #f)(= weapon-mod-toggle #f)(= popup-hint2 #t)) ;draws the popup hint
+    (clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+    (format *temp-string* "<COLOR_WHITE>INFO ~%Press <COLOR_RED>R3<COLOR_WHITE> to view inventory"
+    )
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 200 0.0 (font-color default) (font-flags shadow kerning large))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+)
+
+(when (= error-hint #t) ;draws the error hint
+    (clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+    (format *temp-string* "<COLOR_RED>OOPS! <COLOR_WHITE>cannot apply two guard shot types to one gun"
+    )
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 200 0.0 (font-color default) (font-flags shadow kerning large))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+)
+
+(when (and (= in-menu-2 #t)(= yes-no #t)) ;draws the yes function being green
+  (clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+    (format *temp-string* "
+    <COLOR_WHITE>Welcome to HeroMode+!
+    ~%<COLOR_BLUE>Made by Kraken
+    ~%
+    ~%
+    <COLOR_WHITE>~%Everything in the game is out to get you.
+    ~%You can gain an edge by enabling weapon mods for you to find and acquire,
+    ~%but in doing so, you also enable a random modifier.
+    ~%These can last the whole game.
+    ~%All modifiers have a give and a take
+    ~%And Hero-Mode enables all of these modifiers.
+    ~%<COLOR_YELLOW>Would you like to enable Weapon Mods?
+    ~%(hint: this option is only asked once per save)
+    ~%<COLOR_GREEN>Yes<COLOR_RED> No"
+    )
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 245 75 0.0 (font-color default) (font-flags middle shadow kerning large))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+)
+(when (and (= in-menu-2 #t)(= yes-no #f)) ;draws the no function being green
+  (clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+    (format *temp-string* "
+    <COLOR_WHITE>Welcome to HeroMode+!
+    ~%<COLOR_BLUE>Made by Kraken
+    ~%
+    ~%
+    <COLOR_WHITE>~%Everything in the game is out to get you.
+    ~%You can gain an edge by enabling weapon mods for you to find and acquire,
+    ~%but in doing so, you also enable a random modifier.
+    ~%These can last the whole game.
+    ~%All modifiers have a give and a take
+    ~%And Hero-Mode enables all of these modifiers.
+    ~%<COLOR_YELLOW>Would you like to enable Weapon Mods?
+    ~%(hint: this option is only asked once per save)
+    ~%<COLOR_RED>Yes<COLOR_GREEN> No"
+    )
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 245 75 0.0 (font-color default) (font-flags middle shadow kerning large))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+)
+
+
+;hud-menu 
+;---------------------------------------------------------
+
+(when *target*
+(when (= menu-activate #t)
+  (when (and (= menu-pressed? #f)(= in-menu #t))
+    (print "Select your gun mod:
+  ")
+  )
+
+
+;menu-update
+;---------------------------------------Rapid Fire Main-----------------------------------------------------------
+  (when (and (= menu-pressed? #f)(= rapid-fire-option #t)(= in-menu #t)(= menu-slot 0)(= sub-menu-slot 0))
+    (set! gun-mod-string "Rapid Fire")
+    (set! mod-string "Rapid Fire")
+  )
+    (when (and (= menu-pressed? #f)(= rapid-fire-option #f)(= in-menu #t)(= menu-slot 0)(= sub-menu-slot 0))
+    (set! gun-mod-string "??????????????")
+    (set! mod-string "??????????????")
+
+    )
+  ;---------------------------------------Rapid Fire sub-----------------------------------------------------------
+    (when (and (= menu-pressed? #t)(= weapon-id 1)(= rapid-fire-option #t)(= in-menu #t)(= sub-menu-slot 0))
+    (print "Rapid Fire!
+")
+    (print "Red
+")
+    (set! gun-string "Red Gun")
+    
+(when (cpad-pressed? 0 square)
+    (set! rapid-fire-int 1)
+    (print "Set! red
+")
+)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 1)(= rapid-fire-option #t)(= in-menu #t)(= sub-menu-slot 1))
+    (print "Rapid Fire!
+")
+    (print "Yellow
+")
+      (set! gun-string "Yellow Gun")
+(when (cpad-pressed? 0 square)
+    (set! rapid-fire-int 2)
+    (print "Set! yellow
+")
+)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 1)(= rapid-fire-option #t)(= in-menu #t)(= sub-menu-slot 2))
+    (print "Rapid Fire!
+")
+    (print "Blue
+")
+      (set! gun-string "Blue Gun")
+(when (cpad-pressed? 0 square)
+    (set! rapid-fire-int 3)
+    (print "Set! blue
+")
+)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 1)(= rapid-fire-option #t)(= in-menu #t)(= sub-menu-slot 3))
+    (print "Rapid Fire!
+")
+(print "Dark
+")
+     (set! gun-string "Peacemaker Gun")
+(when (cpad-pressed? 0 square)
+    (set! rapid-fire-int 4)
+)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 1)(= rapid-fire-option #t)(= in-menu #t)(= sub-menu-slot 4))
+    (print "Rapid Fire!
+")
+    (print "None
+")
+          (set! gun-string "None")
+            (when (cpad-pressed? 0 square)
+                (set! rapid-fire-int 0)
+            )
+    )
+
+;---------------------------------------Double Tap Main-----------------------------------------------------------
+  (when (and (= menu-pressed? #f)(= double-tap-option #t)(= in-menu #t)(= menu-slot 1)(= sub-menu-slot 0))
+    (set! gun-mod-string "Chanced Double Tap")
+    (set! mod-string "Chanced Double Tap")
+  )
+    (when (and (= menu-pressed? #f)(= double-tap-option #f)(= in-menu #t)(= menu-slot 1)(= sub-menu-slot 0))
+    (set! gun-mod-string "??????????????")
+    (set! mod-string "??????????????")
+  )
+
+
+
+  ;---------------------------------------Double Tap sub-----------------------------------------------------------
+    (when (and (= menu-pressed? #t)(= weapon-id 2)(= double-tap-option #t)(= in-menu #t)(= sub-menu-slot 0))
+    (print "Double Tap!
+")
+    (print "Red
+")
+    (set! gun-string "Red Gun")
+(when (cpad-pressed? 0 square)
+    (set! double-tap-int 2)
+    (print "Set! red
+")
+)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 2)(= double-tap-option #t)(= in-menu #t)(= sub-menu-slot 1))
+    (print "Double Tap!
+")
+    (print "Yellow
+")
+      (set! gun-string "Yellow Gun")
+(when (cpad-pressed? 0 square)
+    (set! double-tap-int 1)
+    (print "Set! yellow
+")
+)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 2)(= double-tap-option #t)(= in-menu #t)(= sub-menu-slot 2))
+    (print "Double Tap!
+")
+    (print "Blue
+")
+(set! gun-string "Blue Gun")
+(when (cpad-pressed? 0 square)
+    (set! double-tap-int 3)
+    (print "Set! blue
+")
+)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 2)(= double-tap-option #t)(= in-menu #t)(= sub-menu-slot 3))
+    (print "Double Tap!
+")
+    (print "Dark
+")
+(set! gun-string "Peacemaker Gun")
+(when (cpad-pressed? 0 square)
+    (set! double-tap-int 4)
+    (print "Set! dark
+")
+)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 2)(= double-tap-option #t)(= in-menu #t)(= sub-menu-slot 4))
+    (print "Double Tap!
+")
+    (print "None
+")
+          (set! gun-string "None")
+(when (cpad-pressed? 0 square)
+    (set! double-tap-int 0)
+)
+    )
+    
+;---------------------------------------Guard Shot Main-----------------------------------------------------------
+  (when (and (= menu-pressed? #f)(= guard-shot-option #t)(= in-menu #t)(= menu-slot 2)(= sub-menu-slot 0))
+    (set! gun-mod-string "Guard Shot")
+    (set! mod-string "Guard Shot")
+  )
+    (when (and (= menu-pressed? #f)(= guard-shot-option #f)(= in-menu #t)(= menu-slot 2)(= sub-menu-slot 0))
+    (set! gun-mod-string "??????????????")
+    (set! mod-string "??????????????")
+  )
+
+
+
+  ;---------------------------------------Guard Shot sub-----------------------------------------------------------
+    (when (and (= menu-pressed? #t)(= weapon-id 3)(= guard-shot-option #t)(= in-menu #t)(= sub-menu-slot 0))
+    (print "Guard Shot!
+")
+    (print "Red
+")
+(set! gun-string "Red Gun")
+(when (cpad-pressed? 0 square)
+      (set! guard-shot-int 2)
+      (print "Set! red
+")
+)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 3)(= guard-shot-option #t)(= in-menu #t)(= sub-menu-slot 1))
+    (print "Guard Shot!
+")
+    (print "Yellow
+")
+   (set! gun-string "Yellow Gun")
+(when (cpad-pressed? 0 square)
+      (set! guard-shot-int 1)
+      (print "Set! yellow
+")
+)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 3)(= guard-shot-option #t)(= in-menu #t)(= sub-menu-slot 2))
+    (print "Guard Shot!
+")
+    (print "Blue
+")
+(set! gun-string "Blue Gun")
+(when (cpad-pressed? 0 square)
+      (set! guard-shot-int 3)
+      (print "Set! blue
+")
+)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 3)(= guard-shot-option #t)(= in-menu #t)(= sub-menu-slot 3))
+    (print "Guard Shot!
+")
+      (print "Dark
+")
+    (set! gun-string "Peacemaker Gun")
+(when (cpad-pressed? 0 square)
+      (set! guard-shot-int 4)
+      (print "Set! dark
+")
+)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 3)(= guard-shot-option #t)(= in-menu #t)(= sub-menu-slot 4))
+    (print "Guard Shot!
+")
+    (print "None
+")
+          (set! gun-string "None")
+(when (cpad-pressed? 0 square)
+      (set! guard-shot-int 0)
+)
+    )
+    
+    ;---------------------------------------Guard Grenade Main-----------------------------------------------------------
+  (when (and (= menu-pressed? #f)(= guard-grenade-option #t)(= in-menu #t)(= menu-slot 3)(= sub-menu-slot 0))
+    (set! gun-mod-string "Boom Stick!")
+    (set! mod-string "Boom Stick!")
+  )
+    (when (and (= menu-pressed? #f)(= guard-grenade-option #f)(= in-menu #t)(= menu-slot 3)(= sub-menu-slot 0))
+    (set! gun-mod-string "??????????????")
+    (set! mod-string "??????????????")
+  )
+
+
+
+  ;---------------------------------------Guard Grenade sub-----------------------------------------------------------
+    (when (and (= menu-pressed? #t)(= weapon-id 4)(= guard-grenade-option #t)(= in-menu #t)(= sub-menu-slot 0))
+      (set! gun-string "Red Gun")
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 4)(= guard-grenade-option #t)(= in-menu #t)(= sub-menu-slot 1))
+      (set! gun-string "Yellow Gun")
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 4)(= guard-grenade-option #t)(= in-menu #t)(= sub-menu-slot 2))
+      (set! gun-string "Blue Gun")
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 4)(= guard-grenade-option #t)(= in-menu #t)(= sub-menu-slot 3))
+          (set! gun-string "Peacemaker Gun")
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 4)(= guard-grenade-option #t)(= in-menu #t)(= sub-menu-slot 4))
+          (set! gun-string "None")
+    )
+
+
+
+
+
+    ;---------------------------------------Legendary Random Shot Main-----------------------------------------------------------
+  (when (and (= menu-pressed? #f)(= leg-random-shot #t)(= in-menu #t)(= menu-slot 4)(= sub-menu-slot 0))
+    (set! gun-mod-string "| LEGENDARY Random Shot!")
+    (set! mod-string "| LEGENDARY Random Shot!")
+  )
+    (when (and (= menu-pressed? #f)(= leg-random-shot #f)(= in-menu #t)(= menu-slot 4)(= sub-menu-slot 0))
+    (set! gun-mod-string "??????????????")
+    (set! mod-string "??????????????")
+  )
+
+
+
+  ;---------------------------------------Legendary Random Shot sub-----------------------------------------------------------
+    (when (and (= menu-pressed? #t)(= weapon-id 5)(= leg-random-shot #t)(= in-menu #t)(= sub-menu-slot 0))
+    (print "LEGENDARY! Random shot!
+")
+    (print "Red
+")
+      (set! gun-string "Red Gun")
+(when (cpad-pressed? 0 square)
+    (set! leg-random-int 2)
+    (print "Set! red
+")
+)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 5)(= leg-random-shot #t)(= in-menu #t)(= sub-menu-slot 1))
+    (print "LEGENDARY! Random shot!
+")
+    (print "Yellow
+")
+      (set! gun-string "Yellow Gun")
+(when (cpad-pressed? 0 square)
+    (set! leg-random-int 1)
+    (print "Set! yellow
+")
+)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 5)(= leg-random-shot #t)(= in-menu #t)(= sub-menu-slot 2))
+    (print "| LEGENDARY! Random shot!
+")
+    (print "Blue
+")
+      (set! gun-string "Blue Gun")
+(when (cpad-pressed? 0 square)
+    (set! leg-random-int 3)
+    (print "Set! blue
+")
+)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 5)(= leg-random-shot #t)(= in-menu #t)(= sub-menu-slot 3))
+    (print "| LEGENDARY | Random shot!
+")
+    (print "Dark
+")
+    (set! gun-string "Peacemaker Gun")
+(when (cpad-pressed? 0 square)
+    (set! leg-random-int 4)
+    (print "Set! dark
+")
+)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 5)(= leg-random-shot #t)(= in-menu #t)(= sub-menu-slot 4))
+    (print "| LEGENDARY | Random shot!
+")
+    (print "None
+")
+          (set! gun-string "None")
+(when (cpad-pressed? 0 square)
+    (set! leg-random-int 0)
+)
+    )
+
+  ;---------------------------------------Legendary pm-extra-shot-----------------------------------------------------------
+
+  (when (and (= menu-pressed? #f)(= pm-extra-shot-option #t)(= in-menu #t)(= menu-slot 5)(= sub-menu-slot 0))
+    (set! gun-mod-string "| LEGENDARY | Chanced Peacemaker Shot!")
+    (set! mod-string "| LEGENDARY | Chanced Peacemaker Shot!")
+  )
+    (when (and (= menu-pressed? #f)(= pm-extra-shot-option #f)(= in-menu #t)(= menu-slot 5)(= sub-menu-slot 0))
+    (set! gun-mod-string "??????????????")
+    (set! mod-string "??????????????")
+  )
+
+
+
+  ;---------------------------------------Legendary pm-extra-shot sub-----------------------------------------------------------
+    (when (and (= menu-pressed? #t)(= weapon-id 6)(= pm-extra-shot-option #t)(= in-menu #t)(= sub-menu-slot 0))
+    (print "| LEGENDARY | Chanced Peacemaker Shot!
+")
+    (print "Red
+")
+      (set! gun-string "Red Gun")
+(when (cpad-pressed? 0 square)
+    (set! pm-extra-shot-int 2)
+    (print "Set! red
+")
+)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 6)(= pm-extra-shot-option #t)(= in-menu #t)(= sub-menu-slot 1))
+    (print "| LEGENDARY | Chanced Peacemaker Shot!
+")
+    (print "Yellow
+")
+      (set! gun-string "Yellow Gun")
+    (when (cpad-pressed? 0 square)
+    (set! pm-extra-shot-int 1)
+    (print "Set! yellow
+")
+)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 6)(= pm-extra-shot-option #t)(= in-menu #t)(= sub-menu-slot 2))
+    (print "| LEGENDARY | Chanced Peacemaker Shot!
+")
+    (print "Blue
+")
+      (set! gun-string "Blue Gun")
+   (when (cpad-pressed? 0 square)
+    (set! pm-extra-shot-int 3)
+    (print "Set! blue
+")
+)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 6)(= pm-extra-shot-option #t)(= in-menu #t)(= sub-menu-slot 3))
+    (print "| LEGENDARY | Chanced Peacemaker Shot!
+")
+    (print "Dark
+")
+          (set! gun-string "Peacemaker Gun")
+    (when (cpad-pressed? 0 square)
+    (set! pm-extra-shot-int 4)
+    (print "Set! dark
+")
+)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 6)(= pm-extra-shot-option #t)(= in-menu #t)(= sub-menu-slot 4))
+    (print "| LEGENDARY | Chanced Peacemaker Shot!
+")
+    (print "None
+")
+          (set! gun-string "None")
+    (when (cpad-pressed? 0 square)
+    (set! pm-extra-shot-int 0)
+)
+    )
+      ;---------------------------------------mag bag main-----------------------------------------------------------
+
+  (when (and (= menu-pressed? #f)(= mag-bag-option #t)(= in-menu #t)(= menu-slot 6)(= sub-menu-slot 0))
+    (set! gun-mod-string "Mag Bag!")
+    (set! mod-string "Mag Bag!")
+  )
+    (when (and (= menu-pressed? #f)(= mag-bag-option #f)(= in-menu #t)(= menu-slot 6)(= sub-menu-slot 0))
+    (set! gun-mod-string "??????????????")
+    (set! mod-string "??????????????")
+  )
+
+
+      ;---------------------------------------mag bag sub-----------------------------------------------------------
+    (when (and (= menu-pressed? #t)(= weapon-id 7)(= mag-bag-option #t)(= in-menu #t)(= sub-menu-slot 0))
+      (set! gun-string "Red Gun")
+(when (cpad-pressed? 0 square)
+    (set! mag-bag-int 2)
+)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 7)(= mag-bag-option #t)(= in-menu #t)(= sub-menu-slot 1))
+      (set! gun-string "Yellow Gun")
+    (when (cpad-pressed? 0 square)
+    (set! mag-bag-int 1)
+)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 7)(= mag-bag-option #t)(= in-menu #t)(= sub-menu-slot 2))
+      (set! gun-string "Blue Gun")
+   (when (cpad-pressed? 0 square)
+    (set! mag-bag-int 3)
+)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 7)(= mag-bag-option #t)(= in-menu #t)(= sub-menu-slot 3))
+          (set! gun-string "Peacemaker Gun")
+    (when (cpad-pressed? 0 square)
+    (set! mag-bag-int 4)
+)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 7)(= mag-bag-option #t)(= in-menu #t)(= sub-menu-slot 4))
+    (print "| LEGENDARY | Chanced Peacemaker Shot!
+")
+    (print "None
+")
+          (set! gun-string "None")
+    (when (cpad-pressed? 0 square)
+    (set! mag-bag-int 0)
+)
+    )
+    
+  ;---------------------------------------Missing Gun Mod-----------------------------------------------------------
+  (when (and (= menu-pressed? #t)(= weapon-id 99)(= in-menu #t)(= sub-menu-slot 0))
+    (set! gun-mod-string "You have not unlocked this weapon mod yet")
+    (set! mod-string "You have not unlocked this weapon mod yet")
+  (set! menu-pressed? #f)
+    (set! menu-slot 0)
+    (set! sub-menu-slot 0)
+    (set! weapon-id 0)
+    (set! menu-activate #t)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 99)(= in-menu #t)(= sub-menu-slot 1))
+    (print "You have not unlocked this weapon mod.
+")
+(set! gun-mod-string "You have not unlocked this weapon mod yet")
+    (set! mod-string "You have not unlocked this weapon mod yet")
+  (set! menu-pressed? #f)
+    (set! menu-slot 0)
+    (set! sub-menu-slot 0)
+    (set! weapon-id 0)
+    (set! menu-activate #t)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 99)(= in-menu #t)(= sub-menu-slot 2))
+    (print "You have not unlocked this weapon mod.
+")
+(set! gun-mod-string "You have not unlocked this weapon mod yet")
+    (set! mod-string "You have not unlocked this weapon mod yet")
+  (set! menu-pressed? #f)
+    (set! menu-slot 0)
+    (set! sub-menu-slot 0)
+    (set! weapon-id 0)
+    (set! menu-activate #t)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 99)(= in-menu #t)(= sub-menu-slot 3))
+    (print "You have not unlocked this weapon mod.
+")
+(set! gun-mod-string "You have not unlocked this weapon mod yet")
+    (set! mod-string "You have not unlocked this weapon mod yet")
+  (set! menu-pressed? #f)
+    (set! menu-slot 0)
+    (set! sub-menu-slot 0)
+    (set! weapon-id 0)
+    (set! menu-activate #t)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 99)(= in-menu #t)(= sub-menu-slot 4))
+    (print "You have not unlocked this weapon mod.
+")
+(set! gun-mod-string "You have not unlocked this weapon mod yet")
+    (set! mod-string "You have not unlocked this weapon mod yet")
+  (set! menu-pressed? #f)
+    (set! menu-slot 0)
+    (set! sub-menu-slot 0)
+    (set! weapon-id 0)
+    (set! menu-activate #t)
+    )
+
+  (set! menu-activate #f)
+)
+
+
+(when (= camera-locked #t) ;lock camera
+  (set! (-> *target* cam-user-mode) 'look-around)
+  (send-event *target* 'draw #f)
+  (set-setting-by-param *setting-control* 'mode-name 'cam-eye 0 0)
+  (persist-with-delay *setting-control* 'gun (seconds 0.5) 'gun #f 0.0 0)
+  (process-grab? *target* #f)
+)
+
+
+
+;controls
+(when (and (= weapon-mod-toggle #t)(= (paused?) #f)(= in-menu #t)(cpad-pressed? 0 triangle)) ;exit virtual menu
+  (print "Exited Menu
+")
+    (set! camera-locked #f)
+    (remove-setting-by-arg0 *setting-control* 'mode-name)
+    (set! in-menu #f)
+    (set! menu-pressed? #f)
+    (set! wait-start #t)
+    (set! pause-menu-blocked? #f)
+    (set! string-printed? #f)
+    (sound-play "gun-putaway")
+)
+
+(when (= wait-start #t)
+  (+! wait-frame 1)
+  (when (> wait-frame 5)
+    (set! wait-start #f)
+    (set! wait-frame 0)
+    (set! weapon-id 0)
+    (send-event *target* 'draw #t)
+    (process-release? *target*)
+  )
+)
+
+
+
+
+
+(when (not *scene-player*)
+  (when (and (= weapon-mod-toggle #t)(= in-menu #f)(= (paused?) #f)(cpad-pressed? 0 r3)) ;startup virtual menu
+    (set! menu-activate #t)
+    (set! in-menu #t)
+    (set! sub-menu-slot 0)
+    (set! menu-slot 0)
+    (set! menu-pressed? #f)
+    (set! string-printed? #t)
+    (set! pause-menu-blocked? #t)
+    (sound-play "gun-takeout")
+    (print "Entered Menu: 
+  CONTROLS:
+  X: Select
+  SQUARE: Attach gun mod
+  TRIANGLE: Exit Menu
+  LEFT/RIGHT: Browse
+  ")
+  (set! camera-locked #t)
+  )
+)
+
+
+(when (= weapon-mod-toggle #t)
+(when (= gm-start #t)
+  (+! gm-frame 1)
+  (when (= gm-frame 300)
+    (set! recieved-gm #f)
+    (set! gm-frame 0)
+    (set! gm-start #f)
+  )
+)
+(when (= gm-start2 #t)
+  (+! gm-frame2 1)
+  (when (= gm-frame2 300)
+    (set! recieved-gm2 #f)
+    (set! gm-frame2 0)
+    (set! gm-start2 #f)
+  )
+)
+(when (= gm-start3 #t)
+  (+! gm-frame3 1)
+  (when (= gm-frame3 300)
+    (set! recieved-gm3 #f)
+    (set! gm-frame3 0)
+    (set! gm-start3 #f)
+  )
+)
+(when (= gm-start4 #t)
+  (+! gm-frame4 1)
+  (when (= gm-frame4 300)
+    (set! recieved-gm4 #f)
+    (set! gm-frame4 0)
+    (set! gm-start4 #f)
+  )
+)
+(when (= gm-start5 #t)
+  (+! gm-frame5 1)
+  (when (= gm-frame5 300)
+    (set! recieved-gm5 #f)
+    (set! gm-frame5 0)
+    (set! gm-start5 #f)
+  )
+)
+(when (= gm-start6 #t)
+  (+! gm-frame6 1)
+  (when (= gm-frame6 300)
+    (set! recieved-gm6 #f)
+    (set! gm-frame6 0)
+    (set! gm-start6 #f)
+  )
+)
+(when (= gm-start7 #t)
+  (+! gm-frame7 1)
+  (when (= gm-frame7 300)
+    (set! recieved-gm7 #f)
+    (set! gm-frame7 0)
+    (set! gm-start7 #f)
+  )
+)
+(when (= recieved-gm #t) ;looks for recieving a gun mod to alert for weapon id 1
+  (clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+    (format *temp-string* "<COLOR_WHITE>Recieved Gun Mod:~%<COLOR_GREEN>~S"
+    recieved-gm-s ;the names of weapon mods
+    )
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 245 0.0 (font-color default) (font-flags shadow kerning large))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (set! gm-start #t)
+)
+
+(when (= recieved-gm2 #t) ;looks for recieving a gun mod to alert for weapon id 2
+  (clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+    (format *temp-string* "<COLOR_WHITE>Recieved Gun Mod:~%<COLOR_GREEN>~S"
+    recieved-gm-s2 ;the names of weapon mods
+    )
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 225 0.0 (font-color default) (font-flags shadow kerning large))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (set! gm-start2 #t)
+)
+
+(when (= recieved-gm3 #t) ;looks for recieving a gun mod to alert for weapon id 3
+  (clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+    (format *temp-string* "<COLOR_WHITE>Recieved Gun Mod:~%<COLOR_GREEN>~S"
+    recieved-gm-s3 ;the names of weapon mods
+    )
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 205 0.0 (font-color default) (font-flags shadow kerning large))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (set! gm-start3 #t)
+)
+
+(when (= recieved-gm4 #t) ;looks for recieving a gun mod to alert for weapon id 4
+  (clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+    (format *temp-string* "<COLOR_WHITE>Recieved Gun Mod:~%<COLOR_GREEN>~S"
+    recieved-gm-s4 ;the names of weapon mods
+    )
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 185 0.0 (font-color default) (font-flags shadow kerning large))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (set! gm-start4 #t)
+)
+
+(when (= recieved-gm5 #t) ;looks for recieving a gun mod to alert for weapon id 5
+  (clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+    (format *temp-string* "<COLOR_YELLOW> | LEGENDARY <COLOR_WHITE>Recieved Gun Mod:~%<COLOR_RED>~S"
+    recieved-gm-s5 ;the names of weapon mods
+    )
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 165 0.0 (font-color default) (font-flags shadow kerning large))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (set! gm-start5 #t)
+)
+
+(when (= recieved-gm6 #t) ;looks for recieving a gun mod to alert for weapon id 6
+  (clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+    (format *temp-string* "<COLOR_YELLOW> | LEGENDARY | <COLOR_WHITE>Recieved Gun Mod:~%<COLOR_RED>~S"
+    recieved-gm-s6 ;the names of weapon mods
+    )
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 165 0.0 (font-color default) (font-flags shadow kerning large))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (set! gm-start6 #t)
+)
+
+(when (= recieved-gm7 #t) ;looks for recieving a gun mod to alert for weapon id 7
+  (clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+    (format *temp-string* "<COLOR_WHITE>Recieved Gun Mod:~%<COLOR_BLUE>~S"
+    recieved-gm-s7 ;the names of weapon mods
+    )
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 145 0.0 (font-color default) (font-flags shadow kerning large))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (set! gm-start7 #t)
+)
+
+)
+(when (and (= menu-pressed? #f)(= string-printed? #t)) ;draws the gunmod section
+  (clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+    (format *temp-string* "<COLOR_WHITE>GUN MODS:~%<COLOR_GREEN>~S"
+    gun-mod-string ;the names of weapon mods
+    )
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 245 0.0 (font-color default) (font-flags right shadow kerning large))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+)
+
+(when (and (= menu-pressed? #t)(= string-printed? #t)) ;draws the sub menu for gun mod
+  (clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+    (format *temp-string* "<COLOR_WHITE>Attach <COLOR_GREEN>~S <COLOR_WHITE>to:~%<COLOR_RED>~S"
+    mod-string ;the name of the mod
+    gun-string ;the name of the colored gun
+    )
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 245 0.0 (font-color default) (font-flags right shadow kerning large))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+)
+
+(when (and (= in-menu #t)(= menu-pressed? #t)(cpad-hold? 0 square)) ;draws the sub menu yellow for when you attach a mod
+(clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+  (format *temp-string* "<COLOR_WHITE>Attach <COLOR_GREEN>~S <COLOR_WHITE>to:~%<COLOR_YELLOW>~S"
+    mod-string
+    gun-string
+    )
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 245 0.0 (font-color default) (font-flags right shadow kerning large))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+)
+
+(when (= in-menu #t) ;displays modifier
+  (clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+    (format *temp-string* "<COLOR_WHITE>CURRENT MODIFIER:~%<COLOR_RED>~S"
+    modifier-string
+    )
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 0 0.0 (font-color default) (font-flags right shadow kerning large))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+)
+
+(when (and (not (cpad-hold? 0 l3))(!= (-> *game-info* fuel) 10.0)(= in-menu #t)(= mod-reroll #f)) ;displays control menu
+  (clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+    (format *temp-string* "<COLOR_WHITE>CONTROLS:~%LEFT/RIGHT: Browse~%X: Select~%SQUARE: Attach Gun Mod~%CIRCLE: Back to Mods~%L3: Reroll Modifier (-10 gems)~%TRIANGLE: Exit Menu"
+    modifier-string
+    )
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 30 0.0 (font-color default) (font-flags right shadow kerning large))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (set! press-frame 0)
+)
+
+(when (and (= in-menu #t)(!= (-> *game-info* fuel) 10.0)(cpad-hold? 0 l3)) ;displays control menu when you do mod reroll
+(clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+   (format *temp-string* "<COLOR_WHITE>CONTROLS:~%LEFT/RIGHT: Browse~%X: Select~%SQUARE: Attach Gun Mod~%CIRCLE: Back to Mods~%L3: <COLOR_RED>(PRESS AND HOLD):~S~%<COLOR_WHITE>TRIANGLE: Exit Menu"
+    mod-reroll-string
+    )
+
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 30 0.0 (font-color default) (font-flags right shadow kerning large))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (when (< (-> *game-info* gem) 10.0)
+        (set! mod-reroll-string "NOT ENOUGH GEMS")
+        )
+        (when (>= (-> *game-info* gem) 10.0)
+        (+! press-frame 1)
+        )
+)
+
+(when (and (= (-> *game-info* fuel) 10.0)(= in-menu #t)) ;displays control menu but in heromode. Removes mod-reroll
+  (clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+    (format *temp-string* "<COLOR_WHITE>CONTROLS:~%LEFT/RIGHT: Browse~%X: Select~%SQUARE: Attach Gun Mod~%CIRCLE: Back to Mods~%<COLOR_RED>Down: HellMode Info~%<COLOR_WHITE>TRIANGLE: Exit Menu"
+    modifier-string
+    )
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 30 0.0 (font-color default) (font-flags right shadow kerning large))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (set! press-frame 0)
+)
+#|
+    (set! modifier-string "Peacemaker Ability / 1 Hit Boss")
+    (set! modifier-string "On-Death TP-FB Challenge")
+    (set! modifier-string "Increased Hov Speed / X5 Health Enemies")
+    (set! modifier-string "Chanced Max Eco collect / Traffic Max alert")
+    (set! modifier-string "Chanced Trip / Gain 10 Metalheads")
+    (set! modifier-string "Target Explode / DJak Longer Duration")|#
+(when (and (= in-menu #t)(= tp-fb-win #f)(= (-> *game-info* fuel) 10.0)(cpad-hold? 0 down)) ;draws the info screen
+  (clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+    (format *temp-string* "
+    <COLOR_WHITE>HELL MODE INFO:
+    ~%<COLOR_YELLOW>All modifiers are active:
+    ~%<COLOR_RED>On-Death TP-FB Challenge
+    ~%<COLOR_WHITE>Upon death, jak teleports to the final boss, but its extremely unfair.
+    ~%Beat the boss to gain a powerful weapon mod (even more powerful in hero-mode)
+    ~%<COLOR_RED>Peacemaker Ability / 1 Hit Boss
+    ~%<COLOR_WHITE>At all times, have a chance to fire 100 peacemaker shots,
+    ~%but you must fight every boss with 1 HP
+    ~%<COLOR_RED>Increased Hov Speed / X5 Health Enemies
+    ~%<COLOR_WHITE>Hoverboard is the fast
+    ~%but enemies have X5 HP
+    ~%<COLOR_RED>Chanced Max Eco collect / Traffic Max alert
+    ~%<COLOR_WHITE>Any eco pickup can fill up the rest of your meter
+    ~%but any time you anger the guards, theyre alerted to max level
+    ~%<COLOR_RED>Chanced Trip / Gain 10 Metalheads
+    ~%<COLOR_WHITE>Can trip from shooting, rolling, punching, jumping, or twirling
+    ~%but every time this happens, gain 10 metalheads (on-cooldown)
+    ~%<COLOR_RED>Target Explode / DJak Longer Duration
+    ~%<COLOR_WHITE>Dark Jak has a longer duration
+    ~%but Jak has a bomb strapped inside of him, any hits or bonks could set it off
+    "
+    )
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 10 0.0 (font-color default) (font-flags shadow kerning large))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+)
+
+(when (and (= in-menu #t)(= tp-fb-win #t)(= (-> *game-info* fuel) 10.0)(cpad-hold? 0 down)) ;draws the info screen
+  (clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+    (format *temp-string* "
+    <COLOR_WHITE>HELL MODE INFO:
+    ~%<COLOR_YELLOW>All modifiers are active:
+    ~%<COLOR_RED>On-Death TP-FB Challenge (disabled)
+    ~%<COLOR_GREEN>You beat TP-FB in Hero Mode! I'm actually impressed.
+    ~%You now have one of the finest Mods out of all Gun Mods. You've earned it.
+    ~%<COLOR_RED>Peacemaker Ability / 1 Hit Boss
+    ~%<COLOR_WHITE>At all times, have a chance to fire 100 peacemaker shots,
+    ~%but you must fight every boss with 1 HP
+    ~%<COLOR_RED>Increased Hov Speed / X5 Health Enemies
+    ~%<COLOR_WHITE>Hoverboard is the fast
+    ~%but enemies have X5 HP
+    ~%<COLOR_RED>Chanced Max Eco collect / Traffic Max alert
+    ~%<COLOR_WHITE>Any eco pickup can fill up the rest of your meter
+    ~%but any time you anger the guards, theyre alerted to max level
+    ~%<COLOR_RED>Chanced Trip / Gain 10 Metalheads
+    ~%<COLOR_WHITE>Can trip from shooting, rolling, punching, jumping, or twirling
+    ~%but every time this happens, gain 10 metalheads (on-cooldown)
+    ~%<COLOR_RED>Target Explode / DJak Longer Duration
+    ~%<COLOR_WHITE>Dark Jak has a longer duration
+    ~%but Jak has a bomb strapped inside of him, any hits or bonks could set it off
+    "
+    )
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 10 0.0 (font-color default) (font-flags shadow kerning large))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+)
+
+(when (>= (-> *game-info* gem) 10.0)
+(when (= press-frame 1)
+    (set! mod-reroll-string "Re-Rolling")
+  )
+  (when (= press-frame 60)
+    (set! mod-reroll-string "Re-Rolling.")
+  )
+  (when (= press-frame 120)
+    (set! mod-reroll-string "Re-Rolling..")
+  )
+  (when (= press-frame 180)
+    (set! mod-reroll-string "Re-Rolling...")
+  )
+    (when (= press-frame 240)
+    (set! mod-reroll-string "Re-Rolling..!")
+  )
+      (when (= press-frame 300)
+    (set! mod-reroll-string "Re-Rolling.!!")
+  )
+        (when (= press-frame 360)
+    (set! mod-reroll-string "Re-Rolling!!!")
+  )
+  
+  (when (= press-frame 390)
+    (set! mod-reroll #t)
+    (set! press-frame 0)
+  )
+)
+(when (and (= in-menu #t)(= menu-slot 0)(= menu-pressed? #t)(cpad-pressed? 0 square)) ;Selected Gun Mod!
+  (set! menu-activate #t)
+  ;-------------------------rapid-fire-int--------------------------------
+  (when (and (= rapid-fire-option #t)(= weapon-id 1)(= sub-menu-slot 0))
+    (set! rapid-fire-int 2)(sound-play "gun-takeout")
+        
+  )
+  (when (and (= rapid-fire-option #t)(= weapon-id 1)(= sub-menu-slot 1))
+    (set! rapid-fire-int 1)(sound-play "gun-takeout")
+  )
+  (when (and (= rapid-fire-option #t)(= weapon-id 1)(= sub-menu-slot 2))
+    (set! rapid-fire-int 3)(sound-play "gun-takeout")
+  )
+  (when (and (= rapid-fire-option #t)(= weapon-id 1)(= sub-menu-slot 3))
+    (set! rapid-fire-int 4)(sound-play "gun-takeout")
+  )
+  (when (and (= rapid-fire-option #t)(= weapon-id 1)(= sub-menu-slot 4))
+    (set! rapid-fire-int 0)(sound-play "gun-takeout")
+  )
+      ;-------------------------double-tap-int--------------------------------
+  (when (and (= double-tap-option #t)(= weapon-id 2)(= sub-menu-slot 0))
+        (set! double-tap-int 2)(sound-play "gun-takeout")
+  )
+  (when (and (= double-tap-option #t)(= weapon-id 2)(= sub-menu-slot 1))
+    (set! double-tap-int 1)(sound-play "gun-takeout")
+  )
+  (when (and (= double-tap-option #t)(= weapon-id 2)(= sub-menu-slot 2))
+    (set! double-tap-int 3)(sound-play "gun-takeout")
+  )
+  (when (and (= double-tap-option #t)(= weapon-id 2)(= sub-menu-slot 3))
+    (set! double-tap-int 4)(sound-play "gun-takeout")
+  )
+  (when (and (= double-tap-option #t)(= weapon-id 2)(= sub-menu-slot 4))
+    (set! double-tap-int 0)(sound-play "gun-takeout")
+  )
+      ;-------------------------guard-shot-int--------------------------------
+  (when (and (= guard-shot-option #t)(= weapon-id 3)(= sub-menu-slot 0))
+        (set! guard-shot-int 2)(sound-play "gun-takeout")
+  )
+  (when (and (= guard-shot-option #t)(= weapon-id 3)(= sub-menu-slot 1))
+    (set! guard-shot-int 1)(sound-play "gun-takeout")
+  )
+  (when (and (= guard-shot-option #t)(= weapon-id 3)(= sub-menu-slot 2))
+    (set! guard-shot-int 3)(sound-play "gun-takeout")
+  )
+  (when (and (= guard-shot-option #t)(= weapon-id 3)(= sub-menu-slot 3))
+    (set! guard-shot-int 4)(sound-play "gun-takeout")
+  )
+  (when (and (= guard-shot-option #t)(= weapon-id 3)(= sub-menu-slot 4))
+    (set! guard-shot-int 0)(sound-play "gun-takeout")
+  )
+;      -------------------------guard-grenade-int--------------------------------
+  (when (and (= guard-grenade-option #t)(= weapon-id 4)(= sub-menu-slot 0))
+        (set! guard-grenade-int 2)(sound-play "gun-takeout")
+  )
+  (when (and (= guard-grenade-option #t)(= weapon-id 4)(= sub-menu-slot 1))
+    (set! guard-grenade-int 1)(sound-play "gun-takeout")
+  )
+  (when (and (= guard-grenade-option #t)(= weapon-id 4)(= sub-menu-slot 2))
+    (set! guard-grenade-int 3)(sound-play "gun-takeout")
+  )
+  (when (and (= guard-grenade-option #t)(= weapon-id 4)(= sub-menu-slot 3))
+    (set! guard-grenade-int 4)(sound-play "gun-takeout")
+  )
+  (when (and (= guard-grenade-option #t)(= weapon-id 4)(= sub-menu-slot 4))
+    (set! guard-grenade-int 0)(sound-play "gun-takeout")
+  )
+  
+      ;-------------------------rand-shot-int--------------------------------
+  (when (and (= leg-random-shot #t)(= weapon-id 5)(= sub-menu-slot 0))
+        (set! leg-random-int 2)(sound-play "gun-takeout")
+  )
+  (when (and (= leg-random-shot #t)(= weapon-id 5)(= sub-menu-slot 1))
+    (set! leg-random-int 1)(sound-play "gun-takeout")
+  )
+  (when (and (= leg-random-shot #t)(= weapon-id 5)(= sub-menu-slot 2))
+    (set! leg-random-int 3)(sound-play "gun-takeout")
+  )
+  (when (and (= leg-random-shot #t)(= weapon-id 5)(= sub-menu-slot 3))
+    (set! leg-random-int 4)(sound-play "gun-takeout")
+  )
+  (when (and (= leg-random-shot #t)(= weapon-id 5)(= sub-menu-slot 4))
+    (set! leg-random-int 0)(sound-play "gun-takeout")
+  )
+      ;-------------------------pm-extra-shot-int--------------------------------
+  (when (and (= pm-extra-shot-option #t)(= weapon-id 6)(= sub-menu-slot 0))
+        (set! pm-extra-shot-int 2)(sound-play "gun-takeout")
+  )
+  (when (and (= pm-extra-shot-option #t)(= weapon-id 6)(= sub-menu-slot 1))
+    (set! pm-extra-shot-int 1)(sound-play "gun-takeout")
+  )
+  (when (and (= pm-extra-shot-option #t)(= weapon-id 6)(= sub-menu-slot 2))
+    (set! pm-extra-shot-int 3)(sound-play "gun-takeout")
+  )
+  (when (and (= pm-extra-shot-option #t)(= weapon-id 6)(= sub-menu-slot 3))
+    (set! pm-extra-shot-int 4)(sound-play "gun-takeout")
+  )
+  (when (and (= pm-extra-shot-option #t)(= weapon-id 6)(= sub-menu-slot 4))
+    (set! pm-extra-shot-int 0)(sound-play "gun-takeout")
+  )
+        ;-------------------------mag-bag-int--------------------------------
+  (when (and (= mag-bag-option #t)(= weapon-id 7)(= sub-menu-slot 0))
+        (set! mag-bag-int 2)(sound-play "gun-takeout")
+  )
+  (when (and (= mag-bag-option #t)(= weapon-id 7)(= sub-menu-slot 1))
+    (set! mag-bag-int 1)(sound-play "gun-takeout")
+  )
+  (when (and (= mag-bag-option #t)(= weapon-id 7)(= sub-menu-slot 2))
+    (set! mag-bag-int 3)(sound-play "gun-takeout")
+  )
+  (when (and (= mag-bag-option #t)(= weapon-id 7)(= sub-menu-slot 3))
+    (set! mag-bag-int 4)(sound-play "gun-takeout")
+  )
+  (when (and (= mag-bag-option #t)(= weapon-id 7)(= sub-menu-slot 4))
+    (set! mag-bag-int 0)(sound-play "gun-takeout")
+  )
+)
+
+(when (and (= in-menu #t)(!= weapon-id 0)(= menu-pressed? #t)(cpad-pressed? 0 circle)) ;go back from color menu
+    (set! menu-pressed? #f)
+    (set! menu-slot 0)
+    (set! sub-menu-slot 0)
+    (set! weapon-id 0)
+    (set! menu-activate #t)
+
+  )
+
+  (when (and (= in-menu #t)(cpad-pressed? 0 left))
+    (when (= menu-pressed? #f)
+      (-! menu-slot 1)
+      (set! sub-menu-slot 0)
+      (set! menu-activate #t)
+    )
+      (when (= menu-pressed? #t)
+      (set! menu-slot 0)
+      (-! sub-menu-slot 1)
+      (set! menu-activate #t)
+      )
+    (when (and (= menu-pressed? #f) (or (> menu-slot 6)(< menu-slot 0))) ;max options for menu left
+      (set! menu-slot 0)
+      (set! menu-activate #t)
+    )
+    (when (and (= menu-pressed? #t) (or (> sub-menu-slot 4)(< sub-menu-slot 0))) ;max options for sub-menu left
+      (set! sub-menu-slot 0)
+      (set! menu-activate #t)
+    )
+  )
+
+  (when (and (= in-menu #t)(cpad-pressed? 0 right))
+    (when (= menu-pressed? #f)
+      (+! menu-slot 1)
+      (set! sub-menu-slot 0)
+      (set! menu-activate #t)
+    )
+      (when (= menu-pressed? #t)
+      (set! menu-slot 0)
+      (+! sub-menu-slot 1)
+      (set! menu-activate #t)
+
+      (when (and (= menu-pressed? #f) (or (> menu-slot 6)(< menu-slot 0))) ;max options for menu right
+      (set! menu-slot 0)
+      (set! menu-activate #t)
+    )
+    (when (and (= menu-pressed? #t) (or (> sub-menu-slot 4)(< sub-menu-slot 0))) ;max options for sub-menu right
+      (set! sub-menu-slot 0)
+      (set! menu-activate #t)
+    )
+    )
+
+  )
+    (when (and (= menu-pressed? #f)(= weapon-id 0)(= in-menu #t)(cpad-pressed? 0 x))
+      ;looks for when you have transitioned into selecting color for the weapon mod
+      (set! menu-pressed? #t)
+      (when (and (= rapid-fire-option #t)(= menu-slot 0)(= sub-menu-slot 0))
+        (set! weapon-id 1)
+      )
+      (when (and (= double-tap-option #t)(= menu-slot 1)(= sub-menu-slot 0))
+        (set! weapon-id 2)
+      )
+      (when (and (= guard-shot-option #t)(= menu-slot 2)(= sub-menu-slot 0))
+        (set! weapon-id 3)
+      )
+      (when (and (= guard-grenade-option #t)(= menu-slot 3)(= sub-menu-slot 0))
+        (set! weapon-id 4)
+      )
+      (when (and (= leg-random-shot #t)(= menu-slot 4)(= sub-menu-slot 0))
+        (set! weapon-id 5)
+      )
+      (when (and (= pm-extra-shot-option #t)(= menu-slot 5)(= sub-menu-slot 0))
+        (set! weapon-id 6)
+      )
+      (when (and (= mag-bag-option #t)(= menu-slot 6)(= sub-menu-slot 0))
+        (set! weapon-id 7)
+      )
+      (when (and (= rapid-fire-option #f)(= menu-slot 0)(= sub-menu-slot 0))
+        (set! weapon-id 99)
+      )
+      (when (and (= double-tap-option #f)(= menu-slot 1)(= sub-menu-slot 0))
+        (set! weapon-id 99)
+      )
+      (when (and (= guard-shot-option #f)(= menu-slot 2)(= sub-menu-slot 0))
+        (set! weapon-id 99)
+      )
+      (when (and (= guard-grenade-option #f)(= menu-slot 3)(= sub-menu-slot 0))
+        (set! weapon-id 99)
+      )
+      (when (and (= leg-random-shot #f)(= menu-slot 4)(= sub-menu-slot 0))
+        (set! weapon-id 99)
+      )
+      (when (and (= pm-extra-shot-option #f)(= menu-slot 5)(= sub-menu-slot 0))
+        (set! weapon-id 99)
+      )
+      (when (and (= mag-bag-option #f)(= menu-slot 6)(= sub-menu-slot 0))
+        (set! weapon-id 99)
+      )
+      (set! menu-activate #t)
+    )
+
+)
+
+(when (and *scene-player* (= in-menu #t)) ;if you're in a cutscene while youre in the menu, it disables it.
+    (set! camera-locked #f)
+    (set! (-> *target* cam-user-mode) 'normal)
+    (set-setting-by-param *setting-control* 'mode-name 'cam-string 0 0)
+    (set! in-menu #f)
+    (set! menu-pressed? #f)
+    (set! wait-start #t)
+    (set! string-printed? #f)
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
       (if *show-input-display* 
         (input-display-on)
@@ -45,6 +3185,7 @@
 
       (none)
       )
+
 
     (defun runs-on-task-close ()
     

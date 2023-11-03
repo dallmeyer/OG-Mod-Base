@@ -5,6 +5,8 @@
 ;; name in dgo: task-control
 ;; dgos: ENGINE, GAME
 
+(define-extern hell-mode-option symbol)
+
 (defenum fail-mission-flags
   :bitfield #t
   :type uint8
@@ -77,10 +79,10 @@
     ((or (= arg0 'debug) (= arg0 'level))
      )
     ((logtest? (-> *game-info* secrets) (game-secrets hero-mode))
-     (set! (-> *game-info* features) (game-feature gun gun-yellow gun-red gun-blue gun-dark))
+     (set! (-> *game-info* features) (game-feature gun board gun-yellow gun-red gun-blue gun-dark))
      )
     (else
-      (set! (-> *game-info* features) (game-feature))
+      (set! (-> *game-info* features) (game-feature gun board gun-yellow gun-red gun-blue gun-dark))
       0
       )
     )
