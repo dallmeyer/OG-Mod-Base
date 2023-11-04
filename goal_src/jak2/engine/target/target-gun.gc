@@ -755,7 +755,7 @@
          )
         ((4) ;purple
         (when (and (= mag-bag-option #t)(= mag-bag-int 4))
-          (set! (-> *FACT-bank* ammo-dark-max) 100.0)
+          (set! (-> *FACT-bank* ammo-dark-max) 50.0)
          )
          (set! (-> self gun gun-control) (the-as uint 2))
          (set! (-> self gun fire-range) 1638400.0)

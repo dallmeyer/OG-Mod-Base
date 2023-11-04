@@ -5,13 +5,28 @@
     ;; name in dgo: mod-custom-code
     ;; dgos: TODO
 
+#|
+TODO: FINISH HEROMODE+
+--------------------------------------------
+- have jak get dark bomb and blast during (= stored-cp? #t)
+- Integrate blue rapid fire and double tap mods
+- set enemy health correctly in (gametask drill-ship)
+- something to make getting shit tons of ammo easier, like adding ALOT more boxes in gun-range, or have the boxes hold more ammo in them.
+- when mag-bag not set to that gun, set gun back to original ammo 
 
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;
-    ;; What is this file for.
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;
+POLISH?
+- change up darkjaklonger to be a dark bomb init every time?
+- maaaaybe add another mod for 100 orbs? we'll see as we go down the line for playtesting difficulty.
+- change color of projectiles due to weapon mods attached?
+- list the weapon mods attached to the weapon pulled out?
 
-    #| This is the brains of the operation, all modifiers, menus, variables, etc. are defined in this script
-    Then, the script changes attributes based on the already existing functions in the game|#
+- beat TP-FB
+- beat HellMode
+
+FINISHED :D
+|#
+
+
 
 
 (defpartgroup group-guard-grenade
@@ -145,7 +160,7 @@
   :event (behavior ((proc process) (argc int) (message symbol) (block event-message-block))
     (case message
       (('touched)
-       (if (send-event proc 'attack (-> block param 0) (static-attack-info ((id (-> self attack-id)) (mode 'explode))))
+       (if (send-event proc 'attack (-> block param 0) (static-attack-info ((id (-> *game-info* attack-id)) (mode 'explode))))
            #t
            )
        )
@@ -240,10 +255,10 @@
       )
     (cty-guard-turret-method-33 self)
     (reset-to-collide-spec (-> self focus) (collide-spec jak player-list))
-    (set! (-> self jm-turret) (new 'process 'joint-mod (joint-mod-mode joint-set*) self 6))
-    (set! (-> self jm-gunsL) (new 'process 'joint-mod (joint-mod-mode joint-set*) self 7))
-    (set! (-> self jm-gunsR) (new 'process 'joint-mod (joint-mod-mode joint-set*) self 8))
-    (set! (-> self part) (create-launch-control (-> *part-group-id-table* 186) self))
+    (set! (-> self jm-turret) (new 'process 'joint-mod (joint-mod-mode joint-set*) *target* 6))
+    (set! (-> self jm-gunsL) (new 'process 'joint-mod (joint-mod-mode joint-set*) *target* 7))
+    (set! (-> self jm-gunsR) (new 'process 'joint-mod (joint-mod-mode joint-set*) *target* 8))
+    (set! (-> self part) (create-launch-control (-> *part-group-id-table* 186) *target*))
     (set! (-> self id) 0)
     (set! (-> self destroyed) #f)
     (set! (-> self hit-points) 6)
@@ -278,12 +293,18 @@
 
 
 
+(define kill-game-demo? #t)
+(when (and (= (-> *game-info* mode) 'debug)(= kill-game-demo? #t))
+  (set! (-> *game-info* mode) 'play)
+  (initialize! *game-info* 'game (the-as game-save #f) (the-as string #f))
+)
+
 
 
 
 ;WEAPON MOD SPAWNS, REWARDS, AND SAVES
 ;Once a legendary is spawned it unlocks it for you. Later ill figure how to do it upon pickup, but for now I have no fucking clue. :L
-;Right now all gun mods are set towards mod-default-gun, which is the yellow gun atm, until Mod-Base updates with the updated misc menu in "game-options" then you can select it yourself.
+;Right now all gun mods are set towards mod-default-gun, which is the yellow gun atm, until Mod-Base updates with the updated misc menu in "game-options" then you can select it your*target*.
 
 
 (when (= mod-reroll #t)
@@ -307,6 +328,7 @@
     (set! mod-reroll #f)
   )
 )
+
 
 
 (when (and (= (-> *game-info* fuel) 0.0)(= weapon-mod-toggle #t)) ;checks for if you have weapon mod toggle on, then gives you a modifier
@@ -571,12 +593,27 @@
     (set! recieved-gm4 #t)  ;sets the draw func on
   )
   (when (and (= orb-grab-1 #f)(>= (-> *game-info* skill) orb-count1)) ;when a certain amount of orbs or higher, get mag-bag
-    (set! mag-bag-option #t)
     (set! recieved-gm-s7 "Mag Bag!")
     (set! recieved-gm7 #t)
     (sound-play "ammo-pickup")
     (sound-play "board-boost")
     (set! orb-grab-1 #t)
+    (set! mag-bag-option #t)
+    (when (= (-> *game-info* karma) 1.0)
+      (set! mag-bag-int 1)
+    )
+    (when (= (-> *game-info* karma) 2.0)
+      (set! mag-bag-int 2)
+    )
+    (when (= (-> *game-info* karma) 3.0)
+      (set! mag-bag-int 3)
+    )
+    (when (= (-> *game-info* karma) 4.0)
+      (set! mag-bag-int 4)
+    )
+    (when (= (-> *game-info* karma) 0.0)
+      (set! mag-bag-int 0)
+    )
   )
   ;looks for if their missions become un-completed after setting them, then takes away mission gun mods respectively
   (when (and (not (task-node-closed? (game-task-node city-krew-delivery-resolution)))(= mission-grab-1 #t))
@@ -1327,57 +1364,9 @@
     )
 
 
-#|
-(let ((s4-0 (vector<-cspace! (new 'stack-no-clear 'vector) (-> this node-list data 14))))
-    (new 'stack-no-clear 'vector)
-    (let ((s5-0 (new 'stack-no-clear 'traj3d-params)))
-      (let ((s3-1 (vector-! (new 'stack-no-clear 'vector) (-> this target-pos-predict) s4-0)))
-        (set! (-> s3-1 y) 0.0)
-        (vector-rotate-around-y! s3-1 s3-1 (* 182.04445 (+ (if (zero? (rand-vu-int-count 2))
-                                                               90.0
-                                                               -90.0
-                                                               )
-                                                           (rand-vu-float-range -45.0 45.0)
-                                                           )
-                                              )
-                                 )
-        (if (logtest? (-> this draw status) (draw-control-status on-screen))
-            (vector-normalize! s3-1 (* 4096.0 (rand-vu-float-range 1.0 4.0)))
-            (vector-normalize! s3-1 (* 4096.0 (rand-vu-float-range 4.0 15.0)))
-            )
-        (set! (-> s5-0 dest quad)
-              (-> (vector+! (new 'stack-no-clear 'vector) s3-1 (-> this target-pos-predict)) quad)
-              )
-        )
-      (set! (-> s5-0 src quad) (-> s4-0 quad))
-      (set! (-> s5-0 initial-tilt) 8192.0)
-      (set! (-> s5-0 gravity) 184320.0)
-      (when (traj3d-calc-initial-velocity-using-tilt s5-0)
-        (let ((a1-9 (new 'stack-no-clear 'projectile-init-by-other-params)))
-          (set! (-> a1-9 ent) (-> *target* entity))
-          (set! (-> a1-9 charge) 1.0)
-          (set! (-> a1-9 options) (projectile-options account-for-target-velocity proj-options-8000))
-          (set! (-> a1-9 pos quad) (-> *target* gun fire-point quad))
-          (set! (-> a1-9 vel quad) (-> *target* gun fire-dir-out quad))
-          (set! (-> a1-9 notify-handle) (the-as handle #f))
-          (set! (-> a1-9 owner-handle) (the-as handle #f))
-          (set! (-> a1-9 ignore-handle) (process->handle (the-as process (send-event *target* 'get-vehicle))))
-          (let* ((v1-24 *game-info*)
-                 (a0-23 (+ (-> v1-24 attack-id) 1))
-                 )
-            (set! (-> v1-24 attack-id) a0-23)
-            (set! (-> a1-9 attack-id) a0-23)
-            )
-          (set! (-> a1-9 timeout) (seconds 4))
-          (spawn-projectile vehicle-grenade a1-9 (ppointer->process (-> *target* gun gun)) *default-dead-pool*)
-          )
-          )
-    )
-)
-    |#
 
       (when (and (= test-option #t) (rand-vu-percent? 0.05)) ;debug projectile, you can enable to do absolutely nothing but have a chance to shoot a projectile every frame or so
-        (fire-guard-grenade *target* (-> *target* gun fire-point) (-> *target* gun fire-dir-out))
+        (print "test")
         )
 
 
@@ -1437,15 +1426,15 @@
   (when (= start-frame-count #t)
     (+! frame-count 1)
   )
-  (when (and (and (and (= stored-cp? #f)(= tp-fb #t)(rand-vu-percent? 0.0009)(< (-> *target* fact health) 1)))) ;looks for teleport percentage upon death, if so, init new game.
+  (when (and (and (and (= stored-cp? #f)(= tp-fb #t)(rand-vu-percent? 0.0009)(< (-> *target* fact health) 1)))) ;looks for teleport percentage upon death, if so, init tp-fb
     (set! start-frame-count #t)
     (set! stored-cp? #t)
     (set! new-game-s? #t)
     (print "[MOD] Started tp-fb, Autosaving User...
 ")
   )
-  (when (and (and (= frame-count 10)(= new-game-s? #t)(= stored-cp? #t)))
-    (initialize! *game-info* 'game (the-as game-save #f) (the-as string #f))
+  (when (and (and (= frame-count 10)(= new-game-s? #t)(= stored-cp? #t))) ;sets all your gunmod attributes, starts a new game
+    (initialize! *game-info* 'game (the-as game-save #f) "prison")
     (set! mission-grab-1 #t)
     (set! mission-grab-2 #t)
     (set! mission-grab-3 #t)
@@ -1472,7 +1461,7 @@
     )
     (when (= hell-mode-option #f)
       (set! (-> *game-info* fuel) 2.0)
-      (print "[MOD] Hellmode #f, tp-fb by itself is set!
+      (print "[MOD] Hellmode #f, tp-fb by it*target* is set!
 ")
     )
     (set! start-frame-count #f)
@@ -1512,7 +1501,7 @@
     (set! mission-grab-2 #f)
     (set! mission-grab-3 #f)
     (set! mission-grab-4 #f)
-    (print "[MOD] You died!! POGGERS!!! (PLAQUE: I logged 42 hours on this particular problem alone ;-;)
+    (print "[MOD] You died!! POGGERS!!! (PLAQUE:) I logged 42 hours on this particular problem alone ;-;
 ")
   )
 
@@ -1522,6 +1511,7 @@
     (when (and (= stored-cp? #t)(= frame-count 1))
       (auto-save-command 'restore 0 0 *default-pool* #f)
     )
+
     (when (and (= stored-cp? #t)(= frame-count 120)) ;gives you corresponding modifiers from your save, then adding the legendary depending on whether or not in hell-mode.
       (set! stored-cp? #f)
       (set! pause-menu-blocked? #f)
@@ -1551,7 +1541,6 @@
       )
     )
   )
-
 
 (when (= pause-menu-blocked? #t)
   (set-master-mode 'game)
@@ -1717,6 +1706,22 @@
     (set! spawned-turret-vin? #f) 
     (print "VIN TURRET SET TO FALSE")
   )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1938,7 +1943,24 @@
 )
 
 
-;hud-menu 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;hud-menu (this is very inefficient and long. Not worth to add any options if you're not me.)
 ;---------------------------------------------------------
 
 (when *target*
@@ -3017,18 +3039,23 @@
         ;-------------------------mag-bag-int--------------------------------
   (when (and (= mag-bag-option #t)(= weapon-id 7)(= sub-menu-slot 0))
         (set! mag-bag-int 2)(sound-play "gun-takeout")
+        (set! (-> *game-info* karma) 2.0)
   )
   (when (and (= mag-bag-option #t)(= weapon-id 7)(= sub-menu-slot 1))
     (set! mag-bag-int 1)(sound-play "gun-takeout")
+    (set! (-> *game-info* karma) 1.0)
   )
   (when (and (= mag-bag-option #t)(= weapon-id 7)(= sub-menu-slot 2))
     (set! mag-bag-int 3)(sound-play "gun-takeout")
+    (set! (-> *game-info* karma) 3.0)
   )
   (when (and (= mag-bag-option #t)(= weapon-id 7)(= sub-menu-slot 3))
     (set! mag-bag-int 4)(sound-play "gun-takeout")
+    (set! (-> *game-info* karma) 4.0)
   )
   (when (and (= mag-bag-option #t)(= weapon-id 7)(= sub-menu-slot 4))
     (set! mag-bag-int 0)(sound-play "gun-takeout")
+    (set! (-> *game-info* karma) 0.0)
   )
 )
 
