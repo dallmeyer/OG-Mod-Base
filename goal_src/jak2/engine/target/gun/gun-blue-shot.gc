@@ -179,6 +179,9 @@
         (set! (-> s4-1 attack-id) a0-15)
         )
       (set! (-> s4-1 timeout) (seconds 4))
+      (when (= rapid-fire-int 3)
+        (set! rapid-fire-blue #t)
+      )
             (when (and (!= guard-grenade-int 3)(!= guard-shot-int 3)) ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;WEAPON MOD CHANGES OCCUR HERE AND DOWN
         (spawn-projectile gun-blue-shot s4-1 (ppointer->process (-> gp-0 gun)) *default-dead-pool*)
       )

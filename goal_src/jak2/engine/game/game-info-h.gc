@@ -430,6 +430,8 @@ CURRENT BUGS:
 ;-------------GUNMOD DEF----------------------
 (define rapid-fire-option #f) ;option for if its enabled/gotten
 (define rapid-fire-int 0) ;option for weapon 1-4
+(define rapid-fire-blue #f)
+(define rapid-fire-blue-count 0)
 (define double-tap-option #f) ;option for if its enabled/gotten
 (define double-tap-int 0);option for weapon 1-4
 (define infinite-range-option #f) ;option for if its enabled/gotten
