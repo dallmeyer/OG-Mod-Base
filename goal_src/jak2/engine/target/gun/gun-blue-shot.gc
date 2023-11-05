@@ -555,7 +555,7 @@
         )
             )
             (when (= stored-cp? #t)
-              (set! (-> this damage) 0.5)
+              (set! (-> this damage) 1.0)
             )
     0
     (none)

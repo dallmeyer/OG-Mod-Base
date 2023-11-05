@@ -9,10 +9,8 @@
 TODO: FINISH HEROMODE+
 --------------------------------------------
 - have jak get dark bomb and blast during (= stored-cp? #t)
-- Integrate blue rapid fire and double tap mods
 - set enemy health correctly in (gametask drill-ship)
 - something to make getting shit tons of ammo easier, like adding ALOT more boxes in gun-range, or have the boxes hold more ammo in them.
-- when mag-bag not set to that gun, set gun back to original ammo 
 
 POLISH?
 - change up darkjaklonger to be a dark bomb init every time?
@@ -1793,7 +1791,7 @@ FINISHED :D
     )
   )
 
-  (when (and (= start-death-timer-i #t)(= stored-cp? #f)(= tp-fb #t)(rand-vu-percent? 0.01)) ;looks for teleport percentage upon death, if so, init tp-fb
+  (when (and (= start-death-timer-i #t)(= stored-cp? #f)(= tp-fb #t)(rand-vu-percent? 0.007)) ;looks for teleport percentage upon death, if so, init tp-fb
     (set! start-frame-count #t)
     (set! stored-cp? #t)
     (set! new-game-s? #t)
@@ -3215,7 +3213,7 @@ FINISHED :D
 #|
     (set! modifier-string "Peacemaker Ability / 1 Hit Boss")
     (set! modifier-string "On-Death TP-FB Challenge")
-    (set! modifier-string "Increased Hov Speed / X5 Health Enemies")
+    (set! modifier-string "Increased Hov Speed / X4 Health Enemies")
     (set! modifier-string "Chanced Max Eco collect / Traffic Max alert")
     (set! modifier-string "Chanced Trip / Gain 10 Metalheads")
     (set! modifier-string "Target Explode / DJak Longer Duration")|#
@@ -3233,7 +3231,7 @@ FINISHED :D
     ~%but you must fight every boss with 1 HP
     ~%<COLOR_RED>Boosted Hov Speed / Boosted Enemy HP
     ~%<COLOR_WHITE>Hoverboard is the fast
-    ~%but enemies have X5 HP
+    ~%but enemies have X4 HP
     ~%<COLOR_RED>Chanced Max Eco collect / Traffic Max alert
     ~%<COLOR_WHITE>Any eco pickup can fill up the rest of your meter
     ~%but any time you anger the guards, theyre alerted to max level
@@ -3267,9 +3265,9 @@ FINISHED :D
     ~%<COLOR_RED>Peacemaker Ability / 1 Hit Boss
     ~%<COLOR_WHITE>At all times, have a chance to fire 100 peacemaker shots,
     ~%but you must fight every boss with 1 HP
-    ~%<COLOR_RED>Increased Hov Speed / X5 Health Enemies
+    ~%<COLOR_RED>Increased Hov Speed / X4 Health Enemies
     ~%<COLOR_WHITE>Hoverboard is the fast
-    ~%but enemies have X5 HP
+    ~%but enemies have X4 HP
     ~%<COLOR_RED>Chanced Max Eco collect / Traffic Max alert
     ~%<COLOR_WHITE>Any eco pickup can fill up the rest of your meter
     ~%but any time you anger the guards, theyre alerted to max level
