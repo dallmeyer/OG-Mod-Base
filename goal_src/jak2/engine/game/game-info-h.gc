@@ -276,6 +276,10 @@ CURRENT BUGS:
 (define pause-menu-blocked? #f)
 (define-extern tp-fb-win symbol)
 (define load-state-tp 0)
+(define start-death-timer-i #f)
+(define death-timer-i 0)
+(define death-timer-cdr #f)
+(define death-timer-cdi 0)
 
 (define tp-fb-2 #f)
 (define tp-framec 0)
