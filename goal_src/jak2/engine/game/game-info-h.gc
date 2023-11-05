@@ -275,6 +275,7 @@ CURRENT BUGS:
 (define stored-cp? #f)
 (define pause-menu-blocked? #f)
 (define-extern tp-fb-win symbol)
+(define load-state-tp 0)
 
 (define tp-fb-2 #f)
 (define tp-framec 0)

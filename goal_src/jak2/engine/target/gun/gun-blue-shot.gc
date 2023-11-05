@@ -569,6 +569,7 @@
       (set! (-> s4-1 charge) 1.0)
       (set! (-> s4-1 options) (projectile-options account-for-target-velocity deal-damage proj-options-8000))
       (set! (-> s4-1 pos quad) (-> arg1 quad))
+      (set! (-> s4-1 vel quad) (-> arg2 quad))
       (set! (-> s4-1 notify-handle) (the-as handle #f))
       (set! (-> s4-1 owner-handle) (the-as handle #f))
       (set! (-> s4-1 ignore-handle) (process->handle arg0))

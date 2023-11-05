@@ -293,11 +293,6 @@ FINISHED :D
 
 
 
-(define kill-game-demo? #t)
-(when (and (= (-> *game-info* mode) 'debug)(= kill-game-demo? #t))
-  (set! (-> *game-info* mode) 'play)
-  (initialize! *game-info* 'game (the-as game-save #f) (the-as string #f))
-)
 
 
 
@@ -1430,6 +1425,19 @@ FINISHED :D
     (set! start-frame-count #t)
     (set! stored-cp? #t)
     (set! new-game-s? #t)
+    (when (= (-> *progress-state* which-slot) 0)
+      (set! load-state-tp 0)
+    )
+    (when (= (-> *progress-state* which-slot) 1)
+      (set! load-state-tp 1)
+    )
+    (when (= (-> *progress-state* which-slot) 2)
+      (set! load-state-tp 2)
+    )
+    (when (= (-> *progress-state* which-slot) 3)
+      (set! load-state-tp 3)
+    )
+    
     (print "[MOD] Started tp-fb, Autosaving User...
 ")
   )
@@ -1480,7 +1488,7 @@ FINISHED :D
 ")
   )
   (when (and (= frame-count 60)(= tp-fb-win #f)(= going-back-tp #t)) ;loads the save you had after 60 frames of DEATH
-    (auto-save-command 'restore 0 0 *default-pool* #f)
+    (auto-save-command 'restore 0 load-state-tp *default-pool* #f)
     (print "[MOD] crash?
 ")
   )
@@ -1509,7 +1517,7 @@ FINISHED :D
     (set! start-frame-count #t)
     (set! new-game-s? #f)
     (when (and (= stored-cp? #t)(= frame-count 1))
-      (auto-save-command 'restore 0 0 *default-pool* #f)
+      (auto-save-command 'restore 0 load-state-tp *default-pool* #f)
     )
 
     (when (and (= stored-cp? #t)(= frame-count 120)) ;gives you corresponding modifiers from your save, then adding the legendary depending on whether or not in hell-mode.
