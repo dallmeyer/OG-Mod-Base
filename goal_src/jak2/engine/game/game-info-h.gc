@@ -281,6 +281,8 @@ CURRENT BUGS:
 (define death-timer-cdr #f)
 (define death-timer-cdi 0)
 (define rapid-fire-blue-frame 0)
+(define already-died? #f)
+(define jakisntdead #t)
 
 (define tp-fb-2 #f)
 (define tp-framec 0)
@@ -307,6 +309,10 @@ CURRENT BUGS:
 (define r-bomb-setoff 0)
 (define dark-jacked? #f)
 (define dark-jacked! #f)
+(define rand-setting? #f)
+(define rand-setting-c 0)
+
+(define gungame-ammorefill #f)
 
 (define dt-frame-start #f)
 (define dt-count 0)
@@ -393,6 +399,8 @@ CURRENT BUGS:
 (define error-hint #f)
 (define error-frame 0)
 (define error-start #f)
+(define popup3-start #f)
+(define popup-time 0)
 (define-extern recieved-gm-s string)
 (define-extern recieved-gm-s2 string)
 (define-extern recieved-gm-s3 string)

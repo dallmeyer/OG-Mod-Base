@@ -317,6 +317,14 @@
         )
     (if (logtest? arg0 (darkjak-stage no-anim))
         (go target-stance)
+
+#|
+        (when (rand-vu-percent? 0.4)
+      (set! rand-setting? #t)
+      (go target-darkjak-get-off)
+    )
+
+    |#
         )
     (set-setting! 'bg-r 'abs 0.1 0)
     (set-setting! 'bg-b 'abs 0.1 0)

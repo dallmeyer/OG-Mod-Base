@@ -8,9 +8,8 @@
 #|
 TODO: FINISH HEROMODE+
 --------------------------------------------
-- have jak get dark bomb and blast during (= stored-cp? #t)
-- set enemy health correctly in (gametask drill-ship)
-- something to make getting shit tons of ammo easier, like adding ALOT more boxes in gun-range, or have the boxes hold more ammo in them.
+- have jak get dark bomb and blast when (= stored-cp? #t)
+- make metalkors 3rd stage attacks variable when (= stored-cp? #t)
 
 POLISH?
 - change up darkjaklonger to be a dark bomb init every time?
@@ -373,7 +372,7 @@ FINISHED :D
   (when (= mod-rand 6)
     (set! (-> *game-info* fuel) 6.0)
     (set! mod-pick #f)
-    (print "[MOD] rolled for Target Explode / DarkJakLonger!
+    (print "[MOD] rolled for Target Explode / GunGame Ammo!
 ")
 (auto-save-user)
   )
@@ -508,7 +507,7 @@ FINISHED :D
     (set! weapon-mod-toggle #t)
     (set! trip-metalheads #f)
     (set! target-explode #t)
-    (set! modifier-string "Target Explode / DJak Longer Duration")
+    (set! modifier-string "Target Explode / GunGame Ammo")
   )
   (when (and (= (-> *game-info* fuel) 10.0)(= hell-mode-option #f)) ;if 10, hell mode }:)
     (set! hell-mode-option #t)
@@ -1173,7 +1172,7 @@ FINISHED :D
 
 (when (and (cpad-hold? 0 r1)(= rapid-fire-blue #t))
   (+! rapid-fire-blue-frame 1)
-  (when (= rapid-fire-blue-frame 3)
+  (when (= rapid-fire-blue-frame 5)
     (let ((gp-0 (-> *target* gun))
         (s4-0 (-> *target* gun fire-dir-out))
         (s5-0 (new 'stack-no-clear 'vector))
@@ -1199,9 +1198,6 @@ FINISHED :D
         (set! (-> s4-1 attack-id) a0-15)
         )
       (set! (-> s4-1 timeout) (seconds 4))
-      (when (= rapid-fire-int 3)
-        (set! rapid-fire-blue #t)
-      )
             (when (and (!= guard-grenade-int 3)(!= guard-shot-int 3)) ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;WEAPON MOD CHANGES OCCUR HERE AND DOWN
         (spawn-projectile gun-blue-shot s4-1 (ppointer->process (-> gp-0 gun)) *default-dead-pool*)
       )
@@ -1296,7 +1292,7 @@ FINISHED :D
     )
   )
   )
-  (when (= rapid-fire-blue-frame 6)
+  (when (= rapid-fire-blue-frame 10)
     (let ((gp-0 (-> *target* gun))
         (s4-0 (-> *target* gun fire-dir-out))
         (s5-0 (new 'stack-no-clear 'vector))
@@ -1322,9 +1318,6 @@ FINISHED :D
         (set! (-> s4-1 attack-id) a0-15)
         )
       (set! (-> s4-1 timeout) (seconds 4))
-      (when (= rapid-fire-int 3)
-        (set! rapid-fire-blue #t)
-      )
             (when (and (!= guard-grenade-int 3)(!= guard-shot-int 3)) ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;WEAPON MOD CHANGES OCCUR HERE AND DOWN
         (spawn-projectile gun-blue-shot s4-1 (ppointer->process (-> gp-0 gun)) *default-dead-pool*)
       )
@@ -1419,7 +1412,7 @@ FINISHED :D
     )
   )
   )
-  (when (= rapid-fire-blue-frame 9)
+  (when (= rapid-fire-blue-frame 15)
     (let ((gp-0 (-> *target* gun))
         (s4-0 (-> *target* gun fire-dir-out))
         (s5-0 (new 'stack-no-clear 'vector))
@@ -1445,9 +1438,6 @@ FINISHED :D
         (set! (-> s4-1 attack-id) a0-15)
         )
       (set! (-> s4-1 timeout) (seconds 4))
-      (when (= rapid-fire-int 3)
-        (set! rapid-fire-blue #t)
-      )
             (when (and (!= guard-grenade-int 3)(!= guard-shot-int 3)) ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;WEAPON MOD CHANGES OCCUR HERE AND DOWN
         (spawn-projectile gun-blue-shot s4-1 (ppointer->process (-> gp-0 gun)) *default-dead-pool*)
       )
@@ -1763,35 +1753,38 @@ FINISHED :D
 ;tp-fb is the whole TeleportJakToFinalBoss Mod.
 ;All of the variables set are for time-based events based off of frames |
 
+  (when (and (= jakisntdead #f)(= (pause-allowed?) #t)(!= (-> *target* fact health) 0.0)) ;when jak alive
+    (set! jakisntdead #t)
+    (set! already-died? #f)
+  )
+  (when (and (= jakisntdead #t)(= (pause-allowed?) #t)(= (-> *target* fact health) 0.0)) ;when jak dead
+    (set! jakisntdead #f)
+  )
+
+  (when (and (not *scene-player*)(= (pause-allowed?) #t)(= stored-cp? #f)(= already-died? #f)(= start-death-timer-i #f)(= jakisntdead #f))
+    (set! start-death-timer-i #t)
+  )
 
   (when (= start-frame-count #t)
     (+! frame-count 1)
   )
-  (when *target*
-  (when (and (= death-timer-cdr #f)(= start-death-timer-i #f)(< (-> *target* fact health) 1))
-    (set! start-death-timer-i #t)
-  )
-  )
+
+  
   (when (= start-death-timer-i #t)
     (+! death-timer-i 1)
     (when (= death-timer-i 120)
       (set! start-death-timer-i #f)
       (set! death-timer-i 0)
-      (set! death-timer-cdr #t)
-      (when (= stored-cp? #f)
-        (initialize! *game-info* 'dead (the-as game-save #f) (the-as string #f))
-      )
+      (set! already-died? #t)
     )
   )
-  (when (= death-timer-cdr #t)
-    (+! death-timer-cdi 1)
-    (when (= death-timer-cdi 480)
-      (set! death-timer-cdi 0)
-      (set! death-timer-cdr #f)
-    )
-  )
+  
 
-  (when (and (= start-death-timer-i #t)(= stored-cp? #f)(= tp-fb #t)(rand-vu-percent? 0.007)) ;looks for teleport percentage upon death, if so, init tp-fb
+
+
+
+
+  (when (and (= already-died? #f)(= jakisntdead #f)(= stored-cp? #f)(= tp-fb #t)(rand-vu-percent? 0.007)) ;looks for teleport percentage upon death, if so, init tp-fb
     (set! start-frame-count #t)
     (set! stored-cp? #t)
     (set! new-game-s? #t)
@@ -1995,18 +1988,20 @@ FINISHED :D
   )
 )
 
-(when (= dark-jacked? #t)
-    (when (= target-explode #f)
-          (set! (-> (the-as fact-info-target (-> *target* fact)) darkjak-effect-time) (seconds 20))
-        )
-    (when (= target-explode #t)
-          (set! (-> (the-as fact-info-target (-> *target* fact)) darkjak-effect-time) (seconds 60))
-        )
-    (set! dark-jacked? #f)
+
+(when (and (= target-explode #t)(= gungame-ammorefill #f)(= (-> (level-get-target-inside *level*) name) 'gungame) (not (= (-> (level-get-target-inside *level*) name) 'ctywide)))
+  (send-event *target* 'get-pickup (pickup-type ammo-yellow) 1000.0)
+  (send-event *target* 'get-pickup (pickup-type ammo-red) 1000.0)
+  (send-event *target* 'get-pickup (pickup-type ammo-blue) 1000.0)
+  (send-event *target* 'get-pickup (pickup-type ammo-dark) 1000.0)
+  (set! gungame-ammorefill #t)
+  (set! popup3-start #t)
+  (sound-play "ammo-pickup")
 )
 
-
-
+(when (and (= gungame-ammorefill #t)(not (= (-> (level-get-target-inside *level*) name) 'gungame)))
+  (set! gungame-ammorefill #f)
+)
 
 
 ;start mushroom-movies
@@ -2324,7 +2319,30 @@ FINISHED :D
 )
 
 
+(when (= popup3-start #t)
+  (+! popup-time 1)
 
+(clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+    (format *temp-string* "
+<COLOR_WHITE>MAX AMMO:
+~%<COLOR_GREEN>All Ammo Refilled.
+"
+    )
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 75 0.0 (font-color default) (font-flags shadow kerning large))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+
+  (when (= popup-time 600)
+    (set! popup-time 0)
+    (set! popup3-start #f)
+  )
+)
 
 
 
@@ -3216,7 +3234,7 @@ FINISHED :D
     (set! modifier-string "Increased Hov Speed / X4 Health Enemies")
     (set! modifier-string "Chanced Max Eco collect / Traffic Max alert")
     (set! modifier-string "Chanced Trip / Gain 10 Metalheads")
-    (set! modifier-string "Target Explode / DJak Longer Duration")|#
+    (set! modifier-string "Target Explode / GunGame Ammo")|#
 (when (and (= in-menu #t)(= tp-fb-win #f)(= (-> *game-info* fuel) 10.0)(cpad-hold? 0 down)) ;draws the info screen
   (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
@@ -3224,10 +3242,10 @@ FINISHED :D
     <COLOR_WHITE>HELL MODE INFO:
     ~%<COLOR_YELLOW>All modifiers are active:
     ~%<COLOR_RED>TP-FB Challenge
-    ~%<COLOR_WHITE>Upon death, jak teleports to the final boss, but its extremely unfair.
+    ~%<COLOR_WHITE>Upon death, jak teleports to the final boss, but its extremely unfair
     ~%Beat the boss to gain a powerful weapon mod (even more powerful in hero-mode)
     ~%<COLOR_RED>Peacemaker Ability / 1 Hit Boss
-    ~%<COLOR_WHITE>At all times, have a chance to fire 100 peacemaker shots,
+    ~%<COLOR_WHITE>At all times, have a chance to fire 100 peacemaker shots
     ~%but you must fight every boss with 1 HP
     ~%<COLOR_RED>Boosted Hov Speed / Boosted Enemy HP
     ~%<COLOR_WHITE>Hoverboard is the fast
@@ -3238,8 +3256,8 @@ FINISHED :D
     ~%<COLOR_RED>Chanced Trip / Gain 10 Metalheads
     ~%<COLOR_WHITE>Can trip from shooting, rolling, punching, jumping, or twirling
     ~%but every time this happens, gain 10 metalheads (on-cooldown)
-    ~%<COLOR_RED>Target Explode / DJak Longer Duration
-    ~%<COLOR_WHITE>Dark Jak has a longer duration
+    ~%<COLOR_RED>Target Explode / GunGame Ammo
+    ~%<COLOR_WHITE>Entering the gun course refills all of your ammo to maximum
     ~%but Jak has a bomb strapped inside of him, any hits or bonks could set it off
     "
     )
@@ -3260,12 +3278,12 @@ FINISHED :D
     <COLOR_WHITE>HELL MODE INFO:
     ~%<COLOR_YELLOW>All modifiers are active:
     ~%<COLOR_RED>On-Death TP-FB Challenge (disabled)
-    ~%<COLOR_GREEN>You beat TP-FB in Hero Mode! I'm actually impressed.
-    ~%You now have one of the finest Mods out of all Gun Mods. You've earned it.
+    ~%<COLOR_GREEN>You beat TP-FB in Hero Mode! I'm actually impressed
+    ~%You now have one of the finest Mods out of all Gun Mods. You've earned it
     ~%<COLOR_RED>Peacemaker Ability / 1 Hit Boss
-    ~%<COLOR_WHITE>At all times, have a chance to fire 100 peacemaker shots,
+    ~%<COLOR_WHITE>At all times, have a chance to fire 100 peacemaker shots
     ~%but you must fight every boss with 1 HP
-    ~%<COLOR_RED>Increased Hov Speed / X4 Health Enemies
+    ~%<COLOR_RED>Boosted Hov Speed / Boosted Enemy HP
     ~%<COLOR_WHITE>Hoverboard is the fast
     ~%but enemies have X4 HP
     ~%<COLOR_RED>Chanced Max Eco collect / Traffic Max alert
@@ -3274,8 +3292,8 @@ FINISHED :D
     ~%<COLOR_RED>Chanced Trip / Gain 10 Metalheads
     ~%<COLOR_WHITE>Can trip from shooting, rolling, punching, jumping, or twirling
     ~%but every time this happens, gain 10 metalheads (on-cooldown)
-    ~%<COLOR_RED>Target Explode / DJak Longer Duration
-    ~%<COLOR_WHITE>Dark Jak has a longer duration
+    ~%<COLOR_RED>Target Explode / GunGame Ammo
+    ~%<COLOR_WHITE>Entering the gun course refills all of your ammo to maximum
     ~%but Jak has a bomb strapped inside of him, any hits or bonks could set it off
     "
     )
@@ -3706,7 +3724,7 @@ FINISHED :D
 
     (defun runs-on-jak-spawn ()
       ;; Code here runs every time jak spawns (loading a file new game or death)   
-
+      (set! jakisntdead #t)
       (none)
       )
 
@@ -3714,7 +3732,6 @@ FINISHED :D
       (case death-event
         (('dying)
           ;; Code here runs immediately every time jak dies, before any death animation or death cutscene
-          
           )
         (('blackout)
           ;; Code here runs after jak dies (and any death cutscene finishes), during the blackout before he spawns
