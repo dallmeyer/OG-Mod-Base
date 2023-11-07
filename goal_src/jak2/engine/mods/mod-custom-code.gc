@@ -8,13 +8,9 @@
 #|
 TODO: FINISH HEROMODE+
 --------------------------------------------
-- have jak get dark bomb and blast when (= stored-cp? #t)
-- make metalkors 3rd stage attacks variable when (= stored-cp? #t)
-
-POLISH?
-- maaaaybe add another mod for 100 orbs? we'll see as we go down the line for playtesting difficulty.
-- change color of projectiles due to weapon mods attached?
-- list the weapon mods attached to the weapon pulled out?
+- maybe have jak get dark bomb and blast when (= stored-cp? #t)
+- maybe make metalkors 3rd stage attacks variable when (= stored-cp? #t)
+- tweak mag-bag
 
 - beat TP-FB
 - beat HellMode
@@ -22,7 +18,8 @@ POLISH?
 FINISHED :D
 |#
 
-
+ (define-extern dark-traffic symbol)
+ (define orb-count1 60)
 
 
 (defpartgroup group-guard-grenade
@@ -266,8 +263,7 @@ FINISHED :D
 
 
 
- (define-extern dark-traffic symbol)
- (define orb-count1 50)
+
     ;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;; Begin function defintions.
     ;;;;;;;;;;;;;;;;;;;;;;;;;;
