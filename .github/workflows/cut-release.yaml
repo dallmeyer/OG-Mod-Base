@@ -28,5 +28,8 @@ jobs:
       metadataAuthors: "Kraken"
       metadataTags: "challenge,gameplay-mod"
       metadataWebsiteUrl: "https://github.com/RealOfficialKraken/OG-HeroMode-Plus"
+      skipMacOS: true
+      skipLinux: true
+      toolingBinaryDir: "out/build/Release/bin"
     secrets:
       token: ${{ secrets.GITHUB_TOKEN }}
