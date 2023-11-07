@@ -332,6 +332,13 @@
                            2.0
                            1.0
                            )
+                        (if (and (rand-vu-percent? 0.06)(= mehrunes-shot-int 2))
+                          999.0
+                          (if (logtest? (game-feature gun-upgrade-damage) (-> *game-info* features))
+                           2.0
+                           1.0
+                           )
+                        )
                        )
                     )
              )

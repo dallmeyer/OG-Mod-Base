@@ -331,6 +331,7 @@ CURRENT BUGS:
 (define mission-grab-3 #f) ;sets mission get for weapon mods
 (define mission-grab-4 #f) ;sets mission get for weapon mods
 (define orb-grab-1 #f) ;sets weapon mod after certain # of orbs
+(define orb-grab-2 #f)
 
 (define mushroom-movies #t)
 (define movie-int 0)
@@ -367,6 +368,7 @@ CURRENT BUGS:
 (define recieved-gm5 #f)
 (define recieved-gm6 #f)
 (define recieved-gm7 #f)
+(define recieved-gm8 #f)
 (define gm-frame 0)
 (define gm-start #f)
 (define gm-frame2 0)
@@ -381,6 +383,8 @@ CURRENT BUGS:
 (define gm-start6 #f)
 (define gm-frame7 0)
 (define gm-start7 #f)
+(define gm-frame8 0)
+(define gm-start8 #f)
 (define gm-weapon-id 0)
 (define weapon-toggle-false? #f)
 (define in-menu-2 #f)
@@ -408,11 +412,20 @@ CURRENT BUGS:
 (define-extern recieved-gm-s5 string)
 (define-extern recieved-gm-s6 string)
 (define-extern recieved-gm-s7 string)
+(define-extern recieved-gm-s8 string)
 (define-extern gun-string string)
 (define-extern mod-string string) 
 (define-extern gun-mod-string string)
 (define-extern modifier-string string)
 (define-extern mod-reroll-string string)
+(define gs1 #f)
+(define gs2 #f)
+(define gs3 #f)
+(define gs4 #f)
+(define gs5 #f)
+(define gs6 #f)
+(define gs7 #f)
+(define gs8 #f)
 
 (define pm-shot-trigger #f) ;these had to be placed here due to load order
 
@@ -434,6 +447,11 @@ CURRENT BUGS:
 (define guard-grenade-int 0)
 (define-extern fire-guard-grenade (function process-drawable vector vector (pointer process)))
 (define firingthegun #f)
+(define mehrunes-shot-option #f)
+(define mehrunes-shot-int 0)
+(define mehrunes-start #f)
+(define mehrunes-count 0)
+(define mehrunes-plug #f)
 
 
 

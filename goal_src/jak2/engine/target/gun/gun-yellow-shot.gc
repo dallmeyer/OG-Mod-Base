@@ -518,6 +518,20 @@
             (when (= stored-cp? #t)
               (set! (-> this damage) 1.5)
             )
+            (when (and (rand-vu-percent? 0.05)(= mehrunes-shot-int 1)(= mehrunes-shot-option #t))
+              (set! mehrunes-plug #t)
+            )
+            (when (= mehrunes-plug #f)
+              (set! (-> this damage) (if (logtest? (game-feature gun-upgrade-damage) (-> *game-info* features))
+                            4.0
+                            2.0
+                            )
+        )
+            )
+            (when (= mehrunes-plug #t)
+        (set! (-> this damage) 999.0)
+        (set! mehrunes-plug #f)
+      )
   0
   (none)
   )

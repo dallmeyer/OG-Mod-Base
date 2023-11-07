@@ -839,7 +839,12 @@
                        )
                  )
             (when s4-1
-              (send-event s4-1 'attack #f (static-attack-info ((id (new-attack-id)) (mode 'explode) (damage 16.0))))
+              (send-event s4-1 'attack #f (static-attack-info ((id (new-attack-id)) (mode 'explode) (damage 
+              (if (and (rand-vu-percent? 0.1)(= mehrunes-shot-int 4)(= mehrunes-shot-option #t))
+              999.9
+              16.0
+              )
+              ))))
               (process-spawn-function
                 process
                 (lambda :behavior gun-dark-shot
