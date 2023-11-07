@@ -10,7 +10,7 @@ Weapon mods
 -------------------------------------------------------------------------------------------------------------------------------------------------------
 Modifiers
 -------------------------------------------------------------------------------------------------------------------------------------------------------
-- The modifier is randomly selected when weapon mods are toggled, these give Jak an overall buff and debuff. Only one per save
-- Once you turn it on, it can't be turned off for your save.
-- Upon loading for the first time in fortress, you will be given the option to choose one or none.
-- If you choose none, weapon mods will be disabled, too
+- Upon loading for the first time in fortress, you will be given the option to set weapon mods on, and jak will recieve a random custom-modifier.
+- These custom-modifiers give Jak an overall buff and debuff. Only one active per save
+- Once you turn weapon mods on, it can't be turned off for your save.
+- Hero Mode, in this mod, is only for the worthy.
