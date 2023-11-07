@@ -2285,7 +2285,8 @@ FINISHED :D
     ~%but in doing so, you also enable a random modifier.
     ~%These can last the whole game.
     ~%All modifiers have a give and a take
-    ~%And Hero-Mode enables all of these modifiers.
+    ~%Or, you can choose not to enable them this run, and just experience harder Jak II!
+    ~%
     ~%<COLOR_YELLOW>Would you like to enable Weapon Mods?
     ~%(hint: this option is only asked once per save)
     ~%<COLOR_GREEN>Yes<COLOR_RED> No"
@@ -2312,7 +2313,8 @@ FINISHED :D
     ~%but in doing so, you also enable a random modifier.
     ~%These can last the whole game.
     ~%All modifiers have a give and a take
-    ~%And Hero-Mode enables all of these modifiers.
+    ~%Or, you can choose not to enable them this run, and just experience harder Jak II!
+    ~%
     ~%<COLOR_YELLOW>Would you like to enable Weapon Mods?
     ~%(hint: this option is only asked once per save)
     ~%<COLOR_RED>Yes<COLOR_GREEN> No"
