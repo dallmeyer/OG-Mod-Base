@@ -3738,7 +3738,7 @@ FINISHED :D
     ~%but you must fight every boss with 1 HP
     ~%<COLOR_RED>Boosted Hov Speed / Boosted Enemy HP
     ~%<COLOR_WHITE>Hoverboard is the fast
-    ~%but enemies have X5 HP
+    ~%but enemies have X5 HP (does not apply in traffic)
     ~%<COLOR_RED>Chanced Max Eco collect / Traffic Max alert
     ~%<COLOR_WHITE>Any eco pickup can fill up the rest of your meter
     ~%but any time you anger the guards, theyre alerted to max level
@@ -3766,15 +3766,15 @@ FINISHED :D
     (format *temp-string* "
     <COLOR_WHITE>HELL MODE INFO:
     ~%<COLOR_YELLOW>All modifiers are active:
-    ~%<COLOR_RED>On-Death TP-FB Challenge (disabled)
-    ~%<COLOR_GREEN>You beat TP-FB in Hero Mode! I'm actually impressed
+    ~%<COLOR_GREEN>On-Death TP-FB Challenge (DISABLED)
+    ~%<COLOR_YELLOW>You beat TP-FB in Hero Mode! I'm actually impressed
     ~%You now have one of the finest Mods out of all Gun Mods. You've earned it
     ~%<COLOR_RED>Peacemaker Ability / 1 Hit Boss
     ~%<COLOR_WHITE>At all times, have a chance to fire 100 peacemaker shots
     ~%but you must fight every boss with 1 HP
     ~%<COLOR_RED>Boosted Hov Speed / Boosted Enemy HP
     ~%<COLOR_WHITE>Hoverboard is the fast
-    ~%but enemies have X5 HP
+    ~%but enemies have X5 HP (does not apply in traffic)
     ~%<COLOR_RED>Chanced Max Eco collect / Traffic Max alert
     ~%<COLOR_WHITE>Any eco pickup can fill up the rest of your meter
     ~%but any time you anger the guards, theyre alerted to max level
