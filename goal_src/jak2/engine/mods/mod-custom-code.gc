@@ -3720,7 +3720,7 @@ FINISHED :D
 #|
     (set! modifier-string "Peacemaker Ability / 1 Hit Boss")
     (set! modifier-string "On-Death TP-FB Challenge")
-    (set! modifier-string "Increased Hov Speed / X4 Health Enemies")
+    (set! modifier-string "Increased Hov Speed / X5 Health Enemies")
     (set! modifier-string "Chanced Max Eco collect / Traffic Max alert")
     (set! modifier-string "Chanced Trip / Gain 10 Metalheads")
     (set! modifier-string "Target Explode / GunGame Ammo")|#
@@ -3738,7 +3738,7 @@ FINISHED :D
     ~%but you must fight every boss with 1 HP
     ~%<COLOR_RED>Boosted Hov Speed / Boosted Enemy HP
     ~%<COLOR_WHITE>Hoverboard is the fast
-    ~%but enemies have X4 HP
+    ~%but enemies have X5 HP
     ~%<COLOR_RED>Chanced Max Eco collect / Traffic Max alert
     ~%<COLOR_WHITE>Any eco pickup can fill up the rest of your meter
     ~%but any time you anger the guards, theyre alerted to max level
@@ -3774,7 +3774,7 @@ FINISHED :D
     ~%but you must fight every boss with 1 HP
     ~%<COLOR_RED>Boosted Hov Speed / Boosted Enemy HP
     ~%<COLOR_WHITE>Hoverboard is the fast
-    ~%but enemies have X4 HP
+    ~%but enemies have X5 HP
     ~%<COLOR_RED>Chanced Max Eco collect / Traffic Max alert
     ~%<COLOR_WHITE>Any eco pickup can fill up the rest of your meter
     ~%but any time you anger the guards, theyre alerted to max level
