@@ -425,6 +425,9 @@ CURRENT BUGS:
 (define gs6 #f)
 (define gs7 #f)
 (define gs8 #f)
+(define disable-mm 0)
+(define-extern disable-mms string)
+(define done-it #f)
 
 (define pm-shot-trigger #f) ;these had to be placed here due to load order
 
