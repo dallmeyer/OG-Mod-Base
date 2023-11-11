@@ -12,8 +12,6 @@ TODO: FINISH HEROMODE+
 - maybe make metalkors 3rd stage attacks variable when (= stored-cp? #t)
 - tweak mag-bag
 
-- beat TP-FB
-- beat HellMode
 
 FINISHED :D
 |#
@@ -586,6 +584,7 @@ FINISHED :D
     (sound-play "board-boost")
     (set! orb-grab-1 #t)
     (set! mag-bag-option #t)
+    (set! mushie-unlocked? #t)
     (when (= (-> *game-info* karma) 1.0)
       (set! mag-bag-int 1)
     )
@@ -1146,7 +1145,7 @@ FINISHED :D
 ;(fire-guard-grenade *target* (-> *target* gun fire-point) (-> *target* gun fire-dir-out))
 
 
-(when (and (cpad-hold? 0 r1)(= rapid-fire-int 3)(= rapid-fire-option #t)(= rapid-fire-blue #t))
+(when (and (cpad-hold? 0 r1)(= rapid-fire-int 3)(= rapid-fire-option #t)(= (-> *target* gun gun-type) (pickup-type eco-blue))(= rapid-fire-blue #t))
   (+! rapid-fire-blue-frame 1)
   (when (= rapid-fire-blue-frame 5)
     (let ((gp-0 (-> *target* gun))
@@ -1858,6 +1857,8 @@ FINISHED :D
     (set! mission-grab-4 #f)
     (print "[MOD] You died!! POGGERS!!! (PLAQUE:) I logged 42 hours on this particular problem alone ;-;
 ")
+    (set! pickup-save #f)
+    (set! pickup-frame 0)
   )
 
   (when (and (= stored-cp? #t)(= tp-fb-win #t))   ;runs after winning the final boss fight in tp-fb
@@ -1878,6 +1879,8 @@ FINISHED :D
       (set! mission-grab-2 #f)
       (set! mission-grab-3 #f)
       (set! mission-grab-4 #f)
+      (set! pickup-save #f)
+      (set! pickup-frame 0)
       (set! auto-save-delayed? #t)
       (when (= hell-mode-option #f)
         (print "[MOD] | LEGENDARY | You beat tp-fb on normal and recieved Weapon Mod pm-extra-shot! tp-fb is now disabled, rerolling modifier.
@@ -1910,6 +1913,18 @@ FINISHED :D
   )
 )
 
+(when (and *target* (not *scene-player*))
+  (when (and (= stored-cp? #f)(= pickup-save #t))
+    (when (and (<= pickup-frame 600)(!= (-> *target* fact health) 0.0)(= (paused?) #f))
+      (+! pickup-frame 1)
+    )
+    (when (= pickup-frame 600)
+      (auto-save-user)
+      (set! pickup-save #f)
+      (set! pickup-frame 0)
+    )
+  )
+)
 
 
 ;trip-metalheads function

@@ -332,10 +332,14 @@ CURRENT BUGS:
 (define orb-grab-1 #f) ;sets weapon mod after certain # of orbs
 (define orb-grab-2 #f)
 
-(define mushroom-movies #t)
+(define mushroom-movies #f)
+(define mushie-unlocked? #f)
 (define movie-int 0)
 (define mushroom-movies-start #f)
 (define mushroom-var 0)
+
+(define pickup-save #f)
+(define pickup-frame 0)
 
 ;cty-guard-turret spawn params
 (define spawned-turret-hideout? #f)
