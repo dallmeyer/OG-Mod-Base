@@ -165,10 +165,10 @@
       (set! (-> s4-1 timeout) (seconds 4))
       (vector-normalize! (-> s4-1 vel) 819200.0)
       (when (not (logtest? (-> *game-info* secrets) (game-secrets hero-mode)))
-    (set! (-> *game-info* secrets) (game-secrets invulnerable)) ;this also makes it so that theres no game secrets allowed when using predator/guard shot. I could be lazy and make it for all of them
+    (logior! (-> *game-info* secrets) (game-secrets invulnerable)) ;this also makes it so that theres no game secrets allowed when using predator/guard shot. I could be lazy and make it for all of them
   )
   (when (logtest? (-> *game-info* secrets) (game-secrets hero-mode))
-    (set! (-> *game-info* secrets) (game-secrets invulnerable hero-mode)) ;this also makes it so that theres no game secrets allowed when using predator/guard shot. I could be lazy and make it for all of them
+    (logior! (-> *game-info* secrets) (game-secrets invulnerable hero-mode)) ;this also makes it so that theres no game secrets allowed when using predator/guard shot. I could be lazy and make it for all of them
   )
       (spawn-projectile guard-shot s4-1 (ppointer->process (-> *target* gun gun)) *default-dead-pool*)
       )
@@ -231,10 +231,10 @@
           (set! (-> gp-0 ignore-handle) (process->handle (the-as process (send-event *target* 'get-vehicle))))
           (set! (-> gp-0 timeout) (seconds 4))
           (when (not (logtest? (-> *game-info* secrets) (game-secrets hero-mode)))
-    (set! (-> *game-info* secrets) (game-secrets invulnerable)) ;this also makes it so that theres no game secrets allowed when using predator/guard shot. I could be lazy and make it for all of them
+    (logior! (-> *game-info* secrets) (game-secrets invulnerable)) ;this also makes it so that theres no game secrets allowed when using predator/guard shot. I could be lazy and make it for all of them
   )
   (when (logtest? (-> *game-info* secrets) (game-secrets hero-mode))
-    (set! (-> *game-info* secrets) (game-secrets invulnerable hero-mode)) ;this also makes it so that theres no game secrets allowed when using predator/guard shot. I could be lazy and make it for all of them
+    (logior! (-> *game-info* secrets) (game-secrets invulnerable hero-mode)) ;this also makes it so that theres no game secrets allowed when using predator/guard shot. I could be lazy and make it for all of them
   )
           (spawn-projectile metalhead-predator-shot gp-0 (ppointer->process (-> *target* gun gun)) *default-dead-pool*)
         )
