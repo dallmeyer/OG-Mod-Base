@@ -3426,7 +3426,7 @@ This commonly includes things such as:
                         (-> this entity)
                         )
                    (task-node-closed? (game-task-node city-win-introduction))
-                   (logtest? (-> *game-info* secrets) (game-secrets hero-mode))
+                   (logtest? (-> *game-info* secrets) (game-secrets hero-mode))(= trip-metalheads #t)
                    )
                )
       (logior! (-> this enemy-flags) (enemy-flag cam-attack-mode))

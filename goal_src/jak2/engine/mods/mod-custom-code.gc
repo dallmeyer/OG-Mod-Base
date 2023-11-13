@@ -2352,7 +2352,7 @@ FINISHED :D
 
 
 ;-------------------------------------------method to draw the display gun mods for equipped weapon-----------------------------------------
-(when (and *target* (= (paused?) #f))
+(when (and *target* (= (paused?) #f) (not *scene-player*))
   (when (= (-> *target* gun gun-type) (pickup-type eco-yellow))
     (when (and (= rapid-fire-option #t)(= rapid-fire-int 1))
       (clear *temp-string*)
