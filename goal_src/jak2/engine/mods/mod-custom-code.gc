@@ -365,7 +365,7 @@ FINISHED :D
   (when (= mod-rand 6)
     (set! (-> *game-info* fuel) 6.0)
     (set! mod-pick #f)
-    (print "[MOD] rolled for Target Explode / GunGame Ammo!
+    (print "[MOD] rolled for On Hit Target Explode / GunGame Ammo!
 ")
 (auto-save-user)
   )
@@ -500,7 +500,7 @@ FINISHED :D
     (set! weapon-mod-toggle #t)
     (set! trip-metalheads #f)
     (set! target-explode #t)
-    (set! modifier-string "Target Explode / GunGame Ammo")
+    (set! modifier-string "On Hit Target Explode / GunGame Ammo")
   )
   (when (and (= (-> *game-info* fuel) 10.0)(= hell-mode-option #f)) ;if 10, hell mode }:)
     (set! hell-mode-option #t)
@@ -2274,7 +2274,7 @@ FINISHED :D
     <COLOR_WHITE>~%Everything in the game is out to get you.
     ~%You can gain an edge by enabling weapon mods for you to acquire and find,
     ~%but in doing so, you also enable a random modifier.
-    ~%These can last the whole game.
+    ~%I leave these modifiers vague on purpose, you get a list of all modifiers in a Hero mode save.
     ~%All modifiers have a give and a take
     ~%Or, you can choose not to enable them this run, and just experience harder Jak II!
     ~%
@@ -2302,7 +2302,7 @@ FINISHED :D
     <COLOR_WHITE>~%Everything in the game is out to get you.
     ~%You can gain an edge by enabling weapon mods for you to acquire and find,
     ~%but in doing so, you also enable a random modifier.
-    ~%These can last the whole game.
+    ~%I leave these modifiers vague on purpose, you get a list of all modifiers in a Hero mode save.
     ~%All modifiers have a give and a take
     ~%Or, you can choose not to enable them this run, and just experience harder Jak II!
     ~%
@@ -2327,7 +2327,7 @@ FINISHED :D
 (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
     (format *temp-string* "
-<COLOR_WHITE>MAX AMMO:
+<COLOR_RED>GUNGAME AMMO MODIFIER:
 ~%<COLOR_GREEN>All Ammo Refilled.
 "
     )
@@ -3739,7 +3739,7 @@ FINISHED :D
     (set! modifier-string "Increased Hov Speed / X5 Health Enemies")
     (set! modifier-string "Chanced Max Eco collect / Traffic Max alert")
     (set! modifier-string "Chanced Trip / Gain 10 Metalheads")
-    (set! modifier-string "Target Explode / GunGame Ammo")|#
+    (set! modifier-string "On Hit Target Explode / GunGame Ammo")|#
 (when (and (= in-menu #t)(= tp-fb-win #f)(= (-> *game-info* fuel) 10.0)(cpad-hold? 0 down)) ;draws the info screen
   (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
@@ -3761,7 +3761,7 @@ FINISHED :D
     ~%<COLOR_RED>Chanced Trip / Gain 10 Metalheads
     ~%<COLOR_WHITE>Can trip from shooting, rolling, punching, jumping, or twirling
     ~%but every time this happens, gain 10 metalheads (on-cooldown)
-    ~%<COLOR_RED>Target Explode / GunGame Ammo
+    ~%<COLOR_RED>On Hit Target Explode / GunGame Ammo
     ~%<COLOR_WHITE>Entering the gun course refills all of your ammo to maximum
     ~%but Jak has a bomb strapped inside of him, any hits or bonks could set it off
     "
@@ -3797,7 +3797,7 @@ FINISHED :D
     ~%<COLOR_RED>Chanced Trip / Gain 10 Metalheads
     ~%<COLOR_WHITE>Can trip from shooting, rolling, punching, jumping, or twirling
     ~%but every time this happens, gain 10 metalheads (on-cooldown)
-    ~%<COLOR_RED>Target Explode / GunGame Ammo
+    ~%<COLOR_RED>On Hit Target Explode / GunGame Ammo
     ~%<COLOR_WHITE>Entering the gun course refills all of your ammo to maximum
     ~%but Jak has a bomb strapped inside of him, any hits or bonks could set it off
     "
