@@ -331,6 +331,7 @@ CURRENT BUGS:
 (define mission-grab-4 #f) ;sets mission get for weapon mods
 (define orb-grab-1 #f) ;sets weapon mod after certain # of orbs
 (define orb-grab-2 #f)
+(define orb-grab-3 #f)
 
 (define mushroom-movies #f)
 (define mushie-unlocked? #f)
@@ -372,6 +373,7 @@ CURRENT BUGS:
 (define recieved-gm6 #f)
 (define recieved-gm7 #f)
 (define recieved-gm8 #f)
+(define recieved-gm9 #f)
 (define gm-frame 0)
 (define gm-start #f)
 (define gm-frame2 0)
@@ -388,6 +390,8 @@ CURRENT BUGS:
 (define gm-start7 #f)
 (define gm-frame8 0)
 (define gm-start8 #f)
+(define gm-frame9 0)
+(define gm-start9 #f)
 (define gm-weapon-id 0)
 (define weapon-toggle-false? #f)
 (define in-menu-2 #f)

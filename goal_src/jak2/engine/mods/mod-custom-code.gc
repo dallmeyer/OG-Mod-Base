@@ -18,6 +18,7 @@ FINISHED :D
 
  (define-extern dark-traffic symbol)
  (define orb-count1 60)
+ (define orb-count3 10)
 
 
 (defpartgroup group-guard-grenade
@@ -584,7 +585,6 @@ FINISHED :D
     (sound-play "board-boost")
     (set! orb-grab-1 #t)
     (set! mag-bag-option #t)
-    (set! mushie-unlocked? #t)
     (when (= (-> *game-info* karma) 1.0)
       (set! mag-bag-int 1)
     )
@@ -608,6 +608,13 @@ FINISHED :D
     (sound-play "board-boost")
     (set! orb-grab-2 #t)
     (set! mehrunes-shot-option #t)
+  )
+  (when (and (= orb-grab-3 #f)(>= (-> *game-info* skill) 10))
+    (set! recieved-gm9 #t)
+    (sound-play "ammo-pickup")
+    (sound-play "board-boost")
+    (set! mushie-unlocked? #t)
+    (set! orb-grab-3 #t)
   )
   ;looks for if their missions become un-completed after setting them, then takes away mission gun mods respectively
   (when (and (not (task-node-closed? (game-task-node city-krew-delivery-resolution)))(= mission-grab-1 #t))
@@ -2274,9 +2281,10 @@ FINISHED :D
     <COLOR_WHITE>~%Everything in the game is out to get you.
     ~%You can gain an edge by enabling weapon mods for you to acquire and find,
     ~%but in doing so, you also enable a random modifier.
-    ~%I leave these modifiers vague on purpose, you get a list of all modifiers in a Hero mode save.
-    ~%All modifiers have a give and a take
-    ~%Or, you can choose not to enable them this run, and just experience harder Jak II!
+    ~%All modifiers have a give and a take, left vague on purpose to figure out for yourselves.
+    ~%You get a list of all modifiers in a Hero mode save,
+    ~%and the Hero Mode save is only for the worthiest of Jak II players.
+    ~%However, you can choose not to enable them this run, and just experience harder Jak II!
     ~%
     ~%<COLOR_YELLOW>Would you like to enable Weapon Mods?
     ~%(hint: this option is only asked once per save)
@@ -2287,7 +2295,7 @@ FINISHED :D
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
-      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 245 75 0.0 (font-color default) (font-flags middle shadow kerning large))))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 245 65 0.0 (font-color default) (font-flags middle shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
         (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
 )
@@ -2302,9 +2310,10 @@ FINISHED :D
     <COLOR_WHITE>~%Everything in the game is out to get you.
     ~%You can gain an edge by enabling weapon mods for you to acquire and find,
     ~%but in doing so, you also enable a random modifier.
-    ~%I leave these modifiers vague on purpose, you get a list of all modifiers in a Hero mode save.
-    ~%All modifiers have a give and a take
-    ~%Or, you can choose not to enable them this run, and just experience harder Jak II!
+    ~%All modifiers have a give and a take, left vague on purpose to figure out for yourselves.
+    ~%You get a list of all modifiers in a Hero mode save,
+    ~%and the Hero Mode save is only for the worthiest of Jak II players.
+    ~%However, you can choose not to enable them this run, and just experience harder Jak II!
     ~%
     ~%<COLOR_YELLOW>Would you like to enable Weapon Mods?
     ~%(hint: this option is only asked once per save)
@@ -2315,7 +2324,7 @@ FINISHED :D
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
-      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 245 75 0.0 (font-color default) (font-flags middle shadow kerning large))))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 245 65 0.0 (font-color default) (font-flags middle shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
         (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
 )
@@ -3474,7 +3483,15 @@ FINISHED :D
     (set! gm-start8 #f)
   )
 )
-(when (= recieved-gm #t) ;looks for recieving a gun mod to alert for weapon id 1
+(when (= gm-start9 #t)
+  (+! gm-frame9 1)
+  (when (= gm-frame9 600)
+    (set! recieved-gm9 #f)
+    (set! gm-frame9 0)
+    (set! gm-start9 #f)
+  )
+)
+(when (and (= in-menu #f)(= recieved-gm #t)) ;looks for recieving a gun mod to alert for weapon id 1
   (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
     (format *temp-string* "<COLOR_WHITE>Recieved Gun Mod:~%<COLOR_GREEN>~S"
@@ -3491,7 +3508,7 @@ FINISHED :D
         (set! gm-start #t)
 )
 
-(when (= recieved-gm2 #t) ;looks for recieving a gun mod to alert for weapon id 2
+(when (and (= in-menu #f)(= recieved-gm2 #t)) ;looks for recieving a gun mod to alert for weapon id 2
   (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
     (format *temp-string* "<COLOR_WHITE>Recieved Gun Mod:~%<COLOR_GREEN>~S"
@@ -3508,7 +3525,7 @@ FINISHED :D
         (set! gm-start2 #t)
 )
 
-(when (= recieved-gm3 #t) ;looks for recieving a gun mod to alert for weapon id 3
+(when (and (= in-menu #f)(= recieved-gm3 #t)) ;looks for recieving a gun mod to alert for weapon id 3
   (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
     (format *temp-string* "<COLOR_WHITE>Recieved Gun Mod:~%<COLOR_GREEN>~S"
@@ -3525,7 +3542,7 @@ FINISHED :D
         (set! gm-start3 #t)
 )
 
-(when (= recieved-gm4 #t) ;looks for recieving a gun mod to alert for weapon id 4
+(when (and (= in-menu #f)(= recieved-gm4 #t)) ;looks for recieving a gun mod to alert for weapon id 4
   (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
     (format *temp-string* "<COLOR_WHITE>Recieved Gun Mod:~%<COLOR_GREEN>~S"
@@ -3542,7 +3559,7 @@ FINISHED :D
         (set! gm-start4 #t)
 )
 
-(when (= recieved-gm5 #t) ;looks for recieving a gun mod to alert for weapon id 5
+(when (and (= in-menu #f)(= recieved-gm5 #t)) ;looks for recieving a gun mod to alert for weapon id 5
   (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
     (format *temp-string* "<COLOR_YELLOW> | LEGENDARY <COLOR_WHITE>Recieved Gun Mod:~%<COLOR_RED>~S"
@@ -3559,7 +3576,7 @@ FINISHED :D
         (set! gm-start5 #t)
 )
 
-(when (= recieved-gm6 #t) ;looks for recieving a gun mod to alert for weapon id 6
+(when (and (= in-menu #f)(= recieved-gm6 #t)) ;looks for recieving a gun mod to alert for weapon id 6
   (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
     (format *temp-string* "<COLOR_YELLOW> | LEGENDARY | <COLOR_WHITE>Recieved Gun Mod:~%<COLOR_RED>~S"
@@ -3576,7 +3593,7 @@ FINISHED :D
         (set! gm-start6 #t)
 )
 
-(when (= recieved-gm7 #t) ;looks for recieving a gun mod to alert for weapon id 7
+(when (and (= in-menu #f)(= recieved-gm7 #t)) ;looks for recieving a gun mod to alert for weapon id 7
   (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
     (format *temp-string* "<COLOR_WHITE>Recieved Gun Mod:~%<COLOR_BLUE>~S"
@@ -3593,7 +3610,7 @@ FINISHED :D
         (set! gm-start7 #t)
 )
 
-(when (= recieved-gm8 #t) ;looks for recieving a gun mod to alert for weapon id 8
+(when (and (= in-menu #f)(= recieved-gm8 #t)) ;looks for recieving a gun mod to alert for weapon id 8
   (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
     (format *temp-string* "<COLOR_YELLOW> | LEGENDARY | <COLOR_WHITE>Recieved Gun Mod:~%<COLOR_BLUE>~S"
@@ -3608,6 +3625,23 @@ FINISHED :D
         (set! (-> font-ctx scale) 0.325)
         (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
         (set! gm-start8 #t)
+)
+
+(when (and (= in-menu #f)(= recieved-gm9 #t)) ;looks for recieving mushroom movies secret.
+  (clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+    (format *temp-string* "<COLOR_WHITE>UPDATED GUN MOD MENU SETTINGS
+~%<COLOR_BLUE>Mushroom Movies secret unlocked!"
+    )
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 115 0.0 (font-color default) (font-flags shadow kerning large))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (set! gm-start9 #t)
 )
 
 )
