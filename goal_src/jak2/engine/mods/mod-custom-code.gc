@@ -3996,6 +3996,24 @@ FINISHED :D
 )
 
 
+(when (= in-menu #t)
+  (set! death-counter-int (-> *game-info* total-deaths))
+  (clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+    (format *temp-string* "<COLOR_YELLOW>Death Counter: <COLOR_RED>~d"
+    (the-as int (-> *game-info* total-deaths))
+    )
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 110 0.0 (font-color default) (font-flags shadow kerning large right))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+)
+
+
 (when (and (= in-menu #t)(= menu-slot 0)(= menu-pressed? #t)(cpad-pressed? 0 square)) ;Selected Gun Mod!
   (set! menu-activate #t)
   ;-------------------------rapid-fire-int--------------------------------

@@ -394,6 +394,8 @@ CURRENT BUGS:
 (define gm-start9 #f)
 (define gm-weapon-id 0)
 (define weapon-toggle-false? #f)
+(define-extern death-counter-s string)
+(define-extern death-counter-int int)
 (define in-menu-2 #f)
 (define yes-no #f)
 (define menu2-wait #f)
