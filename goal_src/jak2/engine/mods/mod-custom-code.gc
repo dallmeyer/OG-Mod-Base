@@ -3867,7 +3867,7 @@ FINISHED :D
   (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
     (format *temp-string* "
-    <COLOR_WHITE>HELL MODE INFO: <COLOR_GREEN>(REWORK OF HELLMODE SOON, CHECK HEROMODE+ DISCORD)
+    <COLOR_WHITE>HELL MODE INFO: <COLOR_GREEN>(REWORK OF HELLMODE SOON, CHECK OPENGOAL DISCORD)
     ~%<COLOR_RED>THE STRONGEST SECRETS HAVE BEEN DISABLED.. for now
     ~%<COLOR_YELLOW>All modifiers are active:
     ~%<COLOR_RED>TP-FB Challenge
@@ -3904,7 +3904,7 @@ FINISHED :D
   (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
     (format *temp-string* "
-    <COLOR_WHITE>HELL MODE INFO: <COLOR_GREEN>(REWORK OF HELLMODE SOON, CHECK HEROMODE+ DISCORD)
+    <COLOR_WHITE>HELL MODE INFO: <COLOR_GREEN>(REWORK OF HELLMODE SOON, CHECK OPENGOAL DISCORD)
     ~%<COLOR_GREEN>ALL SECRETS UNBLOCKED :D
     ~%<COLOR_YELLOW>All modifiers are active:
     ~%<COLOR_GREEN>On-Death TP-FB Challenge (DISABLED)
