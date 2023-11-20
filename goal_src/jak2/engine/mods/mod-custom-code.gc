@@ -1868,6 +1868,7 @@ FINISHED :D
     (set! pickup-save #f)
     (set! pickup-frame 0)
     (+! (-> *game-info* total-deaths) 1)
+    (set! auto-save-delayed? #t)
   )
 
   (when (and (= stored-cp? #t)(= tp-fb-win #t))   ;runs after winning the final boss fight in tp-fb
