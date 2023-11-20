@@ -281,10 +281,20 @@ FINISHED :D
 
 
 
+;DISABLING SECRETS IN HELL MODE, WHILE TP-FB REMAINS UNBEATEN.
+  (when (and (= (-> *game-info* fuel) 10.0) (= tp-fb #t))
+    (when (and (logtest? (-> *game-info* secrets) (game-secrets endless-ammo)))
+      (logclear! (-> *game-info* secrets) (game-secrets endless-ammo))
+    )
 
+    (when (and (logtest? (-> *game-info* secrets) (game-secrets endless-dark)))
+      (logclear! (-> *game-info* secrets) (game-secrets endless-dark))
+    )
 
-
-
+    (when (and (= inv-frame-start #f)(= inv-frame-start-g #f)(logtest? (-> *game-info* secrets) (game-secrets invulnerable)))
+      (logclear! (-> *game-info* secrets) (game-secrets invulnerable))
+    )
+  )
 
 
 
@@ -615,6 +625,12 @@ FINISHED :D
     (sound-play "board-boost")
     (set! mushie-unlocked? #t)
     (set! orb-grab-3 #t)
+  )
+  (when (and (= orb-grab-3 #t)(< (-> *game-info* skill) 10))
+    (set! recieved-gm9 #f)
+    (set! mushie-unlocked? #f)
+    (set! orb-grab-3 #f)
+    (set! mushroom-movies #f)
   )
   ;looks for if their missions become un-completed after setting them, then takes away mission gun mods respectively
   (when (and (not (task-node-closed? (game-task-node city-krew-delivery-resolution)))(= mission-grab-1 #t))
@@ -1898,6 +1914,7 @@ FINISHED :D
         (set! (-> *game-info* buzzer-total) 1.0)
         (+! (-> *game-info* gem) 30.0)
         (set! mod-pick #t)
+        (set! popup-tpfb-n #t)
       )
       (when (= hell-mode-option #t)
         (set! (-> *game-info* fuel) 10.0)
@@ -1906,6 +1923,7 @@ FINISHED :D
 ")
         (set! hell-mode-option #f)
         (set! (-> *game-info* buzzer-total) 2.0)
+        (set! popup-tpfb-h #t)
       )
     )
   )
@@ -1958,9 +1976,24 @@ FINISHED :D
 
 ;target-explode
 
+
+
 (when (= target-explode-start #t)
   (set! explode-fstart #t)
   (set! target-explode-start #f)
+  (+! (-> *target* draw color-mult x) 100.0)
+)
+
+(when (= targetec-start #t)
+  (+! targetec-count 1)
+  (when (= targetec-count 1)
+    (+! (-> *target* draw color-mult x) 100.0)
+  )
+  (when (= targetec-count 5)
+    (set! (-> *target* draw color-mult x) (+ 1.0))
+    (set! targetec-start #f)
+    (set! targetec-count 0)
+  )
 )
 
 (when (= explode-fstart #t)
@@ -1973,7 +2006,11 @@ FINISHED :D
   (when (= explode-f 1)
     (set! r-bomb-setoff (rand-vu-int-range 1 3))
   )
+  (when (= explode-f 5)
+    (set! (-> *target* draw color-mult x) (+ 1.0))
+  )
   (when (= explode-f 10)
+    
     (when (= r-bomb-setoff 1)
       (play-sound-file bomb-setoffp 100)
     )
@@ -2034,6 +2071,12 @@ FINISHED :D
 
 
 
+
+
+;COLORS FOR JAK
+;(set! (-> *target* draw color-mult x) (+ 0.0)) ;red
+;(set! (-> *target* draw color-mult y) (+ 0.0)) ;green
+;(set! (-> *target* draw color-mult z) (+ 0.0)) ;blue
 
 
 
@@ -2274,11 +2317,51 @@ FINISHED :D
         (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
 )
 
+(when (and (= in-menu #f)(= popup-tpfb-n #t)) ;looks for completing TP-FB in NORMAL MODE
+  (+! popup-tpfb-tn 1)
+  (clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+    (format *temp-string* "<COLOR_WHITE>TP-FB beaten in Normal Mode, Congrats!~%<COLOR_RED>Modifier Rerolled."
+    )
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 225 0.0 (font-color default) (font-flags right shadow kerning large))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (when (= popup-tpfb-tn 800)
+          (set! popup-tpfb-tn 0)
+          (set! popup-tpfb-n #f)
+        )
+)
+
+(when (and (= in-menu #f)(= popup-tpfb-h #t)) ;looks for completing TP-FB in HELL MODE
+  (+! popup-tpfb-th 1)
+  (clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+    (format *temp-string* "<COLOR_WHITE>Check HELL MODE INFO:~%<COLOR_GREEN>All secrets have been unblocked!"
+    )
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 225 0.0 (font-color default) (font-flags right shadow kerning large))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (when (= popup-tpfb-th 800)
+          (set! popup-tpfb-th 0)
+          (set! popup-tpfb-h #f)
+        )
+)
+
 (when (and (= in-menu-2 #t)(= yes-no #t)) ;draws the yes function being green
   (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
     (format *temp-string* "
-    <COLOR_WHITE>Welcome to<COLOR_RED> HeroMode+!
+    <COLOR_WHITE>Welcome to<COLOR_RED> HeroMode+<COLOR_WHITE>!
     ~%<COLOR_BLUE>  Made by Kraken
     ~%
     ~%
@@ -2286,9 +2369,10 @@ FINISHED :D
     ~%You can gain an edge by enabling weapon mods for you to acquire and find,
     ~%but in doing so, you also enable a random modifier.
     ~%All modifiers have a give and a take, left vague on purpose to figure out for yourselves.
-    ~%You get a list of all modifiers in a Hero mode save,
-    ~%and the Hero Mode save is only for the worthiest of Jak II players.
-    ~%However, you can choose not to enable them this run, and just experience harder Jak II!
+    ~%<COLOR_WHITE>However, you can choose not to enable them this run, and just experience harder Jak II!
+    ~%You will get a list of all modifiers in a Hero mode save.
+    ~%Speaking of, Hero Mode is fully playable and features exclusive content! <COLOR_RED>Only for the worthy.
+    ~%<COLOR_GREEN>(Hero mode is getting a rework, and the update is upcoming, check out HeroMode+ in discord for info!)
     ~%
     ~%<COLOR_YELLOW>Would you like to enable Weapon Mods?
     ~%(hint: this option is only asked once per save)
@@ -2299,7 +2383,7 @@ FINISHED :D
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
-      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 245 65 0.0 (font-color default) (font-flags middle shadow kerning large))))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 250 65 0.0 (font-color default) (font-flags middle shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
         (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
 )
@@ -2307,7 +2391,7 @@ FINISHED :D
   (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
     (format *temp-string* "
-    <COLOR_WHITE>Welcome to<COLOR_RED> HeroMode+!
+    <COLOR_WHITE>Welcome to<COLOR_RED> HeroMode+<COLOR_WHITE>!
     ~%<COLOR_BLUE>  Made by Kraken
     ~%
     ~%
@@ -2315,9 +2399,10 @@ FINISHED :D
     ~%You can gain an edge by enabling weapon mods for you to acquire and find,
     ~%but in doing so, you also enable a random modifier.
     ~%All modifiers have a give and a take, left vague on purpose to figure out for yourselves.
-    ~%You get a list of all modifiers in a Hero mode save,
-    ~%and the Hero Mode save is only for the worthiest of Jak II players.
-    ~%However, you can choose not to enable them this run, and just experience harder Jak II!
+    ~%<COLOR_WHITE>However, you can choose not to enable them this run, and just experience harder Jak II!
+    ~%You will get a list of all modifiers in a Hero mode save.
+    ~%Speaking of, Hero Mode is fully playable and features exclusive content! <COLOR_RED>Only for the worthy.
+    ~%<COLOR_GREEN>(Hero mode is getting a rework, and the update is upcoming, check out HeroMode+ in discord for info!)
     ~%
     ~%<COLOR_YELLOW>Would you like to enable Weapon Mods?
     ~%(hint: this option is only asked once per save)
@@ -2328,7 +2413,7 @@ FINISHED :D
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
-      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 245 65 0.0 (font-color default) (font-flags middle shadow kerning large))))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 250 65 0.0 (font-color default) (font-flags middle shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
         (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
 )
@@ -3782,11 +3867,12 @@ FINISHED :D
   (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
     (format *temp-string* "
-    <COLOR_WHITE>HELL MODE INFO:
+    <COLOR_WHITE>HELL MODE INFO: <COLOR_GREEN>(REWORK OF HELLMODE SOON, CHECK HEROMODE+ DISCORD)
+    ~%<COLOR_RED>THE STRONGEST SECRETS HAVE BEEN DISABLED.. for now
     ~%<COLOR_YELLOW>All modifiers are active:
     ~%<COLOR_RED>TP-FB Challenge
     ~%<COLOR_WHITE>Upon death, jak teleports to the final boss, but its extremely unfair
-    ~%Beat the boss to gain a powerful weapon mod (even more powerful in hero-mode)
+    ~%Beat the boss to gain a powerful weapon mod (more powerful in hero-mode)
     ~%<COLOR_RED>Peacemaker Ability / 1 Hit Boss
     ~%<COLOR_WHITE>At all times, have a chance to fire 100 peacemaker shots
     ~%but you must fight every boss with 1 HP
@@ -3809,7 +3895,7 @@ FINISHED :D
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
-      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 10 0.0 (font-color default) (font-flags shadow kerning large))))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 1 0.0 (font-color default) (font-flags shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
         (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
 )
@@ -3818,7 +3904,8 @@ FINISHED :D
   (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
     (format *temp-string* "
-    <COLOR_WHITE>HELL MODE INFO:
+    <COLOR_WHITE>HELL MODE INFO: <COLOR_GREEN>(REWORK OF HELLMODE SOON, CHECK HEROMODE+ DISCORD)
+    ~%<COLOR_GREEN>ALL SECRETS UNBLOCKED :D
     ~%<COLOR_YELLOW>All modifiers are active:
     ~%<COLOR_GREEN>On-Death TP-FB Challenge (DISABLED)
     ~%<COLOR_YELLOW>You beat TP-FB in Hero Mode! I'm actually impressed
@@ -3845,7 +3932,7 @@ FINISHED :D
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
-      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 10 0.0 (font-color default) (font-flags shadow kerning large))))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 1 0.0 (font-color default) (font-flags shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
         (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
 )

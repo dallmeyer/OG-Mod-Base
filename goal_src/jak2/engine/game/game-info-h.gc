@@ -310,6 +310,8 @@ CURRENT BUGS:
 (define dark-jacked! #f)
 (define rand-setting? #f)
 (define rand-setting-c 0)
+(define targetec-start #f)
+(define targetec-count 0)
 
 (define gungame-ammorefill #f)
 
@@ -414,6 +416,10 @@ CURRENT BUGS:
 (define error-start #f)
 (define popup3-start #f)
 (define popup-time 0)
+(define popup-tpfb-n #f)
+(define popup-tpfb-tn 0)
+(define popup-tpfb-h #f)
+(define popup-tpfb-th 0)
 (define-extern recieved-gm-s string)
 (define-extern recieved-gm-s2 string)
 (define-extern recieved-gm-s3 string)

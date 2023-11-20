@@ -322,7 +322,19 @@
                    )
                )
          )
+         
     (when v1-0
+    #|(when (= mehrunes-plug #t)
+        (set-vector! (-> arg0 draw color-mult) 255.0 255.0 255.0 0.75)
+      )
+      (when (= mehrunes-plug #f)
+            (set! (-> arg0 draw color-mult x) (+ 0.0))
+            (set! (-> arg0 draw color-mult y) (+ 0.0))
+            (set! (-> arg0 draw color-mult z) (+ 0.0))
+          )|#
+      (when (and (rand-vu-percent? 0.09)(= mehrunes-shot-int 2)(= mehrunes-shot-option #t))
+        (set! mehrunes-plug #t)
+      )
       (let* ((s5-2 (vector-! (new 'stack-no-clear 'vector) (-> v1-0 root trans) (-> this start-pos)))
              (f30-0 (* (if (< (vector-length s5-2) 24576.0)
                            3.0
@@ -332,7 +344,7 @@
                            2.0
                            1.0
                            )
-                        (if (and (rand-vu-percent? 0.06)(= mehrunes-shot-int 2))
+                        (if (= mehrunes-plug #t)
                           999.0
                           (if (logtest? (game-feature gun-upgrade-damage) (-> *game-info* features))
                            2.0
@@ -366,6 +378,7 @@
           arg1
           (static-attack-info ((id (-> this attack-id)) (mode 'eco-red) (attacker-velocity s5-2) (damage f30-0)))
           )
+          (set! mehrunes-plug #f)
         )
       )
     )

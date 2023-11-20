@@ -554,7 +554,7 @@
                             )
         )
             )
-            (when (and (rand-vu-percent? 0.03)(= mehrunes-shot-int 3)(= mehrunes-shot-option #t))
+            (when (and (rand-vu-percent? 0.07)(= mehrunes-shot-int 3)(= mehrunes-shot-option #t))
               (set! mehrunes-plug #t)
             )
             (when (= mehrunes-plug #t)
