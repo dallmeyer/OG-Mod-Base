@@ -187,12 +187,17 @@
       )
       (when (and (= guard-grenade-int 3)(= guard-grenade-option #t))
       (fire-guard-grenade *target* (-> *target* gun fire-point) (-> *target* gun fire-dir-out))
+      (when (not (logtest? (-> *game-info* secrets) (game-secrets invulnerable)))
+        (set! inv-frame-start #t)
+      )
       )
       (when (and (= leg-random-int 3)(= leg-random-shot #t))                                    ;random shot
         (set! wm-rand-shot #t)
       )
       (when (and (and (= guard-shot-option #t)(= guard-shot-int 3)))          ;guard-shot
-      (set! inv-frame-start-g #t)
+      (when (not (logtest? (-> *game-info* secrets) (game-secrets invulnerable)))
+        (set! inv-frame-start-g #t)
+      )
           (let ((s4-1 (new 'stack-no-clear 'projectile-init-by-other-params)))
             (set! (-> s4-1 ent) (-> *target* entity))
             (set! (-> s4-1 charge) 1.0)
@@ -210,17 +215,13 @@
         )
       (set! (-> s4-1 timeout) (seconds 4))
       (vector-normalize! (-> s4-1 vel) 819200.0)
-      (when (not (logtest? (-> *game-info* secrets) (game-secrets hero-mode)))
-    (logior! (-> *game-info* secrets) (game-secrets invulnerable)) ;this also makes it so that theres no game secrets allowed when using predator/guard shot. I could be lazy and make it for all of them
-  )
-  (when (logtest? (-> *game-info* secrets) (game-secrets hero-mode))
-    (logior! (-> *game-info* secrets) (game-secrets invulnerable hero-mode)) ;this also makes it so that theres no game secrets allowed when using predator/guard shot. I could be lazy and make it for all of them
-  )
       (spawn-projectile guard-shot s4-1 (ppointer->process (-> *target* gun gun)) *default-dead-pool*)
       )
     )
       (when (and (and (= predator-shot-option #t)(= predator-shot-int 3)))      ;predator-shot
-      (set! inv-frame-start #t)
+      (when (not (logtest? (-> *game-info* secrets) (game-secrets invulnerable)))
+        (set! inv-frame-start #t)
+      )
         (let ((s5-0 (-> *target* gun))
           (gp-0 (new 'stack-no-clear 'projectile-init-by-other-params))
           )
@@ -233,12 +234,6 @@
           (set! (-> gp-0 owner-handle) (the-as handle #f))
           (set! (-> gp-0 ignore-handle) (process->handle (the-as process (send-event *target* 'get-vehicle))))
           (set! (-> gp-0 timeout) (seconds 4))
-          (when (not (logtest? (-> *game-info* secrets) (game-secrets hero-mode)))
-    (logior! (-> *game-info* secrets) (game-secrets invulnerable)) ;this also makes it so that theres no game secrets allowed when using predator/guard shot. I could be lazy and make it for all of them
-  )
-  (when (logtest? (-> *game-info* secrets) (game-secrets hero-mode))
-    (logior! (-> *game-info* secrets) (game-secrets invulnerable hero-mode)) ;this also makes it so that theres no game secrets allowed when using predator/guard shot. I could be lazy and make it for all of them
-  )
           (spawn-projectile metalhead-predator-shot gp-0 (ppointer->process (-> *target* gun gun)) *default-dead-pool*)
         )
       )
