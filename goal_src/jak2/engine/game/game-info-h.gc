@@ -910,7 +910,8 @@ CURRENT BUGS:
 (define peacemaker-ability #f)
 
 
-
+;BUYING SECRETS BACK IN HELL MODE
+(define secrets-bought? #f)
 
 
 

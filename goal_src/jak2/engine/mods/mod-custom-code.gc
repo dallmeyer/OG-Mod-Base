@@ -1154,7 +1154,7 @@ FINISHED :D
 
 
 
-  (when (and (= already-died? #f)(= jakisntdead #f)(= stored-cp? #f)(= tp-fb #t)(rand-vu-percent? 0.007)) ;looks for teleport percentage upon death, if so, init tp-fb
+  (when (and (= already-died? #f)(= jakisntdead #f)(= stored-cp? #f)(= tp-fb #t)(!= (-> *game-info* fuel) 10.0)(rand-vu-percent? 0.007)) ;looks for teleport percentage upon death, if so, init tp-fb
     (set! start-frame-count #t)
     (set! stored-cp? #t)
     (set! new-game-s? #t)
@@ -1174,6 +1174,27 @@ FINISHED :D
     (print "[MOD] Started tp-fb, Autosaving User...
 ")
   )
+  (when (and (= already-died? #f)(= jakisntdead #f)(= stored-cp? #f)(= tp-fb #t)(= (-> *game-info* fuel) 10.0)(rand-vu-percent? 0.0016)) ;looks for teleport percentage upon death, if so, init tp-fb
+    (set! start-frame-count #t)
+    (set! stored-cp? #t)
+    (set! new-game-s? #t)
+    (when (= (-> *progress-state* which-slot) 0)
+      (set! load-state-tp 0)
+    )
+    (when (= (-> *progress-state* which-slot) 1)
+      (set! load-state-tp 1)
+    )
+    (when (= (-> *progress-state* which-slot) 2)
+      (set! load-state-tp 2)
+    )
+    (when (= (-> *progress-state* which-slot) 3)
+      (set! load-state-tp 3)
+    )
+    
+    (print "[MOD] Started tp-fb, Autosaving User...
+")
+  )
+
   (when (and (and (= frame-count 10)(= new-game-s? #t)(= stored-cp? #t))) ;sets all your gunmod attributes, starts a new game
     (initialize! *game-info* 'game (the-as game-save #f) "prison")
     (set! mission-grab-1 #t)
@@ -3211,7 +3232,7 @@ FINISHED :D
 (when (and (= (-> *game-info* fuel) 10.0)(= in-menu #t)) ;displays control menu but in heromode. Removes mod-reroll
   (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
-    (format *temp-string* "<COLOR_WHITE>CONTROLS:~%LEFT/RIGHT: Browse~%X: Select~%SQUARE: Attach Gun Mod~%CIRCLE: Back to Mods~%<COLOR_RED>Down: HellMode Info~%<COLOR_RED>Up: Purchase GunMods~%<COLOR_WHITE>TRIANGLE: Exit Menu"
+    (format *temp-string* "<COLOR_WHITE>CONTROLS:~%LEFT/RIGHT: Browse~%X: Select~%SQUARE: Attach Gun Mod~%CIRCLE: Back to Mods~%<COLOR_RED>Down: HellMode Info~%<COLOR_WHITE>TRIANGLE: Exit Menu"
     modifier-string
     )
     (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)

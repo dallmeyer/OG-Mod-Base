@@ -80,6 +80,10 @@
      )
     ((logtest? (-> *game-info* secrets) (game-secrets hero-mode))
      (set! (-> *game-info* features) (game-feature gun board))
+     (set! rapid-fire-option #t)
+     (set! double-tap-option #t)
+     (set! guard-shot-option #t)
+     (set! guard-grenade-option #t)
      )
     (else
       (set! (-> *game-info* features) (game-feature gun board gun-yellow gun-red gun-blue gun-dark))
