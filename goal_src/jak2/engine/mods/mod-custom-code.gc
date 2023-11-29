@@ -99,8 +99,8 @@ FINISHED :D
 
 
 
-;DISABLING SECRETS IN HELL MODE, WHILE TP-FB REMAINS UNBEATEN.
-  (when (and (= (-> *game-info* fuel) 10.0) (= tp-fb #t))
+;DISABLING ALL OF THE POWERFUL SECRETS IN HELL MODE.
+  (when (and (= (-> *game-info* fuel) 10.0))
     (when (and (logtest? (-> *game-info* secrets) (game-secrets endless-ammo)))
       (logclear! (-> *game-info* secrets) (game-secrets endless-ammo))
     )
@@ -363,7 +363,7 @@ FINISHED :D
 
 
   ;Mission-Based Weapon Mod Gets
-  (when (and (task-node-closed? (game-task-node city-krew-delivery-resolution))(= mission-grab-1 #f)) ;after red gun, get rapid fire
+  (when (and (!= (-> *game-info* fuel) 10.0)(task-node-closed? (game-task-node city-krew-delivery-resolution))(= mission-grab-1 #f)) ;after red gun, get rapid fire
     (set! mission-grab-1 #t)
     (set! rapid-fire-option #t)
     (print "[GUN-MOD] Rapid Fire Acquired! Weapon Mod set to mod-default-gun
@@ -374,7 +374,7 @@ FINISHED :D
     (set! recieved-gm #t) ;sets the draw func on
   )
 
-  (when (and (task-node-closed? (game-task-node sewer-enemy-resolution))(= mission-grab-2 #f)) ;after yellow gun, get double tap
+  (when (and (!= (-> *game-info* fuel) 10.0)(task-node-closed? (game-task-node sewer-enemy-resolution))(= mission-grab-2 #f)) ;after yellow gun, get double tap
     (set! mission-grab-2 #t)
     (set! double-tap-option #t)
     (print "[GUN-MOD] Chanced Double Tap Acquired! Weapon Mod set to mod-default-gun
@@ -385,7 +385,7 @@ FINISHED :D
     (set! recieved-gm2 #t)  ;sets the draw func on
   )
 
-  (when (and (task-node-closed? (game-task-node ruins-enemy-introduction))(= mission-grab-3 #f)) ;after blue gun, get chanced guard shot
+  (when (and (!= (-> *game-info* fuel) 10.0)(task-node-closed? (game-task-node ruins-enemy-introduction))(= mission-grab-3 #f)) ;after blue gun, get chanced guard shot
     (set! mission-grab-3 #t)
     (set! guard-shot-option #t)
     (print "[GUN-MOD] Chanced Guard Shot Acquired! Weapon Mod set to mod-default-gun
@@ -396,7 +396,7 @@ FINISHED :D
     (set! recieved-gm3 #t)  ;sets the draw func on
   )
 
-  (when (and (task-node-closed? (game-task-node sewer-escort-get-gun))(= mission-grab-4 #f)) ;after dark gun, get chanced predator shot
+  (when (and (!= (-> *game-info* fuel) 10.0)(task-node-closed? (game-task-node sewer-escort-get-gun))(= mission-grab-4 #f)) ;after dark gun, get chanced predator shot
     (set! mission-grab-4 #t)
     (set! guard-grenade-option #t)
     (print "[GUN-MOD] Chanced Predator Shot Acquired! Weapon Mod set to mod-default-gun
@@ -1742,7 +1742,6 @@ FINISHED :D
     ~%<COLOR_WHITE>However, you can choose not to enable them this run, and just experience harder Jak II!
     ~%You will get a list of all modifiers in a Hero mode save.
     ~%Speaking of, Hero Mode is fully playable and features exclusive content! <COLOR_RED>Only for the worthy.
-    ~%<COLOR_GREEN>(Hero mode is getting a rework, and the update is upcoming, check out HeroMode+ in discord for info!)
     ~%
     ~%<COLOR_YELLOW>Would you like to enable Weapon Mods?
     ~%(hint: this option is only asked once per save)
@@ -1772,7 +1771,6 @@ FINISHED :D
     ~%<COLOR_WHITE>However, you can choose not to enable them this run, and just experience harder Jak II!
     ~%You will get a list of all modifiers in a Hero mode save.
     ~%Speaking of, Hero Mode is fully playable and features exclusive content! <COLOR_RED>Only for the worthy.
-    ~%<COLOR_GREEN>(Hero mode is getting a rework, and the update is upcoming, check out HeroMode+ in discord for info!)
     ~%
     ~%<COLOR_YELLOW>Would you like to enable Weapon Mods?
     ~%(hint: this option is only asked once per save)
@@ -3213,7 +3211,7 @@ FINISHED :D
 (when (and (= (-> *game-info* fuel) 10.0)(= in-menu #t)) ;displays control menu but in heromode. Removes mod-reroll
   (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
-    (format *temp-string* "<COLOR_WHITE>CONTROLS:~%LEFT/RIGHT: Browse~%X: Select~%SQUARE: Attach Gun Mod~%CIRCLE: Back to Mods~%<COLOR_RED>Down: HellMode Info~%<COLOR_WHITE>TRIANGLE: Exit Menu"
+    (format *temp-string* "<COLOR_WHITE>CONTROLS:~%LEFT/RIGHT: Browse~%X: Select~%SQUARE: Attach Gun Mod~%CIRCLE: Back to Mods~%<COLOR_RED>Down: HellMode Info~%<COLOR_RED>Up: Purchase GunMods~%<COLOR_WHITE>TRIANGLE: Exit Menu"
     modifier-string
     )
     (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
@@ -3237,8 +3235,8 @@ FINISHED :D
   (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
     (format *temp-string* "
-    <COLOR_WHITE>HELL MODE INFO: <COLOR_GREEN>(REWORK OF HELLMODE SOON, CHECK OPENGOAL DISCORD)
-    ~%<COLOR_RED>THE STRONGEST SECRETS HAVE BEEN DISABLED.. for now
+    <COLOR_WHITE>HELL MODE INFO:
+    ~%<COLOR_RED>THE STRONGEST SECRETS HAVE BEEN DISABLED FOR GOOD
     ~%<COLOR_YELLOW>All modifiers are active:
     ~%<COLOR_RED>TP-FB Challenge
     ~%<COLOR_WHITE>Upon death, jak teleports to the final boss, but its extremely unfair
@@ -3274,8 +3272,8 @@ FINISHED :D
   (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
     (format *temp-string* "
-    <COLOR_WHITE>HELL MODE INFO: <COLOR_GREEN>(REWORK OF HELLMODE SOON, CHECK OPENGOAL DISCORD)
-    ~%<COLOR_GREEN>ALL SECRETS UNBLOCKED :D
+    <COLOR_WHITE>HELL MODE INFO:
+    ~%<COLOR_RED>THE STRONGEST SECRETS HAVE BEEN DISABLED FOR GOOD
     ~%<COLOR_YELLOW>All modifiers are active:
     ~%<COLOR_GREEN>On-Death TP-FB Challenge (DISABLED)
     ~%<COLOR_YELLOW>You beat TP-FB in Hero Mode! I'm actually impressed
