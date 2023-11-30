@@ -81,8 +81,8 @@ then upon choosing, it saves a value attached to the option, a 1 or 0, to the sa
 then an updating code block will check for a 1 or 0 and will actively set the corresponding mod a #t or symbol
 It is required to choose one to gain access to the weapon mods menu. (IE if all 0, then the setting for gun mods in the secrets menu does not appear)
 
-(define-extern traffic-nuke-option symbol) ;;this is define-externd for if its over all chosen
-(define-extern traffic-nuke-save 0) ;;this is define-externd to set the gun for the option
+(define-extern traffic-nuke-option symbol) ;;this is define-extern for if its over all chosen
+(define-extern traffic-nuke-save 0) ;;this is define-extern to set the gun for the option
 
 jak does has a chance to cause 50 peacemaker shots to ring out in all directions.
 But bosses must be one hit.
@@ -504,10 +504,6 @@ CURRENT BUGS:
 (define hitting? #f)
 (define hitting2? #f)
 (define round-started? #f)
-(define draw-jak-card1 #f)
-(define draw-jak-card2 #f)
-(define draw-jak-card3 #f)
-(define draw-jak-card4 #f)
 (define draw-jak-current #f)
 
 (define draw-dealer-card1 #f)
@@ -533,7 +529,7 @@ CURRENT BUGS:
 (define dealer-stay #f)
 (define dealer-bust #f)
 (define dealer-cap 0)
-(define char-on-table 0)
+(define char-on-table 1)
 (define bid-amount 0.0)
 (define bid-current 0.0)
 (define bid-select 0)
@@ -544,165 +540,54 @@ CURRENT BUGS:
 (define added-cards-dealer 0)
 (define jak-current-card 0)
 (define dealer-current-card 0)
+(define jturn 0)
+(define dturn 0)
+(define dh-start #f)
+(define d-count 0)
+(define jackpot-win #f)
+
+;COLORS
+(define colorcard #f)
 
 ;BLACKJACK DRAWS
+(define popup-bj #f)
+(define bj-dealer-s "Sig")
+(define bj-bid-s "0")
+(define bj-dealer-d #f)
+(define bj-bid-d #f)
+(define jackpotbaby #f)
+(define jackpotbabytime 0)
+(define-extern jackpotcolors string)
+(define-extern jackpot-string string)
 
-#|
-;BLACKJACK SOUNDS IN RELEASE
-;---------------------------------------------ASHELIN-------------------------------------------------
-(define ashelin-win1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/ashelin/win/ash-win.mp3")
-(define ashelin-win2 "data/goal_src/jak2/pc/csounds/BlackJakSounds/ashelin/win/ash-win2.mp3")
-(define ashelin-win3 "data/goal_src/jak2/pc/csounds/BlackJakSounds/ashelin/win/ash-win3.mp3")
+(define-extern jcard1s string)
+(define-extern jcard2s string)
+(define-extern jcard3s string)
+(define-extern jcard4s string)
+(define jcard1 #f)
+(define jcard2 #f)
+(define jcard3 #f)
+(define jcard4 #f)
+(define-extern dcard1s string)
+(define-extern dcard2s string)
+(define-extern dcard3s string)
+(define-extern dcard4s string)
+(define dcard1 #f)
+(define dcard2 #f)
+(define dcard3 #f)
+(define dcard4 #f)
 
-(define ashelin-lose1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/ashelin/lose/ash-lose.mp3")
-(define ashelin-lose2 "data/goal_src/jak2/pc/csounds/BlackJakSounds/ashelin/lose/ash-lose2.mp3")
+(define-extern jcard1i int)
+(define-extern jcard2i int)
+(define-extern jcard3i int)
+(define-extern jcard4i int)
 
-(define ashelin-start1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/ashelin/startup/ash-start.mp3")
-
-(define ashelin-again1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/ashelin/again/ash-again.mp3")
-
-(define ashelin-kickout1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/ashelin/kickout/ash-kickout.mp3")
-
-;---------------------------------------------DAXTER-------------------------------------------------
-
-(define daxter-win1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/daxter/win/dax-win.mp3")
-(define daxter-win2 "data/goal_src/jak2/pc/csounds/BlackJakSounds/daxter/win/dax-win2.mp3")
-(define daxter-win3 "data/goal_src/jak2/pc/csounds/BlackJakSounds/daxter/win/dax-win3.mp3")
-(define daxter-win4 "data/goal_src/jak2/pc/csounds/BlackJakSounds/daxter/win/dax-win4.mp3")
-(define daxter-win5 "data/goal_src/jak2/pc/csounds/BlackJakSounds/daxter/win/dax-win5.mp3")
-(define daxter-win6 "data/goal_src/jak2/pc/csounds/BlackJakSounds/daxter/win/dax-win6.mp3")
-(define daxter-win7 "data/goal_src/jak2/pc/csounds/BlackJakSounds/daxter/win/dax-win7.mp3")
-(define daxter-win8 "data/goal_src/jak2/pc/csounds/BlackJakSounds/daxter/win/dax-win8.mp3")
-
-(define daxter-lose1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/daxter/lose/dax-lose.mp3")
-(define daxter-lose1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/daxter/lose/dax-lose2.mp3")
-
-(define daxter-start1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/daxter/startup/dax-start.mp3")
-
-(define daxter-again1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/daxter/again/dax-again.mp3")
-
-(define daxter-kickout1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/daxter/kickout/dax-kickout.mp3")
-
-;---------------------------------------------ERROL-------------------------------------------------
-
-(define errol-win1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/errol/win")
-
-(define errol-lose1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/errol/lose/errol-lose.mp3")
-(define errol-lose2 "data/goal_src/jak2/pc/csounds/BlackJakSounds/errol/lose/errol-lose2.mp3")
-(define errol-lose3 "data/goal_src/jak2/pc/csounds/BlackJakSounds/errol/lose/errol-lose3.mp3")
-(define errol-lose4 "data/goal_src/jak2/pc/csounds/BlackJakSounds/errol/lose/errol-lose4.mp3")
-(define errol-lose5 "data/goal_src/jak2/pc/csounds/BlackJakSounds/errol/lose/errol-lose5.mp3")
-
-(define errol-start1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/errol/startup/errol-start.mp3")
-(define errol-start2 "data/goal_src/jak2/pc/csounds/BlackJakSounds/errol/startup/errol-start2.mp3")
-
-(define errol-again1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/errol/again/errol-again.mp3")
-(define errol-again2 "data/goal_src/jak2/pc/csounds/BlackJakSounds/errol/again/errol-again2.mp3")
-
-(define errol-kickout1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/errol/kickout/errol-kickout.mp3")
-
-;---------------------------------------------KREW-------------------------------------------------
-
-(define krew-win1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/krew/win/krew-win.mp3")
-(define krew-win2 "data/goal_src/jak2/pc/csounds/BlackJakSounds/krew/win/krew-win2.mp3")
-(define krew-win3 "data/goal_src/jak2/pc/csounds/BlackJakSounds/krew/win/krew-win3.mp3")
-(define krew-win4 "data/goal_src/jak2/pc/csounds/BlackJakSounds/krew/win/krew-win4.mp3")
-
-(define krew-lose1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/krew/lose/krew-lose.mp3")
-(define krew-lose2 "data/goal_src/jak2/pc/csounds/BlackJakSounds/krew/lose/krew-lose2.mp3")
-
-(define krew-start1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/krew/startup/krew-start.mp3")
-(define krew-start2 "data/goal_src/jak2/pc/csounds/BlackJakSounds/krew/startup/krew-start2.mp3")
-
-(define krew-again1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/krew/again/krew-again.mp3")
-(define krew-again2 "data/goal_src/jak2/pc/csounds/BlackJakSounds/krew/again/krew-again2.mp3")
-
-(define krew-kickout1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/krew/kickout/krew-kickout.mp3")
-
-;---------------------------------------------PECKER-------------------------------------------------
-
-(define pecker-win1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/pecker/win/pecker-win.mp3")
-(define pecker-win2 "data/goal_src/jak2/pc/csounds/BlackJakSounds/pecker/win/pecker-win2.mp3")
-(define pecker-win3 "data/goal_src/jak2/pc/csounds/BlackJakSounds/pecker/win/pecker-win3.mp3")
-(define pecker-win4 "data/goal_src/jak2/pc/csounds/BlackJakSounds/pecker/win/pecker-win4.mp3")
-(define pecker-win5 "data/goal_src/jak2/pc/csounds/BlackJakSounds/pecker/win/pecker-win5.mp3")
-(define pecker-win6 "data/goal_src/jak2/pc/csounds/BlackJakSounds/pecker/win/pecker-win6.mp3")
-(define pecker-win7 "data/goal_src/jak2/pc/csounds/BlackJakSounds/pecker/win/pecker-win7.mp3")
-
-(define pecker-lose1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/pecker/lose/pecker-lose.mp3")
-(define pecker-lose2 "data/goal_src/jak2/pc/csounds/BlackJakSounds/pecker/lose/pecker-lose2.mp3")
-(define pecker-lose3 "data/goal_src/jak2/pc/csounds/BlackJakSounds/pecker/lose/pecker-lose3.mp3")
-
-(define pecker-start1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/pecker/startup/pecker-start.mp3")
-
-(define pecker-again1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/pecker/again/pecker-again.mp3")
-
-(define pecker-kickout1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/pecker/kickout/pecker-kickout.mp3")
-
-;---------------------------------------------SAMOS-------------------------------------------------
-
-(define samos-win1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/samos/win")
-
-(define samos-lose1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/samos/lose")
-
-(define samos-start1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/samos/startup")
-
-(define samos-again1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/samos/again")
-
-(define samos-kickout1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/samos/kickout/samos-kickout.mp3")
-
-;---------------------------------------------SIG-------------------------------------------------
-
-(define sig-win1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/sig/win/sig-win.mp3")
-(define sig-win2 "data/goal_src/jak2/pc/csounds/BlackJakSounds/sig/win/sig-win2.mp3")
-(define sig-win3 "data/goal_src/jak2/pc/csounds/BlackJakSounds/sig/win/sig-win3.mp3")
-(define sig-win4 "data/goal_src/jak2/pc/csounds/BlackJakSounds/sig/win/sig-win4.mp3")
-
-(define sig-lose1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/sig/lose/sig-lose.mp3")
-(define sig-lose2 "data/goal_src/jak2/pc/csounds/BlackJakSounds/sig/lose/sig-lose2.mp3")
-
-(define sig-start1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/sig/startup/sig-start.mp3")
-(define sig-start1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/sig/startup/sig-start2.mp3")
-
-(define sig-again1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/sig/again/sig-again.mp3")
-(define sig-again2 "data/goal_src/jak2/pc/csounds/BlackJakSounds/sig/again/sig-again2.mp3")
-(define sig-again3 "data/goal_src/jak2/pc/csounds/BlackJakSounds/sig/again/sig-again3.mp3")
-
-(define sig-kickout1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/sig/kickout/sig-kickout.mp3")
-
-;---------------------------------------------TORN-------------------------------------------------
-
-(define torn-win1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/torn/win/torn-win.mp3")
-
-(define torn-lose1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/torn/lose")
-
-(define torn-start1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/torn/startup/torn-start.mp3")
-
-(define torn-again1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/torn/again")
-
-(define torn-kickout1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/torn/kickout/torn-kickout.mp3")
-
-;---------------------------------------------TARGET-------------------------------------------------
-
-(define bj-target-win1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/target/win/jak-win.mp3")
-(define bj-target-win2 "data/goal_src/jak2/pc/csounds/BlackJakSounds/target/win/jak-win2.mp3")
-(define bj-target-win3 "data/goal_src/jak2/pc/csounds/BlackJakSounds/target/win/jak-win3.mp3")
-(define bj-target-win4 "data/goal_src/jak2/pc/csounds/BlackJakSounds/target/win/jak-win4.mp3")
-(define bj-target-win5 "data/goal_src/jak2/pc/csounds/BlackJakSounds/target/win/jak-win5.mp3")
-
-(define bj-target-lose1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/target/lose")
-
-(define bj-target-again1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/target/again")
-
-(define bj-target-start1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/target/start")
-
-(define target-lose-against-dax1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/target/lose-against-dax")
-
-(define target-win-against-dax1 "data/goal_src/jak2/pc/csounds/BlackJakSounds/target/win-against-dax")
+(define-extern dcard1i int)
+(define-extern dcard2i int)
+(define-extern dcard3i int)
+(define-extern dcard4i int)
 
 
-;END
-|#
 
 ;BLACKJACK SOUNDS ON MOD BASE
 ;---------------------------------------------ASHELIN-------------------------------------------------
