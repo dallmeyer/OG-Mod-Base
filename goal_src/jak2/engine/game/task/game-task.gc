@@ -9640,7 +9640,7 @@
               :on-fail #f
               )
             :borrow '()
-            :open? (lambda ((arg0 game-task-node-info)) (>= (-> *game-info* gem) 200.0))
+            :open? (lambda ((arg0 game-task-node-info)) (>= (-> *game-info* gem) 400.0))
             :on-close #f
             :add (game-task-node-command add-darkjak-1)
             :description (text-id progress-missions-go-to-oracle)
@@ -9726,7 +9726,7 @@
               :on-fail #f
               )
             :borrow '()
-            :open? (lambda ((arg0 game-task-node-info)) (>= (-> *game-info* gem) 200.0))
+            :open? (lambda ((arg0 game-task-node-info)) (>= (-> *game-info* gem) 400.0))
             :on-close #f
             :add (game-task-node-command add-darkjak-2)
             :description (text-id progress-missions-go-to-oracle)
@@ -9812,7 +9812,7 @@
               :on-fail #f
               )
             :borrow '()
-            :open? (lambda ((arg0 game-task-node-info)) (>= (-> *game-info* gem) 100.0))
+            :open? (lambda ((arg0 game-task-node-info)) (>= (-> *game-info* gem) 300.0))
             :on-close #f
             :add (game-task-node-command add-darkjak-3)
             :description (text-id progress-missions-go-to-oracle)
