@@ -89,11 +89,19 @@ FINISHED :D
 
 
 
+      #|(when (and (= guardv-5 #f)(send-event *traffic-manager* 'set-alert-level 5))
+        (set! guardv-5 #t)
+      )
+      (when (and (= guardv-5 #t)(not (send-event *traffic-manager* 'set-alert-level 5)))
+        (set! guardv-5 #f)
+      )
 
-
-
-
-
+;guard vehicle megaphone lines
+(when (and (rand-vu-percent? 0.001)(= guardv-5 #t))
+  (let ((o 0))
+    (set! o (rand-vu-int-range 1 25)) 
+  )
+)|#
 
 
 
@@ -3798,11 +3806,13 @@ FINISHED :D
 
 (when (= bj-start #t)
   (+! bj-count 1)
+  (set! in-transition? #t)
   (when (= bj-count 60)
     (set! no-state-camera-table #t)
     (set! in-hiphog? #t)
     (set! bj-count 0)
     (set! bj-start #f)
+    (set! in-transition? #f)
   )
 )
 
@@ -3810,7 +3820,7 @@ FINISHED :D
 (when (and (= on-table? #f)(not (cpad-pressed? 0 r3))(not *scene-player*) (= (paused?) #f)(= weapon-mod-toggle #t)(= (-> (level-get-target-inside *level*) name) 'hiphog))
   (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
-    (format *temp-string* "<COLOR_RED>R3:<COLOR_WHITE> Play Eco War"
+    (format *temp-string* "<COLOR_RED>R3:<COLOR_PINK> Play Eco War"
     )
     (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
@@ -3879,6 +3889,7 @@ FINISHED :D
     (set! dcard4 #f)
     (set! dcard4i 0)
     (set! jturn 0)
+    (set! dturn 0)
     (set! jackpot-win #f)
     (set! jackpotbaby #f)
     (set! jackpotbabytime 0)
@@ -3966,6 +3977,7 @@ FINISHED :D
     (set! dcard4 #f)
     (set! dcard4i 0)
     (set! jturn 0)
+    (set! dturn 0)
     (set! jackpot-win #f)
     (set! jackpotbaby #f)
     (set! jackpotbabytime 0)
@@ -4147,9 +4159,12 @@ FINISHED :D
         (set! dealer-cap 16)
         (play-sound-file sshuffle 80)
         (set! current-dealer "Jinx")
-        (set! start-rand (rand-vu-int-range 1 1))
+        (set! start-rand (rand-vu-int-range 1 2))
         (when (= start-rand 1)
           (play-sound-file samos-start1 100)
+        )
+        (when (= start-rand 2)
+          (play-sound-file samos-start2 100)
         )
       )
       (when (= char-on-table 7)
@@ -4218,8 +4233,6 @@ FINISHED :D
   (+! lose-count 1)
   (set! in-hiphog? #f)
   (set! dcard2 #t)
-  (set! dcard3 #t)
-  (set! dcard4 #t)
   (set! jcard3 #t)
   (set! jcard4 #t)
   (when (= lose-count 10)
@@ -4240,7 +4253,7 @@ FINISHED :D
         )
       )
       (when (= char-on-table 2)
-        (set! rand-sound (rand-vu-int-range 1 3))
+        (set! rand-sound (rand-vu-int-range 1 6))
         (when (= rand-sound 1)
           (play-sound-file krew-win1 100)
         )
@@ -4250,6 +4263,15 @@ FINISHED :D
         (when (= rand-sound 3)
           (play-sound-file krew-win3 100)
         )
+        (when (= rand-sound 4)
+          (play-sound-file krew-win4 100)
+        )
+        (when (= rand-sound 5)
+          (play-sound-file krew-win5 100)
+        )
+        (when (= rand-sound 6)
+          (play-sound-file krew-win6 100)
+        )
       )
       (when (= char-on-table 3)
         (set! rand-sound (rand-vu-int-range 1 1))
@@ -4258,7 +4280,7 @@ FINISHED :D
         )
       )
       (when (= char-on-table 4)
-        (set! rand-sound (rand-vu-int-range 1 3))
+        (set! rand-sound (rand-vu-int-range 1 7))
         (when (= rand-sound 1)
           (play-sound-file ashelin-win1 100)
         )
@@ -4267,6 +4289,18 @@ FINISHED :D
         )
         (when (= rand-sound 3)
           (play-sound-file ashelin-win3 100)
+        )
+        (when (= rand-sound 4)
+          (play-sound-file ashelin-win4 100)
+        )
+        (when (= rand-sound 5)
+          (play-sound-file ashelin-win5 100)
+        )
+        (when (= rand-sound 6)
+          (play-sound-file ashelin-win6 100)
+        )
+        (when (= rand-sound 7)
+          (play-sound-file ashelin-win7 100)
         )
       )
       (when (= char-on-table 5)
@@ -4294,9 +4328,30 @@ FINISHED :D
         )
       )
       (when (= char-on-table 6)
-        (set! rand-sound (rand-vu-int-range 1 1))
+        (set! rand-sound (rand-vu-int-range 1 8))
         (when (= rand-sound 1)
           (play-sound-file samos-win1 100)
+        )
+        (when (= rand-sound 2)
+          (play-sound-file samos-win2 100)
+        )
+        (when (= rand-sound 3)
+          (play-sound-file samos-win3 100)
+        )
+        (when (= rand-sound 4)
+          (play-sound-file samos-win4 100)
+        )
+        (when (= rand-sound 5)
+          (play-sound-file samos-win5 100)
+        )
+        (when (= rand-sound 6)
+          (play-sound-file samos-win6 100)
+        )
+        (when (= rand-sound 7)
+          (play-sound-file samos-win7 100)
+        )
+        (when (= rand-sound 8)
+          (play-sound-file samos-win8 100)
         )
       )
       (when (= char-on-table 7)
@@ -4408,9 +4463,12 @@ FINISHED :D
         )
       )
       (when (= char-on-table 6)
-        (set! rand-sound (rand-vu-int-range 1 1))
+        (set! rand-sound (rand-vu-int-range 1 2))
         (when (= rand-sound 1)
           (play-sound-file samos-again1 100)
+        )
+        (when (= rand-sound 2)
+          (play-sound-file samos-again2 100)
         )
       )
       (when (= char-on-table 7)
@@ -4464,6 +4522,7 @@ FINISHED :D
     (set! dcard4 #f)
     (set! dcard4i 0)
     (set! jturn 0)
+    (set! dturn 0)
     (set! bj-bid-s "0")
     (set! bj-dealer-s "Sig")
     (set! jackpot-win #f)
@@ -4480,13 +4539,11 @@ FINISHED :D
     (play-sound-file swin 100)
     (set! in-hiphog? #f)
     (set! dcard2 #t)
-    (set! dcard3 #t)
-    (set! dcard4 #t)
     (set! jcard3 #t)
     (set! jcard4 #t)
   )
   (when (and (= jackpot-win #t) (= win-count 2))
-    (+! (-> *game-info* gem) (*! bid-current 100))
+    (+! (-> *game-info* gem) (*! bid-current 10))
     (set! jackpotbaby #t)
   )
   (when (and (= jackpot-win #f)(= win-count 10))
@@ -4533,6 +4590,12 @@ FINISHED :D
         (when (= rand-sound 2)
           (play-sound-file krew-lose2 100)
         )
+        (when (= rand-sound 3)
+          (play-sound-file krew-lose3 100)
+        )
+        (when (= rand-sound 4)
+          (play-sound-file krew-lose4 100)
+        )
       )
       (when (= char-on-table 3)
         (set! rand-sound (rand-vu-int-range 1 1))
@@ -4541,12 +4604,24 @@ FINISHED :D
         )
       )
       (when (= char-on-table 4)
-        (set! rand-sound (rand-vu-int-range 1 3))
+        (set! rand-sound (rand-vu-int-range 1 6))
         (when (= rand-sound 1)
           (play-sound-file ashelin-lose1 100)
         )
         (when (= rand-sound 2)
           (play-sound-file ashelin-lose2 100)
+        )
+        (when (= rand-sound 3)
+          (play-sound-file ashelin-lose3 100)
+        )
+        (when (= rand-sound 4)
+          (play-sound-file ashelin-lose4 100)
+        )
+        (when (= rand-sound 5)
+          (play-sound-file ashelin-lose5 100)
+        )
+        (when (= rand-sound 6)
+          (play-sound-file ashelin-lose6 100)
         )
       )
       (when (= char-on-table 5)
@@ -4562,9 +4637,33 @@ FINISHED :D
         )
       )
       (when (= char-on-table 6)
-        (set! rand-sound (rand-vu-int-range 1 1))
+        (set! rand-sound (rand-vu-int-range 1 9))
         (when (= rand-sound 1)
           (play-sound-file samos-lose1 100)
+        )
+        (when (= rand-sound 2)
+          (play-sound-file samos-lose2 100)
+        )
+        (when (= rand-sound 3)
+          (play-sound-file samos-lose3 100)
+        )
+        (when (= rand-sound 4)
+          (play-sound-file samos-lose4 100)
+        )
+        (when (= rand-sound 5)
+          (play-sound-file samos-lose5 100)
+        )
+        (when (= rand-sound 6)
+          (play-sound-file samos-lose6 100)
+        )
+        (when (= rand-sound 7)
+          (play-sound-file samos-lose7 100)
+        )
+        (when (= rand-sound 8)
+          (play-sound-file samos-lose8 100)
+        )
+        (when (= rand-sound 9)
+          (play-sound-file samos-lose9 100)
         )
       )
       (when (= char-on-table 7)
@@ -4637,6 +4736,7 @@ FINISHED :D
     (set! dcard4 #f)
     (set! dcard4i 0)
     (set! jturn 0)
+    (set! dturn 0)
     (set! jackpot-win #f)
     (set! jackpotbaby #f)
     (set! jackpotbabytime 0)
@@ -4664,7 +4764,7 @@ FINISHED :D
   )
 
   (when (and (= hitting? #t)(= in-hiphog? #t))   ;activates once when an option is selected from the three above
-    (when (= bj-hit #t)
+    (when (= bj-hit #t)                                                   ;upon jak hit
       (set! jak-current-card (rand-vu-int-range 1 10))
       (set! added-cards-jak (+! added-cards-jak jak-current-card))
       (+! jturn 1)
@@ -4675,6 +4775,12 @@ FINISHED :D
       (when (= jturn 4)
         (set! jcard4i jak-current-card)
         (set! jcard4 #t)
+        (when (= jackpot-win #t)
+          (set! jcard1s "<COLOR_PINK>~d")
+          (set! jcard2s "<COLOR_PINK>~d")
+          (set! jcard3s "<COLOR_PINK>~d")
+          (set! jcard4s "<COLOR_PINK>~d")
+        )
       )
       (let ((cnumb 0))
         (set! cnumb (rand-vu-int-range 1 3))
@@ -4699,7 +4805,7 @@ FINISHED :D
       (set! hitting? #f)
       (set! bj-hit #f)
     )
-    (when (= bj-stay #t)
+    (when (= bj-stay #t)                                                   ;upon jak stay
       (set! dh-start #t)
       (when (= dh-start #t)
         (+! d-count 1)
@@ -4710,21 +4816,21 @@ FINISHED :D
         (+! dturn 1)
         (when (= dturn 3)
           (set! dcard3i dealer-current-card)
+          (set! dcard3 #t)
         )
         (when (= dturn 4)
           (set! dcard4i dealer-current-card)
+          (set! dcard4 #t)
         )
         (set! dcard2 #t)
-        (set! dcard3 #t)
-        (set! dcard4 #t)
         (set! d-count 0)
       )
-      (when (or (>= added-cards-dealer dealer-cap)(> added-cards-dealer added-cards-jak))
+      (when (or (>= added-cards-dealer dealer-cap)(> added-cards-dealer added-cards-jak))               ;play dealer stay
         (set! dealer-stay #t)
         (set! bj-stay #f)
         (set! dh-start #f)
       )
-      (when (>= added-cards-dealer 22)
+      (when (>= added-cards-dealer 22)                                                                 ;play dealer bust
         (set! bj-win #t)
         (set! bj-stay #f)
         (set! dh-start #f)
@@ -4732,7 +4838,7 @@ FINISHED :D
 ")
         (format #t "~%You win ~f!" bid-current)
       )
-      (when (>= added-cards-jak 22)
+      (when (>= added-cards-jak 22)                                                                 ;play jak bust
         (set! bj-lose #t)
         (set! bj-stay #f)
         (set! dh-start #f)
@@ -4916,7 +5022,7 @@ R1 - Double Down")
 )
 
 (when (and (= on-table? #t) (not (cpad-hold? 0 down)))
-(when (= in-hiphog? #t)
+(when (= in-transition? #f)
   (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
   (format *temp-string* "<COLOR_RED>Down:<COLOR_WHITE> Instructions/Buttons"
@@ -4938,16 +5044,16 @@ R1 - Double Down")
     (clear *pc-encoded-temp-string*)
   (format *temp-string* "
 Eco War is similar to BlackJack, but with a twist!
-~%Upon bidding your gems, you will get dealt 2 numbers.
-~%You may choose to hit, which adds a number to your total.
-~%If you hit a higher number than 21, you bust!
-~%If you choose to stay, you must beat the dealer's total.
-~%You can choose to double down to double your bid, but
-~%you will stay afterwards.
-~%If you win with all 4 number colors being the same,
-~%you'll hit a JakPot, which multiplies the amount in the pot by 100!
-~%You may hit up past 4 numbers and still get JakPot.
-~%Good Luck!
+~%Upon bidding, both players will get dealt 2 ecos, each with their own amount.
+~%You may choose to hit, which gives you another random eco and an amount.
+~%If your total eco amount is higher than 21, you bust!
+~%If you choose to stay, you must beat the dealer's total eco.
+~%Choosing to double down will double your bid, hit, and stay afterwards.
+~%You may hit up past 4 numbers without losing, so long as the total stays under 21.
+~%<COLOR_PINK>If you hit all four ecos of the same eco type, you'll channel dark eco.
+~%Winning while channeling hits JakPot, which multiplies the amount in the pot by 10!
+~%Losing while channeling will not multiply anything.
+~%<COLOR_GREEN>Good Luck!
   "
     )
     (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
@@ -4955,7 +5061,7 @@ Eco War is similar to BlackJack, but with a twist!
       
       
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
-      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 260 80 0.0 (font-color default) (font-flags middle shadow kerning large))))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 265 60 0.0 (font-color default) (font-flags middle shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
         (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
   )
@@ -5041,7 +5147,7 @@ Eco War is similar to BlackJack, but with a twist!
     (when (= in-hiphog? #t)
       (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
-  (format *temp-string* "<COLOR_WHITE>Dealer's cards total: <COLOR_RED>??"
+  (format *temp-string* "<COLOR_RED>Dealer's Eco Amount: <COLOR_WHITE>??"
     added-cards-dealer
     )
     (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
@@ -5056,7 +5162,7 @@ Eco War is similar to BlackJack, but with a twist!
     (when (= in-hiphog? #f)
       (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
-  (format *temp-string* "<COLOR_WHITE>Dealer's cards total: <COLOR_RED>~d"
+  (format *temp-string* "<COLOR_RED>Dealer's Eco Amount: <COLOR_WHITE>~d"
     added-cards-dealer
     )
     (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
@@ -5083,7 +5189,7 @@ Eco War is similar to BlackJack, but with a twist!
         (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
     (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
-  (format *temp-string* "<COLOR_WHITE>Jak's cards total: <COLOR_GREEN>~d"
+  (format *temp-string* "<COLOR_GREEN>Jak's Eco Amount: <COLOR_WHITE>~d"
     added-cards-jak
     )
     (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
@@ -5095,7 +5201,7 @@ Eco War is similar to BlackJack, but with a twist!
         (set! (-> font-ctx scale) 0.325)
         (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
   )
-  (when (= on-table? #t)
+  (when (and (= in-transition? #f)(= on-table? #t))
     (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
   (format *temp-string* "<COLOR_WHITE>Your Skull Gems: <COLOR_YELLOW>~d"
@@ -5190,16 +5296,16 @@ Eco War is similar to BlackJack, but with a twist!
   (let ((c4 0))
     (set! c4 (rand-vu-int-range 1 4))
     (when (= c4 1)
-      (set! dcard1s "<COLOR_WHITE><COLOR_RED>~d")
+      (set! dcard1s "<COLOR_RED>~d")
     )
     (when (= c4 2)
-      (set! dcard1s "<COLOR_WHITE><COLOR_BLUE>~d")
+      (set! dcard1s "<COLOR_BLUE>~d")
     )
     (when (= c4 3)
-      (set! dcard1s "<COLOR_WHITE><COLOR_GREEN>~d")
+      (set! dcard1s "<COLOR_GREEN>~d")
     )
     (when (= c4 4)
-      (set! dcard1s "<COLOR_WHITE><COLOR_YELLOW>~d")
+      (set! dcard1s "<COLOR_YELLOW>~d")
     )
   (let ((c5 0))
     (set! c5 (rand-vu-int-range 1 4))
@@ -5245,7 +5351,7 @@ Eco War is similar to BlackJack, but with a twist!
     )
     
 
-    (when (and (= c1 c2) (= c3 c4) (= c1 c4))
+    (when (and (= c c1) (= c1 c2)(= c2 c3) (= c3 c))
       (set! jackpot-win #t)
     )
   )
@@ -5256,7 +5362,7 @@ Eco War is similar to BlackJack, but with a twist!
   )
   )
   )
-  (set! colorcard #f)
+    (set! colorcard #f)
   )
 
                                                                                                                                         ;DRAW CARDS
