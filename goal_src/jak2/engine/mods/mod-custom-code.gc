@@ -166,13 +166,13 @@ FINISHED :D
 ")
   (auto-save-user)
   )
-  (when (and (or (!= (-> *game-info* buzzer-total) 2.0)(!= (-> *game-info* buzzer-total) 1.0))(= mod-rand 2))
+  (when (and (or (!= (-> *game-info* total-trys) 1)(!= (-> *game-info* buzzer-total) 1.0))(= mod-rand 2))
     (set! (-> *game-info* fuel) 2.0)
     (set! mod-pick #f)
           (print "[MOD] rolled for Teleport to Final Boss!
 ")
 (auto-save-user)
-    (when (or (= (-> *game-info* buzzer-total) 2.0)(= (-> *game-info* buzzer-total) 1.0))
+    (when (or (= (-> *game-info* total-trys) 1)(= (-> *game-info* buzzer-total) 1.0))
       (print "[MOD] You already beat tp-fb! rerolling...
 ")
       (set! mod-pick #t)
@@ -221,14 +221,13 @@ FINISHED :D
   )
 
   ;Legendary Weapon Mod Saves
-  (when (and (= (-> *game-info* buzzer-total) 0.0)(or (= leg-random-shot #f)(= pm-extra-shot-option #f))) ;if none
+  (when (and (and (= (-> *game-info* buzzer-total) 0.0)(= (-> *game-info* total-trys) 0))(or (= leg-random-shot #t)(= pm-extra-shot-option #t))) ;if none
     (set! pm-extra-shot-option #f)
     (set! leg-random-shot #f)
     (set! leg-got? #f)
   )
-  (when (and (= (-> *game-info* buzzer-total) 1.0)(= pm-extra-shot-option #f)) ;if 1, legendary extra chanced peacemaker-shot
+  (when (and (= (-> *game-info* buzzer-total) 1.0)(= pm-extra-shot-option #f)) ;if 1 on buzzer-total, legendary extra chanced peacemaker-shot
     (set! pm-extra-shot-option #t)
-    (set! leg-got? #t)
     (set! tp-fb-win #t)
     (set! recieved-gm-s6 "Chanced Peacemaker Shot!")
     (sound-play "ammo-pickup")
@@ -236,15 +235,21 @@ FINISHED :D
     (set! recieved-gm6 #t)
     (set! tp-fb #f)
   )
-
-  (when (and (= (-> *game-info* buzzer-total) 2.0)(= leg-random-shot #f)) ;if 2, legendary random shot
+  (when (and (= (-> *game-info* total-trys) 1)(= leg-random-shot #f)) ;if 1 on total-trys, legendary random shot
     (set! leg-random-shot #t)
-    (set! leg-got? #t)
-    (set! tp-fb-win #t)
     (set! recieved-gm-s5 "Random Shot!")
     (sound-play "ammo-pickup")
     (sound-play "board-boost")
     (set! recieved-gm5 #t)
+  )
+
+  (when (and (= (-> *game-info* buzzer-total) 2.0)(= blast-shot-option #f))
+    (set! blast-shot-option #t)
+    (set! recieved-gm-s5 "Blast Shot!")
+    (sound-play "ammo-pickup")
+    (sound-play "board-boost")
+    (set! recieved-gm5 #t)
+    (set! tp-fb-win #t)
     (set! tp-fb #f)
   )
 
@@ -600,7 +605,7 @@ FINISHED :D
 
 
 (when (= wm-rand-shot #t) ;LEGENDARY Random Shot: rolls through a random shot and shoots it out of jaks weapon. Activated in gun-(color)-shot.gc.
-        (set! wm-roll-shot (rand-vu-int-range 1 6))
+        (set! wm-roll-shot (rand-vu-int-range 1 5))
         (when (= wm-roll-shot 1)
           (someone-fire-dark *target* (-> *target* gun fire-point) (-> *target* gun fire-dir-out))
         (set! wm-roll-shot 0)
@@ -621,9 +626,6 @@ FINISHED :D
         )
         (when (= wm-roll-shot 5)
         (someone-fire-yellow *target* (-> *target* gun fire-point) (-> *target* gun fire-dir-out))
-      )
-      (when (= wm-roll-shot 6)
-        (someone-fire-guard-grenade *target* (-> *target* gun fire-point) (-> *target* gun fire-dir-out))
       )
 )
 
@@ -1330,7 +1332,7 @@ FINISHED :D
       (when (= hell-mode-option #t)
         (set! (-> *game-info* fuel) 10.0)
         (+! (-> *game-info* gem) 30.0)
-        (print "[MOD] | LEGENDARY | You beat tp-fb in hero mode! Congratulations!! You recieved Weapon Mod random-shot! tp-fb is now disabled.
+        (print "[MOD] | LEGENDARY | You beat tp-fb in hero mode! Congratulations!! You recieved Weapon Mod blast shot! tp-fb is now disabled.
 ")
         (set! hell-mode-option #f)
         (set! (-> *game-info* buzzer-total) 2.0)
@@ -1919,10 +1921,10 @@ FINISHED :D
         (set! (-> font-ctx scale) 0.325)
         (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
     )
-    (when (and (= leg-random-int 1)(= leg-random-shot #t))
+    (when (and (= blast-shot-int 1)(= blast-shot-option #t))
       (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
-    (format *temp-string* "<COLOR_YELLOW>RANDOM SHOT!")
+    (format *temp-string* "<COLOR_YELLOW>BLAST SHOT!")
     (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
@@ -1968,6 +1970,19 @@ FINISHED :D
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 190 0.0 (font-color default) (font-flags shadow kerning large right))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+    )
+    (when (and (= leg-random-int 1)(= leg-random-shot #t))
+      (clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+    (format *temp-string* "<COLOR_YELLOW>RANDOM SHOT!")
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 180 0.0 (font-color default) (font-flags shadow kerning large right))))
         (set! (-> font-ctx scale) 0.325)
         (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
     )
@@ -2028,10 +2043,10 @@ FINISHED :D
         (set! (-> font-ctx scale) 0.325)
         (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
     )
-    (when (and (= leg-random-int 2)(= leg-random-shot #t))
+    (when (and (= blast-shot-int 2)(= blast-shot-option #t))
       (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
-    (format *temp-string* "<COLOR_YELLOW>RANDOM SHOT!")
+    (format *temp-string* "<COLOR_YELLOW>BLAST SHOT!")
     (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
@@ -2077,6 +2092,19 @@ FINISHED :D
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 190 0.0 (font-color default) (font-flags shadow kerning large right))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+    )
+    (when (and (= leg-random-int 2)(= leg-random-shot #t))
+      (clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+    (format *temp-string* "<COLOR_YELLOW>RANDOM SHOT!")
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 180 0.0 (font-color default) (font-flags shadow kerning large right))))
         (set! (-> font-ctx scale) 0.325)
         (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
     )
@@ -2137,10 +2165,10 @@ FINISHED :D
         (set! (-> font-ctx scale) 0.325)
         (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
     )
-    (when (and (= leg-random-int 3)(= leg-random-shot #t))
+    (when (and (= blast-shot-int 3)(= blast-shot-option #t))
       (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
-    (format *temp-string* "<COLOR_YELLOW>RANDOM SHOT!")
+    (format *temp-string* "<COLOR_YELLOW>BLAST SHOT!")
     (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
@@ -2186,6 +2214,19 @@ FINISHED :D
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 190 0.0 (font-color default) (font-flags shadow kerning large right))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+    )
+    (when (and (= leg-random-int 3)(= leg-random-shot #t))
+      (clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+    (format *temp-string* "<COLOR_YELLOW>RANDOM SHOT!")
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 180 0.0 (font-color default) (font-flags shadow kerning large right))))
         (set! (-> font-ctx scale) 0.325)
         (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
     )
@@ -2246,10 +2287,10 @@ FINISHED :D
         (set! (-> font-ctx scale) 0.325)
         (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
     )
-    (when (and (= leg-random-int 4)(= leg-random-shot #t))
+    (when (and (= blast-shot-int 4)(= blast-shot-option #t))
       (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
-    (format *temp-string* "<COLOR_YELLOW>RANDOM SHOT!")
+    (format *temp-string* "<COLOR_YELLOW>BLAST SHOT!")
     (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
@@ -2295,6 +2336,19 @@ FINISHED :D
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 190 0.0 (font-color default) (font-flags shadow kerning large right))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+    )
+    (when (and (= leg-random-int 4)(= leg-random-shot #t))
+      (clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+    (format *temp-string* "<COLOR_YELLOW>RANDOM SHOT!")
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 180 0.0 (font-color default) (font-flags shadow kerning large right))))
         (set! (-> font-ctx scale) 0.325)
         (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
     )
@@ -2568,8 +2622,8 @@ FINISHED :D
     (set! mod-string "| LEGENDARY Random Shot!")
   )
     (when (and (= menu-pressed? #f)(= leg-random-shot #f)(= in-menu #t)(= menu-slot 4)(= sub-menu-slot 0))
-    (set! gun-mod-string "?????????? (heromode only)")
-    (set! mod-string "?????????? (heromode only)")
+    (set! gun-mod-string "??????????")
+    (set! mod-string "??????????")
   )
 
 
@@ -2641,8 +2695,14 @@ FINISHED :D
     (set! mod-string "| LEGENDARY | Chanced Peacemaker Shot!")
   )
     (when (and (= menu-pressed? #f)(= pm-extra-shot-option #f)(= in-menu #t)(= menu-slot 5)(= sub-menu-slot 0))
-    (set! gun-mod-string "??????????? (normal only)")
-    (set! mod-string "??????????? (normal only)")
+    (when (= hell-mode-option #t)
+      (set! gun-mod-string "?LOCKED? (normal only)")
+    (set! mod-string "?LOCKED? (normal only)")
+    )
+    (when (= hell-mode-option #f)
+      (set! gun-mod-string "???????????")
+    (set! mod-string "???????????")
+    )
   )
 
 
@@ -2800,6 +2860,57 @@ FINISHED :D
 )
     )
     
+      ;---------------------------------------blast shot main-----------------------------------------------------------
+
+  (when (and (= menu-pressed? #f)(= blast-shot-option #t)(= in-menu #t)(= menu-slot 8)(= sub-menu-slot 0))
+    (set! gun-mod-string "| LEGENDARY | Blast Shot!")
+    (set! mod-string "| LEGENDARY | Blast Shot!")
+  )
+    (when (and (= menu-pressed? #f)(= blast-shot-option #f)(= in-menu #t)(= menu-slot 8)(= sub-menu-slot 0))
+    (when (= hell-mode-option #f)
+      (set! gun-mod-string "?LOCKED? (heromode only)")
+    (set! mod-string "?LOCKED? (heromode only)")
+    )
+    (when (= hell-mode-option #t)
+      (set! gun-mod-string "???????????")
+    (set! mod-string "???????????")
+    )
+  )
+
+
+      ;---------------------------------------blast shot sub-----------------------------------------------------------
+    (when (and (= menu-pressed? #t)(= weapon-id 9)(= blast-shot-option #t)(= in-menu #t)(= sub-menu-slot 0))
+      (set! gun-string "Red Gun")
+(when (cpad-pressed? 0 square)
+    (set! blast-shot-int 2)
+)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 9)(= blast-shot-option #t)(= in-menu #t)(= sub-menu-slot 1))
+      (set! gun-string "Yellow Gun")
+    (when (cpad-pressed? 0 square)
+    (set! blast-shot-int 1)
+)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 9)(= blast-shot-option #t)(= in-menu #t)(= sub-menu-slot 2))
+      (set! gun-string "Blue Gun")
+   (when (cpad-pressed? 0 square)
+    (set! blast-shot-int 3)
+)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 9)(= blast-shot-option #t)(= in-menu #t)(= sub-menu-slot 3))
+          (set! gun-string "Peacemaker Gun")
+    (when (cpad-pressed? 0 square)
+    (set! blast-shot-int 4)
+)
+    )
+    (when (and (= menu-pressed? #t)(= weapon-id 9)(= blast-shot-option #t)(= in-menu #t)(= sub-menu-slot 4))
+    (print "None
+")
+          (set! gun-string "None")
+    (when (cpad-pressed? 0 square)
+    (set! blast-shot-int 0)
+)
+    )
   ;---------------------------------------Missing Gun Mod-----------------------------------------------------------
   (when (and (= menu-pressed? #t)(= weapon-id 99)(= in-menu #t)(= sub-menu-slot 0))
     (set! gun-mod-string "You have not unlocked this weapon mod yet")
@@ -3655,6 +3766,22 @@ FINISHED :D
   (when (and (= mehrunes-shot-option #t)(= weapon-id 8)(= sub-menu-slot 4))
     (set! mehrunes-shot-int 0)(sound-play "gun-takeout")
   )
+          ;-------------------------blast-shot-int--------------------------------
+  (when (and (= blast-shot-option #t)(= weapon-id 9)(= sub-menu-slot 0))
+        (set! mehrunes-shot-int 2)(sound-play "gun-takeout")
+  )
+  (when (and (= blast-shot-option #t)(= weapon-id 9)(= sub-menu-slot 1))
+    (set! blast-shot-int 1)(sound-play "gun-takeout")
+  )
+  (when (and (= blast-shot-option #t)(= weapon-id 9)(= sub-menu-slot 2))
+    (set! blast-shot-int 3)(sound-play "gun-takeout")
+  )
+  (when (and (= blast-shot-option #t)(= weapon-id 9)(= sub-menu-slot 3))
+    (set! blast-shot-int 4)(sound-play "gun-takeout")
+  )
+  (when (and (= blast-shot-option #t)(= weapon-id 9)(= sub-menu-slot 4))
+    (set! blast-shot-int 0)(sound-play "gun-takeout")
+  )
 )
 
 (when (and (= in-menu #t)(!= weapon-id 0)(= menu-pressed? #t)(cpad-pressed? 0 circle)) ;go back from color menu
@@ -3702,8 +3829,8 @@ FINISHED :D
       (+! sub-menu-slot 1)
       (set! menu-activate #t)
 
-     (when (and (= menu-pressed? #f) (> menu-slot 6)) ;max options for menu left
-      (set! menu-slot 6)
+     (when (and (= menu-pressed? #f) (>= menu-slot 8)) ;max options for menu left
+      (set! menu-slot 8)
       (set! menu-activate #t)
     )
     (when (and (= menu-pressed? #f) (> sub-menu-slot 4)) ;max options for menu right
@@ -3739,6 +3866,9 @@ FINISHED :D
       )
       (when (and (= mehrunes-shot-option #t)(= menu-slot 7)(= sub-menu-slot 0))
         (set! weapon-id 8)
+      )
+      (when (and (= blast-shot-option #t)(= menu-slot 8)(= sub-menu-slot 0))
+        (set! weapon-id 9)
       )
       (when (and (= rapid-fire-option #f)(= menu-slot 0)(= sub-menu-slot 0))
         (set! weapon-id 99)
@@ -4550,9 +4680,10 @@ FINISHED :D
   )
   (when (and (= jackpot-win #t) (= win-count 2))
     (+! (-> *game-info* gem) (*! bid-current 10))
+    (set! (-> *game-info* total-trys) 1)
     (set! jackpotbaby #t)
   )
-  (when (and (= jackpot-win #f)(= win-count 10))
+  (when (and (= jackpot-win #f)(= win-count 2))
     (+! (-> *game-info* gem) bid-current)
   )
   (when (= win-count 10)
@@ -5577,12 +5708,21 @@ Eco War is similar to BlackJack, but with a twist!
 
 
 
-#|
 
 
 
 
-;from here and down is my charged-shot mod. Only activated from getting 9999 skull gems. placed at the bottom so it easier to read
+
+
+
+
+
+
+
+
+
+
+;from here and down is my charged-shot mod. Earned from beating TP-FB in hell mode
 
 
 (when (= blast-time-start-blue #t);                                                                                                                          BLUE
@@ -6130,7 +6270,7 @@ Eco War is similar to BlackJack, but with a twist!
 
 
 
-|#
+
 
 
 

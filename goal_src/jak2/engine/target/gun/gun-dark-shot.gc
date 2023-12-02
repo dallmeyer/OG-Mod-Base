@@ -139,6 +139,9 @@
         )
       v0-1
       )               ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+      (when (and (= blast-shot-option #t)(= blast-shot-int 4))
+        (set! blast-time-start-dark #t)
+      )
       (when (and (= guard-grenade-int 4)(= guard-grenade-option #t))
       (someone-fire-guard-grenade *target* (-> *target* gun fire-point) (-> *target* gun fire-dir-out))
       )
@@ -230,12 +233,6 @@
           (set! (-> gp-0 owner-handle) (the-as handle #f))
           (set! (-> gp-0 ignore-handle) (process->handle (the-as process (send-event *target* 'get-vehicle))))
           (set! (-> gp-0 timeout) (seconds 4))
-          (when (not (logtest? (-> *game-info* secrets) (game-secrets hero-mode)))
-    (logior! (-> *game-info* secrets) (game-secrets invulnerable)) ;this also makes it so that theres no game secrets allowed when using predator/guard shot. I could be lazy and make it for all of them
-  )
-  (when (logtest? (-> *game-info* secrets) (game-secrets hero-mode))
-    (logior! (-> *game-info* secrets) (game-secrets invulnerable hero-mode)) ;this also makes it so that theres no game secrets allowed when using predator/guard shot. I could be lazy and make it for all of them
-  )
           (spawn-projectile metalhead-predator-shot gp-0 (ppointer->process (-> *target* gun gun)) *default-dead-pool*)
         )
     )

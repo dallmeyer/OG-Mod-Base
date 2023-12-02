@@ -417,7 +417,10 @@
         (set! (-> s4-1 attack-id) a0-15)
         )
       (set! (-> s4-1 timeout) (seconds 4))
-      (when (= rapid-fire-int 3)
+      (when (and (= blast-shot-option #t)(= blast-shot-int 3))
+        (set! blast-time-start-blue #t)
+      )
+      (when (and (= rapid-fire-int 3)(= rapid-fire-option #t))
         (set! rapid-fire-blue #t)
       )
             (when (and (!= guard-grenade-int 3)(!= guard-shot-int 3)) ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;WEAPON MOD CHANGES OCCUR HERE AND DOWN

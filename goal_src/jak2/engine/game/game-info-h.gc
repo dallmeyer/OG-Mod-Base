@@ -478,6 +478,8 @@ CURRENT BUGS:
 (define mehrunes-count 0)
 (define mehrunes-plug #f)
 
+(define blast-shot-int 0)
+(define blast-shot-option #f)
 (define blast-time-start-blue #f)
 (define blast-time-start-yellow #f)
 (define blast-time-start-red #f)
