@@ -302,7 +302,7 @@
     (('dead 'life)
      (+! (-> this total-deaths) 1)
      (+! (-> this continue-deaths) 1)
-     (+! (-> this task-deaths) 1)
+     (+! (-> this task-deaths) 0)
      (when *target*
        (let ((s4-1 (-> *target* current-level info)))
          (set! (-> this deaths-per-level (-> s4-1 task-level))
