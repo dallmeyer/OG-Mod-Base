@@ -475,13 +475,15 @@ FINISHED :D
   )
 )
 
-
+(when (and (task-node-closed? (game-task-node mountain-lens-introduction))(= weapon-mod-toggle #t))
 (when (= ohshitfirsttime #t)
  (+! ohshiti 1)
  (set! tp-fb #f)
+ (set! target-explode #f)
  (set! (-> (level-get-target-inside *level*) mood-func)update-mood-nest)
  (when (= ohshiti 1)
   (send-event (ppointer->process *time-of-day*) 'change 'ratio 240.0)
+  (set! (-> *time-of-day-context* overide-enable) #f)
   (set! (-> *mood-control* overide-weather-flag) #t)
   (set! (-> *mood-control* overide fog) 1.0)
   (set! (-> *mood-control* overide cloud) 1.0)
@@ -501,39 +503,34 @@ FINISHED :D
     ;set lwideb on
     (set! granger-level 1)
     (set! granger-activated? #t)
+    (set! granger-resist 4)
  )
  (when (= ohshiti 2350)
     ;set lwidec on
     (set! granger-level 2)
     (set! granger-activated? #t)
+    (set! granger-resist 8)
  )
- ;VV    INSERT EXTRA STUFF HERE FOR FIRST TIME    VV
- 
- ;^^                                              ^^
+ (when (= ohshiti 3500)
+  (set! granger-resist 10)
+ )
+ (when (= ohshiti 5500)
+  (set! granger-resist 20)
+ )
  (when (= ohshiti 7198)
-  (when (= (-> *progress-state* which-slot) 0)
-      (set! load-state-tp 0)
-    )
-    (when (= (-> *progress-state* which-slot) 1)
-      (set! load-state-tp 1)
-    )
-    (when (= (-> *progress-state* which-slot) 2)
-      (set! load-state-tp 2)
-    )
-    (when (= (-> *progress-state* which-slot) 3)
-      (set! load-state-tp 3)
-    )
+  (set! granger-resist 30)
  )
- (when (= ohshiti 7199)
-  (set! granger-teleport #t)
+ (when (= ohshiti 9198)
+  (set! granger-resist 40)
  )
- (when (= ohshiti 7200)
-  (set! (-> *mood-control* overide-weather-flag) #f)
-  (set! (-> (level-get-target-inside *level*) mood-func)update-mood-default)
-  (set! ohshiti 0)
-  (set! ohshitfirsttime #f)
-  (send-event (ppointer->process *time-of-day*) 'change 'ratio 1.0)
-  (send-event *traffic-manager* 'set-alert-level 0)
+ (when (= ohshiti 11198)
+  (set! granger-resist 50)
+ )
+ (when (= ohshiti 13198)
+  (set! granger-resist 99)
+ )
+ (when (= ohshiti 20198)
+  (set! granger-resist 999)
  )
  (when (= (-> *target* fact health) 0.0)
   (set! ohshiti 0)
@@ -559,6 +556,13 @@ FINISHED :D
       (set! gf-i 0.01)
       (set! (-> *mood-control* overide fog) gf-i)
     )
+    (when (= ohshiti 594)
+      (set! (-> *time-of-day-context* overide-enable) #t)
+      (set! (-> *overide-mood-color-table* data (logand (-> *time-of-day-context* mode) (time-of-day-palette-id unk0 unk1 unk2)) amb-color x) 1.9921)
+      (set! (-> *overide-mood-color-table* data (logand (-> *time-of-day-context* mode) (time-of-day-palette-id unk0 unk1 unk2)) amb-color y) 1.9921)
+      (set! (-> *overide-mood-color-table* data (logand (-> *time-of-day-context* mode) (time-of-day-palette-id unk0 unk1 unk2)) amb-color z) 1.9921)
+      (set! (-> *overide-mood-color-table* data (logand (-> *time-of-day-context* mode) (time-of-day-palette-id unk0 unk1 unk2)) amb-color w) 2.0)
+    )
   (when (= ohshiti 600)
     (set! ohshiti 0)
     (set! ohshit #f)
@@ -567,7 +571,7 @@ FINISHED :D
     (set! gt-i 0.0)
   )
 )
-
+)
 
 (when (and (= (-> *game-info* fuel) 0.0)(= weapon-mod-toggle #t)) ;checks for if you have weapon mod toggle on, then gives you a modifier
   (set! mod-pick #t)
@@ -2814,7 +2818,7 @@ FINISHED :D
   )
 
 
-
+(when (and (task-node-closed? (game-task-node mountain-lens-introduction))(= weapon-mod-toggle #t))
     (when (and (= (-> *game-info* task-deaths) 1) (= granger1 #f))
       (set! granger1 #t)
     )
@@ -3218,8 +3222,8 @@ FINISHED :D
       (set! di-s4 "")
     )
     (when (= di-i 18)
-      (set! di-s1 "When you have your gems,")
-      (set! di-s2 "come to the port near the hiphog.")
+      (set! di-s1 "Shouldn't be too long now.")
+      (set! di-s2 "")
       (set! di-s3 "")
       (set! di-s4 "")
     )
@@ -3299,26 +3303,26 @@ FINISHED :D
     (when (= di-i 7)
       (set! di-s1 "For you see, there's a tremendous amount of dark eco inside")
       (set! di-s2 "these little hora-quan crystals.")
-      (set! di-s3 "")
+      (set! di-s3 "Those 'gems' you have been collecting")
       (set! di-s4 "")
       (set-master-mode 'game)
     )
     (when (= di-i 8)
-      (set! di-s1 "And seeing as I have been put in stasis for all of my actions before...")
-      (set! di-s2 "now....")
-      (set! di-s3 "")
+      (set! di-s1 "Every gem you got, I could feel myself getting a little")
+      (set! di-s2 "more wiggle room. Inch by inch")
+      (set! di-s3 "but now...")
       (set! di-s4 "")
       (send-event (ppointer->process *time-of-day*) 'change 'ratio 2.0)
     )
     (when (= di-i 9)
-      (set! di-s1 "Now I have enough to truly change the game here")
+      (set! di-s1 "Now I have more than enough to truly change the game here")
       (set! di-s2 "")
       (set! di-s3 "")
       (set! di-s4 "")
       (send-event (ppointer->process *time-of-day*) 'change 'ratio 5.0)
     )
     (when (= di-i 10)
-      (set! di-s1 "Now I could get the rest of the dark eco myself.")
+      (set! di-s1 "I feel as though I can finally stand back up again.")
       (set! di-s2 "")
       (set! di-s3 "")
       (set! di-s4 "")
@@ -3332,14 +3336,14 @@ FINISHED :D
       (send-event (ppointer->process *time-of-day*) 'change 'ratio 20.0)
     )
     (when (= di-i 12)
-      (set! di-s1 "I now have access to nearly all the dark eco in")
-      (set! di-s2 "not only this universe... but ALL universes and timelines...")
-      (set! di-s3 "A virtually infinite amount of dark eco.")
+      (set! di-s1 "This is amazing, I have access to nearly all the dark eco in")
+      (set! di-s2 "not only this world... but ALL worlds and timelines...")
+      (set! di-s3 "A virtually infinite amount of dark eco in an infinite universe.")
       (set! di-s4 "")
       (send-event (ppointer->process *time-of-day*) 'change 'ratio 30.0)
     )
     (when (= di-i 13)
-      (set! di-s1 "I don't need you anymore, Player.")
+      (set! di-s1 "So as it turns out, I don't need you anymore, Player.")
       (set! di-s2 "")
       (set! di-s3 "")
       (set! di-s4 "")
@@ -3366,10 +3370,9 @@ FINISHED :D
       (set! di-s4 "")
     )
     (when (= di-i 17)
-      (set! di-s1 "For whenever I feel like changing universes,")
-      (set! di-s2 "I'll have you be able to hop with me.")
-      (set! di-s3 "")
-      (set! di-s4 "")
+      (set! di-s1 "For whenever you die, you shall ressurect in another 'random' dimension")
+      (set! di-s3 "Same attributes, same mission.")
+      (set! di-s4 "Separated from me until I inevitably find you.")
     )
     (when (= di-i 18)
       (set! di-s1 "...")
@@ -3378,25 +3381,20 @@ FINISHED :D
       (set! di-s4 "")
     )
     (when (= di-i 19)
-      (set! di-s1 "But of course...")
+      (set! di-s1 "Why swap universes, you wonder?")
       (set! di-s2 "")
       (set! di-s3 "")
       (set! di-s4 "")
     )
     (when (= di-i 20)
-      (set! di-s1 "I'll make sure to completely eradicate the world first!")
+      (set! di-s1 "Well....")
       (set! di-s2 "")
       (set! di-s3 "")
       (set! di-s4 "")
-      (set! (-> (level-get-target-inside *level*) mood-func)update-mood-nest)
-      (set! (-> *mood-control* overide-weather-flag) #t)
-      (set! (-> *mood-control* overide fog) 1.0)
-      (set! (-> *mood-control* overide cloud) 1.0)
-      (send-event (ppointer->process *time-of-day*) 'change 'ratio 240.0)
     )
     (when (= di-i 21)
-      (set! di-s1 "It is absolutely impossible to save the world now.")
-      (set! di-s2 "For you're not even the real Jak")
+      (set! di-s1 "Because I'll make sure to completely destroy this reality!")
+      (set! di-s2 "")
       (set! di-s3 "")
       (set! di-s4 "")
       (set! (-> (level-get-target-inside *level*) mood-func)update-mood-nest)
@@ -3406,9 +3404,9 @@ FINISHED :D
       (send-event (ppointer->process *time-of-day*) 'change 'ratio 240.0)
     )
     (when (= di-i 22)
-      (set! di-s1 "...")
-      (set! di-s2 "")
-      (set! di-s3 "")
+      (set! di-s1 "It is absolutely impossible to save this world now. Or the ones after.")
+      (set! di-s2 "For you're not even the real Jak.")
+      (set! di-s3 "That means no heroes in this story.")
       (set! di-s4 "")
       (set! (-> (level-get-target-inside *level*) mood-func)update-mood-nest)
       (set! (-> *mood-control* overide-weather-flag) #t)
@@ -3417,7 +3415,7 @@ FINISHED :D
       (send-event (ppointer->process *time-of-day*) 'change 'ratio 240.0)
     )
     (when (= di-i 23)
-      (set! di-s1 "We shall never speak again, Player.")
+      (set! di-s1 "...")
       (set! di-s2 "")
       (set! di-s3 "")
       (set! di-s4 "")
@@ -3428,7 +3426,7 @@ FINISHED :D
       (send-event (ppointer->process *time-of-day*) 'change 'ratio 240.0)
     )
     (when (= di-i 24)
-      (set! di-s1 "This will certainly not be the last you see of me.")
+      (set! di-s1 "We shall never speak again, Player.")
       (set! di-s2 "")
       (set! di-s3 "")
       (set! di-s4 "")
@@ -3439,7 +3437,7 @@ FINISHED :D
       (send-event (ppointer->process *time-of-day*) 'change 'ratio 240.0)
     )
     (when (= di-i 25)
-      (set! di-s1 "Certainly.")
+      (set! di-s1 "But this will certainly not be the last you see of me.")
       (set! di-s2 "")
       (set! di-s3 "")
       (set! di-s4 "")
@@ -3450,6 +3448,17 @@ FINISHED :D
       (send-event (ppointer->process *time-of-day*) 'change 'ratio 240.0)
     )
     (when (= di-i 26)
+      (set! di-s1 "Certainly.")
+      (set! di-s2 "")
+      (set! di-s3 "")
+      (set! di-s4 "")
+      (set! (-> (level-get-target-inside *level*) mood-func)update-mood-nest)
+      (set! (-> *mood-control* overide-weather-flag) #t)
+      (set! (-> *mood-control* overide fog) 1.0)
+      (set! (-> *mood-control* overide cloud) 1.0)
+      (send-event (ppointer->process *time-of-day*) 'change 'ratio 240.0)
+    )
+    (when (= di-i 27)
       (set! settingunlocked3 #t)
       (set! (-> *game-info* task-deaths) 4)
       (set! ohshitfirsttime #t)
@@ -3484,7 +3493,7 @@ FINISHED :D
     (when (= (-> *target* fact health) 0.0)
       (set! (-> *game-info* gem) 0.0)
       (set! gem-takeaway #f)
-      (set! auto-save-delayed? #t)
+      (set! (-> *target* fact health) 8.0)
     )
   )
 
@@ -3494,7 +3503,7 @@ FINISHED :D
 
   (when 
   (and 
-  (rand-vu-percent? 0.00004) ;normally 0.00002
+  (rand-vu-percent? 0.000006) ;normally 0.00002
   (= (-> *game-info* task-deaths) 4)
   (and 
   (not *scene-player*)
@@ -3522,41 +3531,47 @@ FINISHED :D
   )
 
   (when (= granger-teleport #t)
+    (set! (-> *target* fact health) 8.0)
+    (set! auto-save-delayed? #t)
     (let ((n 0)
           (p (set! granger-teleport #f))
           (pp (set! granger-level 0))
           (ppp (set! granger-activated? #t)))
-      (set! n (rand-vu-int-range 1 8))
       (when (rand-vu-percent? 0.008)
         (set! n 0)
         (set! eine #t)
         (send-event *target* 'continue (get-continue-by-name *game-info* "village1-start"))
       )
-      (when (= n 1)
-        (send-event *target* 'continue (get-continue-by-name *game-info* "ruins-hut"))
+      (when (task-node-closed? (game-task-node mountain-lens-introduction))
+      (set! n (rand-vu-int-range 1 9))
+        (when (= n 1)
+          (send-event *target* 'continue (get-continue-by-name *game-info* "ruins-hut"))
+        )
+        (when (= n 2)
+          (send-event *target* 'continue (get-continue-by-name *game-info* "ruins-tower"))
+        )
+        (when (= n 3)
+          (send-event *target* 'continue (get-continue-by-name *game-info* "atoll-start"))
+        )
+        (when (= n 4)
+          (send-event *target* 'continue (get-continue-by-name *game-info* "caspad-start"))
+        )
+        (when (= n 5)
+          (send-event *target* 'continue (get-continue-by-name *game-info* "strip-warp"))
+        )
+        (when (= n 6)
+          (send-event *target* 'continue (get-continue-by-name *game-info* "mountain-start"))
+        )
+        (when (= n 7)
+          (send-event *target* 'continue (get-continue-by-name *game-info* "ruins-hut"))
+        )
+        (when (= n 8)
+          (send-event *target* 'continue (get-continue-by-name *game-info* "atoll-battle"))
+        )
+        (when (= n 9)
+          (send-event *target* 'continue (get-continue-by-name *game-info* "forest-tree"))
+        )
       )
-      (when (= n 2)
-        (send-event *target* 'continue (get-continue-by-name *game-info* "ruins-tower"))
-      )
-      (when (= n 3)
-        (send-event *target* 'continue (get-continue-by-name *game-info* "atoll-start"))
-      )
-      (when (= n 4)
-        (send-event *target* 'continue (get-continue-by-name *game-info* "caspad-start"))
-      )
-      (when (= n 5)
-        (send-event *target* 'continue (get-continue-by-name *game-info* "strip-warp"))
-      )
-      (when (= n 6)
-        (send-event *target* 'continue (get-continue-by-name *game-info* "mountain-start"))
-      )
-      (when (= n 7)
-        (send-event *target* 'continue (get-continue-by-name *game-info* "ruins-hut"))
-      )
-      (when (= n 8)
-        (send-event *target* 'continue (get-continue-by-name *game-info* "atoll-battle"))
-      )
-      
       p
       pp
       ppp
@@ -3579,7 +3594,7 @@ FINISHED :D
     (set! eine #f)
   )
 )
-
+)
 
 ;hud-menu (this is very inefficient and long. Not worth to add any options if you're not me.)
 ;---------------------------------------------------------
@@ -4605,7 +4620,7 @@ FINISHED :D
     (set! modifier-string "Chanced Max Eco collect / Traffic Max alert")
     (set! modifier-string "Chanced Trip / Gain 25 Metalheads")
     (set! modifier-string "On Hit Target Explode / GunGame Ammo")|#
-(when (and (= in-menu #t)(= tp-fb-win #f)(= (-> *game-info* fuel) 10.0)(cpad-hold? 0 down)) ;draws the info screen
+(when (and (= in-menu #t)(= tp-fb-win #f)(!= (-> *game-info* task-deaths) 4)(= (-> *game-info* fuel) 10.0)(cpad-hold? 0 down)) ;draws the info screen
   (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
     (format *temp-string* "
@@ -4641,13 +4656,85 @@ FINISHED :D
         (set! (-> font-ctx scale) 0.325)
         (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
 )
+(when (and (= in-menu #t)(= tp-fb-win #f)(= (-> *game-info* task-deaths) 4)(= (-> *game-info* fuel) 10.0)(cpad-hold? 0 down)) ;draws the info screen
+  (clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+    (format *temp-string* "
+    <COLOR_WHITE>HELL MODE INFO:
+    ~%<COLOR_RED>END OF ALL WORLDS ENSURED.
+    ~%<COLOR_YELLOW>All modifiers are active:
+    ~%<COLOR_RED>TP-FB Challenge
+    ~%<COLOR_WHITE>Upon death, jak teleports to the final boss, but its extremely unfair
+    ~%Beat the boss to gain a powerful weapon mod (more powerful in hero-mode)
+    ~%<COLOR_RED>Peacemaker Ability / 1 Hit Boss
+    ~%<COLOR_WHITE>At all times, have a chance to fire 100 peacemaker shots
+    ~%but you must fight every boss with 1 HP
+    ~%<COLOR_RED>Boosted Hov Speed / Boosted Enemy HP
+    ~%<COLOR_WHITE>Hoverboard is the fast
+    ~%but enemies have X5 HP (does not apply in traffic)
+    ~%<COLOR_RED>Chanced Max Eco collect / Traffic Max alert
+    ~%<COLOR_WHITE>Any eco pickup can fill up the rest of your meter
+    ~%but any time you anger the guards, theyre alerted to max level
+    ~%<COLOR_RED>Chanced Trip / Gain 25 Metalheads
+    ~%<COLOR_WHITE>Can trip from shooting, rolling, punching, jumping, or twirling
+    ~%but every time this happens, gain 25 metalheads (on-cooldown)
+    ~%<COLOR_RED>On Hit Target Explode / GunGame Ammo
+    ~%<COLOR_WHITE>Entering the gun course refills all of your ammo to maximum
+    ~%but Jak has a bomb strapped inside of him, any hits or bonks could set it off
+    "
+    )
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 1 0.0 (font-color default) (font-flags shadow kerning large))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+)
 
-(when (and (= in-menu #t)(= tp-fb-win #t)(= (-> *game-info* fuel) 10.0)(cpad-hold? 0 down)) ;draws the info screen
+(when (and (= in-menu #t)(= tp-fb-win #t)(!= (-> *game-info* task-deaths) 4)(= (-> *game-info* fuel) 10.0)(cpad-hold? 0 down)) ;draws the info screen
   (clear *temp-string*)
     (clear *pc-encoded-temp-string*)
     (format *temp-string* "
     <COLOR_WHITE>HELL MODE INFO:
     ~%
+    ~%<COLOR_YELLOW>All modifiers are active:
+    ~%<COLOR_GREEN>On-Death TP-FB Challenge (DISABLED)
+    ~%<COLOR_YELLOW>You beat TP-FB in Hero Mode! I'm actually impressed
+    ~%Blast shot has been rewarded in your inventory. Congrats!
+    ~%<COLOR_RED>Peacemaker Ability / 1 Hit Boss
+    ~%<COLOR_WHITE>At all times, have a chance to fire 100 peacemaker shots
+    ~%but you must fight every boss with 1 HP
+    ~%<COLOR_RED>Boosted Hov Speed / Boosted Enemy HP
+    ~%<COLOR_WHITE>Hoverboard is the fast
+    ~%but enemies have X5 HP (does not apply in traffic)
+    ~%<COLOR_RED>Chanced Max Eco collect / Traffic Max alert
+    ~%<COLOR_WHITE>Any eco pickup can fill up the rest of your meter
+    ~%but any time you anger the guards, theyre alerted to max level
+    ~%<COLOR_RED>Chanced Trip / Gain 25 Metalheads
+    ~%<COLOR_WHITE>Can trip from shooting, rolling, punching, jumping, or twirling
+    ~%but every time this happens, gain 25 metalheads (on-cooldown)
+    ~%<COLOR_RED>On Hit Target Explode / GunGame Ammo
+    ~%<COLOR_WHITE>Entering the gun course refills all of your ammo to maximum
+    ~%but Jak has a bomb strapped inside of him, any hits or bonks could set it off
+    "
+    )
+    (pc-encode-utf8-string *temp-string* *pc-encoded-temp-string*)
+    (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
+      ;; reset bucket settings prior to drawing - font won't do this for us, and
+      ;; draw-raw-image can sometimes mess them up. (intro sequence)
+      (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
+      (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 1 0.0 (font-color default) (font-flags shadow kerning large))))
+        (set! (-> font-ctx scale) 0.325)
+        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+)
+(when (and (= in-menu #t)(= tp-fb-win #t)(= (-> *game-info* task-deaths) 4)(= (-> *game-info* fuel) 10.0)(cpad-hold? 0 down)) ;draws the info screen
+  (clear *temp-string*)
+    (clear *pc-encoded-temp-string*)
+    (format *temp-string* "
+    <COLOR_WHITE>HELL MODE INFO:
+    ~%<COLOR_RED>END OF ALL WORLDS ENSURED.
     ~%<COLOR_YELLOW>All modifiers are active:
     ~%<COLOR_GREEN>On-Death TP-FB Challenge (DISABLED)
     ~%<COLOR_YELLOW>You beat TP-FB in Hero Mode! I'm actually impressed
