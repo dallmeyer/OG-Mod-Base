@@ -15,9 +15,324 @@ TODO: FINISH HELL MODE
 FINISHED :D
 |#
 
+
  (define-extern dark-traffic symbol)
  (define orb-count1 60)
  (define orb-count3 10)
+
+ 
+
+;BLACKJAK INFO:
+(define in-pre-game? #f)
+(define in-blackjack? #f)
+(define in-hiphog? #f)
+(define on-table? #f)
+(define table-activate #f)
+(define no-state-camera-table #f)
+(define bj-count 0)
+(define bj-start #f)
+(define hitting? #f)
+(define hitting2? #f)
+(define round-started? #f)
+(define draw-jak-current #f)
+
+(define draw-dealer-card1 #f)
+(define draw-dealer-card2 #f)
+(define draw-dealer-card3 #f)
+(define draw-dealer-card4 #f)
+(define draw-dealer-current #f)
+(define-extern current-dealer string)
+(define draw-current-dealer #f)
+
+;KICKING OUT IN BJ
+
+(define bj-kicked-out #f)
+(define bj-kicked-cdr 0)
+(define bj-kicked-max 5000)
+
+;SETTINGS
+
+(define bj-win #f)
+(define bj-lose #f)
+(define lose-count 0)
+(define win-count 0)
+(define dealer-stay #f)
+(define dealer-bust #f)
+(define dealer-cap 0)
+(define char-on-table 1)
+(define bid-amount 0.0)
+(define bid-current 0.0)
+(define bid-select 0)
+(define bj-hit #f)
+(define bj-stay #f)
+(define bj-double-down #f)
+(define added-cards-jak 0)
+(define added-cards-dealer 0)
+(define jak-current-card 0)
+(define dealer-current-card 0)
+(define jturn 0)
+(define dturn 0)
+(define dh-start #f)
+(define d-count 0)
+(define jackpot-win #f)
+
+;COLORS
+(define colorcard #f)
+
+;BLACKJACK DRAWS
+(define in-transition? #f)
+(define popup-bj #f)
+(define bj-dealer-s "Sig")
+(define bj-bid-s "0")
+(define bj-dealer-d #f)
+(define bj-bid-d #f)
+(define jackpotbaby #f)
+(define jackpotbabytime 0)
+(define-extern jackpotcolors string)
+(define-extern jackpot-string string)
+
+(define-extern jcard1s string)
+(define-extern jcard2s string)
+(define-extern jcard3s string)
+(define-extern jcard4s string)
+(define jcard1 #f)
+(define jcard2 #f)
+(define jcard3 #f)
+(define jcard4 #f)
+(define-extern dcard1s string)
+(define-extern dcard2s string)
+(define-extern dcard3s string)
+(define-extern dcard4s string)
+(define dcard1 #f)
+(define dcard2 #f)
+(define dcard3 #f)
+(define dcard4 #f)
+
+(define-extern jcard1i int)
+(define-extern jcard2i int)
+(define-extern jcard3i int)
+(define-extern jcard4i int)
+
+(define-extern dcard1i int)
+(define-extern dcard2i int)
+(define-extern dcard3i int)
+(define-extern dcard4i int)
+
+
+
+;BLACKJACK SOUNDS ON MOD BASE
+;---------------------------------------------ASHELIN-------------------------------------------------
+(define ashelin-win1 "goal_src/jak2/pc/csounds/BlackJakSounds/ashelin/win/ash-win.mp3")
+(define ashelin-win2 "goal_src/jak2/pc/csounds/BlackJakSounds/ashelin/win/ash-win2.mp3")
+(define ashelin-win3 "goal_src/jak2/pc/csounds/BlackJakSounds/ashelin/win/ash-win3.mp3")
+(define ashelin-win4 "goal_src/jak2/pc/csounds/BlackJakSounds/ashelin/win/ash-win4.mp3")
+(define ashelin-win5 "goal_src/jak2/pc/csounds/BlackJakSounds/ashelin/win/ash-win5.mp3")
+(define ashelin-win6 "goal_src/jak2/pc/csounds/BlackJakSounds/ashelin/win/ash-win6.mp3")
+(define ashelin-win7 "goal_src/jak2/pc/csounds/BlackJakSounds/ashelin/win/ash-win7.mp3")
+
+(define ashelin-lose1 "goal_src/jak2/pc/csounds/BlackJakSounds/ashelin/lose/ash-lose.mp3")
+(define ashelin-lose2 "goal_src/jak2/pc/csounds/BlackJakSounds/ashelin/lose/ash-lose2.mp3")
+(define ashelin-lose3 "goal_src/jak2/pc/csounds/BlackJakSounds/ashelin/lose/ash-lose3.mp3")
+(define ashelin-lose4 "goal_src/jak2/pc/csounds/BlackJakSounds/ashelin/lose/ash-lose4.mp3")
+(define ashelin-lose5 "goal_src/jak2/pc/csounds/BlackJakSounds/ashelin/lose/ash-lose5.mp3")
+(define ashelin-lose6 "goal_src/jak2/pc/csounds/BlackJakSounds/ashelin/lose/ash-lose6.mp3")
+
+(define ashelin-start1 "goal_src/jak2/pc/csounds/BlackJakSounds/ashelin/startup/ash-start.mp3")
+
+(define ashelin-again1 "goal_src/jak2/pc/csounds/BlackJakSounds/ashelin/again/ash-again.mp3")
+
+(define ashelin-kickout1 "goal_src/jak2/pc/csounds/BlackJakSounds/ashelin/kickout/ash-kickout.mp3")
+
+;---------------------------------------------DAXTER-------------------------------------------------
+
+(define daxter-win1 "goal_src/jak2/pc/csounds/BlackJakSounds/daxter/win/dax-win.mp3")
+(define daxter-win2 "goal_src/jak2/pc/csounds/BlackJakSounds/daxter/win/dax-win2.mp3")
+(define daxter-win3 "goal_src/jak2/pc/csounds/BlackJakSounds/daxter/win/dax-win3.mp3")
+(define daxter-win4 "goal_src/jak2/pc/csounds/BlackJakSounds/daxter/win/dax-win4.mp3")
+(define daxter-win5 "goal_src/jak2/pc/csounds/BlackJakSounds/daxter/win/dax-win5.mp3")
+(define daxter-win6 "goal_src/jak2/pc/csounds/BlackJakSounds/daxter/win/dax-win6.mp3")
+(define daxter-win7 "goal_src/jak2/pc/csounds/BlackJakSounds/daxter/win/dax-win7.mp3")
+(define daxter-win8 "goal_src/jak2/pc/csounds/BlackJakSounds/daxter/win/dax-win8.mp3")
+
+(define daxter-lose1 "goal_src/jak2/pc/csounds/BlackJakSounds/daxter/lose/dax-lose.mp3")
+(define daxter-lose2 "goal_src/jak2/pc/csounds/BlackJakSounds/daxter/lose/dax-lose2.mp3")
+(define daxter-lose3 "goal_src/jak2/pc/csounds/BlackJakSounds/daxter/lose/dax-lose3.mp3")
+(define daxter-lose4 "goal_src/jak2/pc/csounds/BlackJakSounds/daxter/lose/dax-lose4.mp3")
+
+(define daxter-start1 "goal_src/jak2/pc/csounds/BlackJakSounds/daxter/startup/dax-start.mp3")
+
+(define daxter-again1 "goal_src/jak2/pc/csounds/BlackJakSounds/daxter/again")
+
+(define daxter-kickout1 "goal_src/jak2/pc/csounds/BlackJakSounds/daxter/kickout/dax-kickout.mp3")
+
+;---------------------------------------------ERROL-------------------------------------------------
+
+
+(define errol-win1 "goal_src/jak2/pc/csounds/BlackJakSounds/errol/win/errol-win.mp3")
+(define errol-win2 "goal_src/jak2/pc/csounds/BlackJakSounds/errol/win/errol-win2.mp3")
+(define errol-win3 "goal_src/jak2/pc/csounds/BlackJakSounds/errol/win/errol-win3.mp3")
+(define errol-win4 "goal_src/jak2/pc/csounds/BlackJakSounds/errol/win/errol-win4.mp3")
+(define errol-win5 "goal_src/jak2/pc/csounds/BlackJakSounds/errol/win/errol-win5.mp3")
+(define errol-win6 "goal_src/jak2/pc/csounds/BlackJakSounds/errol/win/errol-win6.mp3")
+(define errol-win7 "goal_src/jak2/pc/csounds/BlackJakSounds/errol/win/errol-win7.mp3")
+
+(define errol-lose1 "goal_src/jak2/pc/csounds/BlackJakSounds/errol/lose/errol-lose.mp3")
+(define errol-lose2 "goal_src/jak2/pc/csounds/BlackJakSounds/errol/lose/errol-lose2.mp3")
+(define errol-lose3 "goal_src/jak2/pc/csounds/BlackJakSounds/errol/lose/errol-lose3.mp3")
+(define errol-lose4 "goal_src/jak2/pc/csounds/BlackJakSounds/errol/lose/errol-lose4.mp3")
+(define errol-lose5 "goal_src/jak2/pc/csounds/BlackJakSounds/errol/lose/errol-lose5.mp3")
+
+(define errol-start1 "goal_src/jak2/pc/csounds/BlackJakSounds/errol/startup/errol-start.mp3")
+(define errol-start2 "goal_src/jak2/pc/csounds/BlackJakSounds/errol/startup/errol-start2.mp3")
+
+(define errol-again1 "goal_src/jak2/pc/csounds/BlackJakSounds/errol/again/errol-again.mp3")
+(define errol-again2 "goal_src/jak2/pc/csounds/BlackJakSounds/errol/again/errol-again2.mp3")
+
+(define errol-kickout1 "goal_src/jak2/pc/csounds/BlackJakSounds/errol/kickout/errol-kickout.mp3")
+
+;---------------------------------------------KREW-------------------------------------------------
+
+(define krew-win1 "goal_src/jak2/pc/csounds/BlackJakSounds/krew/win/krew-win.mp3")
+(define krew-win2 "goal_src/jak2/pc/csounds/BlackJakSounds/krew/win/krew-win2.mp3")
+(define krew-win3 "goal_src/jak2/pc/csounds/BlackJakSounds/krew/win/krew-win3.mp3")
+(define krew-win4 "goal_src/jak2/pc/csounds/BlackJakSounds/krew/win/krew-win4.mp3")
+(define krew-win5 "goal_src/jak2/pc/csounds/BlackJakSounds/krew/win/krew-win5.mp3")
+(define krew-win6 "goal_src/jak2/pc/csounds/BlackJakSounds/krew/win/krew-win6.mp3")
+
+(define krew-lose1 "goal_src/jak2/pc/csounds/BlackJakSounds/krew/lose/krew-lose.mp3")
+(define krew-lose2 "goal_src/jak2/pc/csounds/BlackJakSounds/krew/lose/krew-lose2.mp3")
+(define krew-lose3 "goal_src/jak2/pc/csounds/BlackJakSounds/krew/lose/krew-lose3.mp3")
+(define krew-lose4 "goal_src/jak2/pc/csounds/BlackJakSounds/krew/lose/krew-lose4.mp3")
+
+(define krew-start1 "goal_src/jak2/pc/csounds/BlackJakSounds/krew/startup/krew-start.mp3")
+(define krew-start2 "goal_src/jak2/pc/csounds/BlackJakSounds/krew/startup/krew-start2.mp3")
+
+(define krew-again1 "goal_src/jak2/pc/csounds/BlackJakSounds/krew/again/krew-again.mp3")
+(define krew-again2 "goal_src/jak2/pc/csounds/BlackJakSounds/krew/again/krew-again2.mp3")
+
+(define krew-kickout1 "goal_src/jak2/pc/csounds/BlackJakSounds/krew/kickout/krew-kickout.mp3")
+
+;---------------------------------------------PECKER-------------------------------------------------
+
+(define pecker-win1 "goal_src/jak2/pc/csounds/BlackJakSounds/pecker/win/pecker-win.mp3")
+(define pecker-win2 "goal_src/jak2/pc/csounds/BlackJakSounds/pecker/win/pecker-win2.mp3")
+(define pecker-win3 "goal_src/jak2/pc/csounds/BlackJakSounds/pecker/win/pecker-win3.mp3")
+(define pecker-win4 "goal_src/jak2/pc/csounds/BlackJakSounds/pecker/win/pecker-win4.mp3")
+(define pecker-win5 "goal_src/jak2/pc/csounds/BlackJakSounds/pecker/win/pecker-win5.mp3")
+(define pecker-win6 "goal_src/jak2/pc/csounds/BlackJakSounds/pecker/win/pecker-win6.mp3")
+(define pecker-win7 "goal_src/jak2/pc/csounds/BlackJakSounds/pecker/win/pecker-win7.mp3")
+
+(define pecker-lose1 "goal_src/jak2/pc/csounds/BlackJakSounds/pecker/lose/pecker-lose.mp3")
+(define pecker-lose2 "goal_src/jak2/pc/csounds/BlackJakSounds/pecker/lose/pecker-lose2.mp3")
+(define pecker-lose3 "goal_src/jak2/pc/csounds/BlackJakSounds/pecker/lose/pecker-lose3.mp3")
+
+(define pecker-start1 "goal_src/jak2/pc/csounds/BlackJakSounds/pecker/startup/pecker-start.mp3")
+
+(define pecker-again1 "goal_src/jak2/pc/csounds/BlackJakSounds/pecker/again/pecker-again.mp3")
+
+(define pecker-kickout1 "goal_src/jak2/pc/csounds/BlackJakSounds/pecker/kickout/pecker-kickout.mp3")
+
+;---------------------------------------------SAMOS-------------------------------------------------
+
+(define samos-win1 "goal_src/jak2/pc/csounds/BlackJakSounds/samos/win/jinx-win.mp3")
+(define samos-win2 "goal_src/jak2/pc/csounds/BlackJakSounds/samos/win/jinx-win2.mp3")
+(define samos-win3 "goal_src/jak2/pc/csounds/BlackJakSounds/samos/win/jinx-win3.mp3")
+(define samos-win4 "goal_src/jak2/pc/csounds/BlackJakSounds/samos/win/jinx-win4.mp3")
+(define samos-win5 "goal_src/jak2/pc/csounds/BlackJakSounds/samos/win/jinx-win5.mp3")
+(define samos-win6 "goal_src/jak2/pc/csounds/BlackJakSounds/samos/win/jinx-win6.mp3")
+(define samos-win7 "goal_src/jak2/pc/csounds/BlackJakSounds/samos/win/jinx-win7.mp3")
+(define samos-win8 "goal_src/jak2/pc/csounds/BlackJakSounds/samos/win/jinx-win8.mp3")
+
+(define samos-lose1 "goal_src/jak2/pc/csounds/BlackJakSounds/samos/lose/jinx-lose.mp3")
+(define samos-lose2 "goal_src/jak2/pc/csounds/BlackJakSounds/samos/lose/jinx-lose2.mp3")
+(define samos-lose3 "goal_src/jak2/pc/csounds/BlackJakSounds/samos/lose/jinx-lose3.mp3")
+(define samos-lose4 "goal_src/jak2/pc/csounds/BlackJakSounds/samos/lose/jinx-lose4.mp3")
+(define samos-lose5 "goal_src/jak2/pc/csounds/BlackJakSounds/samos/lose/jinx-lose5.mp3")
+(define samos-lose6 "goal_src/jak2/pc/csounds/BlackJakSounds/samos/lose/jinx-lose6.mp3")
+(define samos-lose7 "goal_src/jak2/pc/csounds/BlackJakSounds/samos/lose/jinx-lose7.mp3")
+(define samos-lose8 "goal_src/jak2/pc/csounds/BlackJakSounds/samos/lose/jinx-lose8.mp3")
+(define samos-lose9 "goal_src/jak2/pc/csounds/BlackJakSounds/samos/lose/jinx-lose9.mp3")
+
+(define samos-start1 "goal_src/jak2/pc/csounds/BlackJakSounds/samos/startup/jinx-startup.mp3")
+(define samos-start2 "goal_src/jak2/pc/csounds/BlackJakSounds/samos/startup/jinx-startup2.mp3")
+
+(define samos-again1 "goal_src/jak2/pc/csounds/BlackJakSounds/samos/again/jinx-again.mp3")
+(define samos-again2 "goal_src/jak2/pc/csounds/BlackJakSounds/samos/again/jinx-again2.mp3")
+
+(define samos-kickout1 "goal_src/jak2/pc/csounds/BlackJakSounds/samos/kickout/jinx-kickout.mp3")
+
+;---------------------------------------------SIG-------------------------------------------------
+
+(define sig-win1 "goal_src/jak2/pc/csounds/BlackJakSounds/sig/win/sig-win.mp3")
+(define sig-win2 "goal_src/jak2/pc/csounds/BlackJakSounds/sig/win/sig-win2.mp3")
+(define sig-win3 "goal_src/jak2/pc/csounds/BlackJakSounds/sig/win/sig-win3.mp3")
+(define sig-win4 "goal_src/jak2/pc/csounds/BlackJakSounds/sig/win/sig-win4.mp3")
+(define sig-win5 "goal_src/jak2/pc/csounds/BlackJakSounds/sig/win/sig-win5.mp3")
+
+(define sig-lose1 "goal_src/jak2/pc/csounds/BlackJakSounds/sig/lose/sig-lose.mp3")
+(define sig-lose2 "goal_src/jak2/pc/csounds/BlackJakSounds/sig/lose/sig-lose2.mp3")
+(define sig-lose3 "goal_src/jak2/pc/csounds/BlackJakSounds/sig/lose/sig-lose3.mp3")
+(define sig-lose4 "goal_src/jak2/pc/csounds/BlackJakSounds/sig/lose/sig-lose4.mp3")
+
+(define sig-start1 "goal_src/jak2/pc/csounds/BlackJakSounds/sig/startup/sig-start.mp3")
+(define sig-start2 "goal_src/jak2/pc/csounds/BlackJakSounds/sig/startup/sig-start2.mp3")
+
+(define sig-again1 "goal_src/jak2/pc/csounds/BlackJakSounds/sig/again/sig-again.mp3")
+(define sig-again2 "goal_src/jak2/pc/csounds/BlackJakSounds/sig/again/sig-again2.mp3")
+(define sig-again3 "goal_src/jak2/pc/csounds/BlackJakSounds/sig/again/sig-again3.mp3")
+
+(define sig-kickout1 "goal_src/jak2/pc/csounds/BlackJakSounds/sig/kickout/sig-kickout.mp3")
+
+;---------------------------------------------TORN-------------------------------------------------
+
+(define torn-win1 "goal_src/jak2/pc/csounds/BlackJakSounds/torn/win/torn-win.mp3")
+
+(define torn-lose1 "goal_src/jak2/pc/csounds/BlackJakSounds/torn/lose/torn-lose.mp3")
+(define torn-lose2 "goal_src/jak2/pc/csounds/BlackJakSounds/torn/lose/torn-lose2.mp3")
+(define torn-lose3 "goal_src/jak2/pc/csounds/BlackJakSounds/torn/lose/torn-lose3.mp3")
+(define torn-lose4 "goal_src/jak2/pc/csounds/BlackJakSounds/torn/lose/torn-lose4.mp3")
+
+(define torn-start1 "goal_src/jak2/pc/csounds/BlackJakSounds/torn/startup/torn-start.mp3")
+
+(define torn-again1 "goal_src/jak2/pc/csounds/BlackJakSounds/torn/again")
+
+(define torn-kickout1 "goal_src/jak2/pc/csounds/BlackJakSounds/torn/kickout/torn-kickout.mp3")
+
+;---------------------------------------------TARGET-------------------------------------------------
+
+(define bj-target-win1 "goal_src/jak2/pc/csounds/BlackJakSounds/target/win/jak-win.mp3")
+(define bj-target-win2 "goal_src/jak2/pc/csounds/BlackJakSounds/target/win/jak-win2.mp3")
+(define bj-target-win3 "goal_src/jak2/pc/csounds/BlackJakSounds/target/win/jak-win3.mp3")
+(define bj-target-win4 "goal_src/jak2/pc/csounds/BlackJakSounds/target/win/jak-win4.mp3")
+(define bj-target-win5 "goal_src/jak2/pc/csounds/BlackJakSounds/target/win/jak-win5.mp3")
+
+(define bj-target-lose1 "goal_src/jak2/pc/csounds/BlackJakSounds/target/lose")
+
+(define bj-target-again1 "goal_src/jak2/pc/csounds/BlackJakSounds/target/again")
+
+(define bj-target-start1 "goal_src/jak2/pc/csounds/BlackJakSounds/target/start")
+
+(define target-lose-against-dax1 "goal_src/jak2/pc/csounds/BlackJakSounds/target/lose-against-dax/jak-lose-againstdaxter.mp3")
+(define target-lose-against-dax2 "goal_src/jak2/pc/csounds/BlackJakSounds/target/lose-against-dax/jak-lose-againstdaxter2.mp3")
+
+(define target-win-against-dax1 "goal_src/jak2/pc/csounds/BlackJakSounds/target/win-against-dax")
+
+
+;---------------------------------------------GAME-------------------------------------------------
+
+(define sbid "goal_src/jak2/pc/csounds/BlackJakSounds/game/bid.mp3")
+(define scard1 "goal_src/jak2/pc/csounds/BlackJakSounds/game/card1.mp3")
+(define scard2 "goal_src/jak2/pc/csounds/BlackJakSounds/game/card2.mp3")
+(define scard3 "goal_src/jak2/pc/csounds/BlackJakSounds/game/card3.mp3")
+(define slose "goal_src/jak2/pc/csounds/BlackJakSounds/game/lose.mp3")
+(define swin "goal_src/jak2/pc/csounds/BlackJakSounds/game/win.mp3")
+(define sshuffle "goal_src/jak2/pc/csounds/BlackJakSounds/game/shuffle.mp3")
+(define sstay "goal_src/jak2/pc/csounds/BlackJakSounds/game/stay.mp3")
+
+
+
+
+;END
 
 
 
@@ -160,6 +475,83 @@ FINISHED :D
   )
 )
 
+
+(when (= ohshitfirsttime #t)
+ (+! ohshiti 1)
+ (set! tp-fb #f)
+ (set! (-> (level-get-target-inside *level*) mood-func)update-mood-nest)
+ (when (= ohshiti 1)
+  (send-event (ppointer->process *time-of-day*) 'change 'ratio 240.0)
+  (set! (-> *mood-control* overide-weather-flag) #t)
+  (set! (-> *mood-control* overide fog) 1.0)
+  (set! (-> *mood-control* overide cloud) 1.0)
+  #|(set! (-> *overide-mood-color-table* data (logand (-> *time-of-day-context* mode) (time-of-day-palette-id unk0 unk1 unk2)) amb-color x) 255.0)
+  (set! (-> *overide-mood-color-table* data (logand (-> *time-of-day-context* mode) (time-of-day-palette-id unk0 unk1 unk2)) amb-color y) 0.0)
+  (set! (-> *overide-mood-color-table* data (logand (-> *time-of-day-context* mode) (time-of-day-palette-id unk0 unk1 unk2)) amb-color z) 0.0)
+  (set! (-> *overide-mood-color-table* data (logand (-> *time-of-day-context* mode) (time-of-day-palette-id unk0 unk1 unk2)) amb-color w) 10.0)
+  (set! (-> *overide-mood-color-table* data (logand (-> *time-of-day-context* mode) (time-of-day-palette-id unk0 unk1 unk2)) lgt-color x) 255.0)
+  (set! (-> *overide-mood-color-table* data (logand (-> *time-of-day-context* mode) (time-of-day-palette-id unk0 unk1 unk2)) lgt-color w) 255.0)
+  (set! (-> *overide-mood-fog-table* data (logand (-> *time-of-day-context* mode) (time-of-day-palette-id unk0 unk1 unk2)) fog-color x) 255.0)
+  (set! (-> *overide-mood-fog-table* data (logand (-> *time-of-day-context* mode) (time-of-day-palette-id unk0 unk1 unk2)) fog-color y) 0.0)
+  (set! (-> *overide-mood-fog-table* data (logand (-> *time-of-day-context* mode) (time-of-day-palette-id unk0 unk1 unk2)) fog-color z) 0.0)
+  (set! (-> *overide-mood-fog-table* data (logand (-> *time-of-day-context* mode) (time-of-day-palette-id unk0 unk1 unk2)) fog-color w) 0.0)
+  (set! (-> *time-of-day-context* overide-enable) #t)|#
+   )
+ (when (= ohshiti 300)
+    ;set lwideb on
+    (set! granger-level 1)
+    (set! granger-activated? #t)
+ )
+ (when (= ohshiti 2350)
+    ;set lwidec on
+    (set! granger-level 2)
+    (set! granger-activated? #t)
+ )
+ ;VV    INSERT EXTRA STUFF HERE FOR FIRST TIME    VV
+ 
+ ;^^                                              ^^
+ (when (= ohshiti 7198)
+  (when (= (-> *progress-state* which-slot) 0)
+      (set! load-state-tp 0)
+    )
+    (when (= (-> *progress-state* which-slot) 1)
+      (set! load-state-tp 1)
+    )
+    (when (= (-> *progress-state* which-slot) 2)
+      (set! load-state-tp 2)
+    )
+    (when (= (-> *progress-state* which-slot) 3)
+      (set! load-state-tp 3)
+    )
+ )
+ (when (= ohshiti 7199)
+  (set! granger-teleport #t)
+ )
+ (when (= ohshiti 7200)
+  (set! (-> *mood-control* overide-weather-flag) #f)
+  (set! (-> (level-get-target-inside *level*) mood-func)update-mood-default)
+  (set! ohshiti 0)
+  (set! ohshitfirsttime #f)
+  (send-event (ppointer->process *time-of-day*) 'change 'ratio 1.0)
+ )
+ (when (= (-> *target* fact health) 0.0)
+  (auto-save-command 'restore 0 load-state-tp *default-pool* #f)
+  (set! ohshiti 0)
+  (set! ohshitfirsttime #f)
+  (set! (-> *mood-control* overide-weather-flag) #f)
+  (set! (-> (level-get-target-inside *level*) mood-func)update-mood-default)
+  (send-event (ppointer->process *time-of-day*) 'change 'ratio 1.0)
+  (set! granger-teleport #t)
+ )
+)
+
+#|(when (= ohshit #t)
+  (+! ohshiti 1)
+  (when (= ohshiti 7200)
+    (set! ohshiti 0)
+    (set! ohshit #f)
+  )
+)|#
 
 
 (when (and (= (-> *game-info* fuel) 0.0)(= weapon-mod-toggle #t)) ;checks for if you have weapon mod toggle on, then gives you a modifier
@@ -2981,6 +3373,11 @@ FINISHED :D
       (set! di-s2 "")
       (set! di-s3 "")
       (set! di-s4 "")
+      (set! (-> (level-get-target-inside *level*) mood-func)update-mood-nest)
+      (set! (-> *mood-control* overide-weather-flag) #t)
+      (set! (-> *mood-control* overide fog) 1.0)
+      (set! (-> *mood-control* overide cloud) 1.0)
+      (send-event (ppointer->process *time-of-day*) 'change 'ratio 240.0)
     )
     (when (= di-i 21)
       (set! settingunlocked3 #t)
@@ -3009,6 +3406,78 @@ FINISHED :D
     (+! di-i 1)
   )
 
+  (when 
+  (and 
+  (rand-vu-percent? 0.00002)
+  (= (-> *game-info* task-deaths) 4)
+  (and 
+  (not *scene-player*)
+  (= (pause-allowed?) #t)
+  (= (paused?) #f)
+  (= stored-cp? #f)
+  (= in-menu #f)
+  (= on-table? #f)
+  (= jakisntdead #t))
+  (or 
+  (= (-> (level-get-target-inside *level*) name) 'ctyport)
+  (= (-> (level-get-target-inside *level*) name) 'ctypal)
+  (= (-> (level-get-target-inside *level*) name) 'ctysluma)
+  (= (-> (level-get-target-inside *level*) name) 'ctyslumb)
+  (= (-> (level-get-target-inside *level*) name) 'ctyslumc)
+  (= (-> (level-get-target-inside *level*) name) 'ctygena)
+  (= (-> (level-get-target-inside *level*) name) 'ctygenb)
+  (= (-> (level-get-target-inside *level*) name) 'ctygenc)
+  (= (-> (level-get-target-inside *level*) name) 'ctyfarma)
+  (= (-> (level-get-target-inside *level*) name) 'ctyfarmb)
+  (= (-> (level-get-target-inside *level*) name) 'ctyinda)
+  (= (-> (level-get-target-inside *level*) name) 'ctyindb)
+  (= (-> (level-get-target-inside *level*) name) 'ctymarka)
+  (= (-> (level-get-target-inside *level*) name) 'ctymarkb)))
+    (set! ohshitfirsttime #t)
+  )
+
+  (when (= granger-teleport #t)
+    (let ((n 0)
+          (p (set! granger-teleport #f))
+          (pp (set! granger-level 0))
+          (ppp (set! granger-activated? #t)))
+      (set! n (rand-vu-int-range 1 10))
+      (when (= n 1)
+        (send-event *target* 'continue (get-continue-by-name *game-info* "ctyindb-start"))
+      )
+      (when (= n 2)
+        (send-event *target* 'continue (get-continue-by-name *game-info* "ctyinda-start"))
+      )
+      (when (= n 3)
+        (send-event *target* 'continue (get-continue-by-name *game-info* "atoll-start"))
+      )
+      (when (= n 4)
+        (send-event *target* 'continue (get-continue-by-name *game-info* "atoll-battle"))
+      )
+      (when (= n 5)
+        (send-event *target* 'continue (get-continue-by-name *game-info* "caspad-start"))
+      )
+      (when (= n 6)
+        (send-event *target* 'continue (get-continue-by-name *game-info* "ctyport-warp"))
+      )
+      (when (= n 7)
+        (send-event *target* 'continue (get-continue-by-name *game-info* "mountain-start"))
+      )
+      (when (= n 8)
+        (send-event *target* 'continue (get-continue-by-name *game-info* "ruins-hut"))
+      )
+      (when (= n 9)
+        (send-event *target* 'continue (get-continue-by-name *game-info* "ctyslumc-start"))
+      )
+      (when (= n 10)
+        (send-event *target* 'continue (get-continue-by-name *game-info* "ctysluma-start"))
+      )
+      p
+      pp
+      ppp
+    )
+  )
+
 
 
 ;hud-menu (this is very inefficient and long. Not worth to add any options if you're not me.)
@@ -3016,11 +3485,6 @@ FINISHED :D
 
 (when *target*
 (when (= menu-activate #t)
-  (when (and (= menu-pressed? #f)(= in-menu #t))
-    (print "Select your gun mod:
-  ")
-  )
-
 
 ;menu-update
 ;---------------------------------------Rapid Fire Main-----------------------------------------------------------
