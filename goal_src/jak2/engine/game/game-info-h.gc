@@ -518,6 +518,13 @@ CURRENT BUGS:
 (define guardv-5 #f)
 (define guardv-5c 0)
 
+(define eine #f)
+(define einei 0)
+(define gt-i 0.0)
+(define gf-i 0.0)
+(define gc-i 0.0)
+(define gem-takeaway #f)
+
 
 
 

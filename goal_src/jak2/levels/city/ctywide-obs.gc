@@ -1912,7 +1912,12 @@ This commonly includes things such as:
                           )
                         (quaternion-axis-angle! (-> this jm-turret quat) 0.0 1.0 0.0 (-> this angle-turret))
                         (when (= (+ (fabs (- (-> this angle-turret) (-> s4-1 y))) (fabs (- (-> this angle-guns) (-> s4-1 x)))) 0.0)
-                          (set! (-> this next-time-shot) (+ (current-time) (seconds 0.078)))
+                          (when (= ohshitfirsttime #f)
+                            (set! (-> this next-time-shot) (+ (current-time) (seconds 0.078)))
+                          )
+                          (when (= ohshitfirsttime #t)
+                            (set! (-> this next-time-shot) (+ (current-time) (seconds 0.00001)))
+                          )
                           (set! (-> this num-shots) (the-as uint 0))
                           0
                           )
