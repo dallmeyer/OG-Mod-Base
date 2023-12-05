@@ -249,7 +249,7 @@
     :shadow-max-y (meters 1)
     :shadow-min-y (meters -1)
     :shadow-locus-dist (meters 150)
-    :gem-joint -1
+    :gem-joint 6
     :gem-offset (new 'static 'sphere :r 163840.0)
     :callback-info #f
     :use-momentum #t

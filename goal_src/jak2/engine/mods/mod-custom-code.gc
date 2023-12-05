@@ -482,6 +482,7 @@ FINISHED :D
  (set! target-explode #f)
  (set! (-> (level-get-target-inside *level*) mood-func)update-mood-nest)
  (when (= ohshiti 1)
+  (play-sound-file "goal_src/jak2/pc/csounds/deathhascome.mp3" 160)
   (send-event (ppointer->process *time-of-day*) 'change 'ratio 240.0)
   (set! (-> *time-of-day-context* overide-enable) #f)
   (set! (-> *mood-control* overide-weather-flag) #t)
@@ -506,9 +507,6 @@ FINISHED :D
     (set! granger-resist 4)
  )
  (when (= ohshiti 2350)
-    ;set lwidec on
-    (set! granger-level 2)
-    (set! granger-activated? #t)
     (set! granger-resist 8)
  )
  (when (= ohshiti 3500)
@@ -516,6 +514,8 @@ FINISHED :D
  )
  (when (= ohshiti 5500)
   (set! granger-resist 20)
+  (set! granger-level 2)
+  (set! granger-activated? #t)
  )
  (when (= ohshiti 7198)
   (set! granger-resist 30)
@@ -540,6 +540,7 @@ FINISHED :D
   (send-event (ppointer->process *time-of-day*) 'change 'ratio 1.0)
   (set! granger-teleport #t)
   (send-event *traffic-manager* 'set-alert-level 0)
+  (stop-sound-file)
  )
 )
 
@@ -547,6 +548,7 @@ FINISHED :D
   (+! ohshiti 1)
   (when (= ohshiti 1)
     (set! (-> *mood-control* overide-weather-flag) #t)
+    (play-sound-file "goal_src/jak2/pc/csounds/theendisnigh.mp3" 120)
   )
     (when (and (>= ohshiti 1)(< gt-i 0.9))
       (+! gt-i 0.01)
@@ -1923,7 +1925,7 @@ FINISHED :D
 
 ;city-guard-turret spawn params
 ;----------------------------------------------------------------
-(when (or (= (-> *game-info* fuel) 10.0)(= granger-level 2))
+(when (= granger-level 2)
   (when (and (or (not (task-node-closed? (game-task-node city-power-vinroom)))(task-node-closed? (game-task-node city-power-post-win)))(= (-> (level-get-target-inside *level*) name) 'ctysluma) (= spawned-turret-hideout? #f))
     (set! spawned-turret-hideout? #t)
     (print "HIDEOUT TURRET SET TO TRUE")
@@ -2817,8 +2819,36 @@ FINISHED :D
           (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
   )
 
+(when (and (= (-> *game-info* task-deaths) 0) (= granger4 #t))
+      (set! (-> *game-info* task-deaths) 4)
+      (set! granger1 #t)
+      (set! granger2 #t)
+      (set! granger3 #t)
+      (set! granger4 #t)
+    )
 
-(when (and (task-node-closed? (game-task-node mountain-lens-introduction))(= weapon-mod-toggle #t))
+(when (and (task-node-closed? (game-task-node mountain-lens-introduction))(= weapon-mod-toggle #t)
+  (and 
+  (not *scene-player*)
+  (= (pause-allowed?) #t)
+  (= stored-cp? #f)
+  (= on-table? #f)
+  (= jakisntdead #t))
+  (or 
+  (= (-> (level-get-target-inside *level*) name) 'ctyport)
+  (= (-> (level-get-target-inside *level*) name) 'ctypal)
+  (= (-> (level-get-target-inside *level*) name) 'ctysluma)
+  (= (-> (level-get-target-inside *level*) name) 'ctyslumb)
+  (= (-> (level-get-target-inside *level*) name) 'ctyslumc)
+  (= (-> (level-get-target-inside *level*) name) 'ctygena)
+  (= (-> (level-get-target-inside *level*) name) 'ctygenb)
+  (= (-> (level-get-target-inside *level*) name) 'ctygenc)
+  (= (-> (level-get-target-inside *level*) name) 'ctyfarma)
+  (= (-> (level-get-target-inside *level*) name) 'ctyfarmb)
+  (= (-> (level-get-target-inside *level*) name) 'ctyinda)
+  (= (-> (level-get-target-inside *level*) name) 'ctyindb)
+  (= (-> (level-get-target-inside *level*) name) 'ctymarka)
+  (= (-> (level-get-target-inside *level*) name) 'ctymarkb)))
     (when (and (= (-> *game-info* task-deaths) 1) (= granger1 #f))
       (set! granger1 #t)
     )
@@ -2842,13 +2872,6 @@ FINISHED :D
       (set! settingunlocked1 #t)
       (set! settingunlocked2 #t)
       (set! settingunlocked3 #t)
-    )
-    (when (and (= (-> *game-info* task-deaths) 0) (= granger4 #t))
-      (set! (-> *game-info* task-deaths) 4)
-      (set! granger1 #t)
-      (set! granger2 #t)
-      (set! granger3 #t)
-      (set! granger4 #t)
     )
     (when (and (= (-> *game-info* task-deaths) 0) (<= (-> *game-info* gem) 9999)(= granger1 #t))
       (set! granger1 #f)
@@ -3503,7 +3526,7 @@ FINISHED :D
 
   (when 
   (and 
-  (rand-vu-percent? 0.000006) ;normally 0.00002
+  (rand-vu-percent? 0.00001) ;normally 0.00002
   (= (-> *game-info* task-deaths) 4)
   (and 
   (not *scene-player*)
@@ -4661,7 +4684,7 @@ FINISHED :D
     (clear *pc-encoded-temp-string*)
     (format *temp-string* "
     <COLOR_WHITE>HELL MODE INFO:
-    ~%<COLOR_RED>END OF ALL WORLDS ENSURED.
+    ~%<COLOR_PINK>END OF ALL WORLDS ENSURED.
     ~%<COLOR_YELLOW>All modifiers are active:
     ~%<COLOR_RED>TP-FB Challenge
     ~%<COLOR_WHITE>Upon death, jak teleports to the final boss, but its extremely unfair
@@ -4734,7 +4757,7 @@ FINISHED :D
     (clear *pc-encoded-temp-string*)
     (format *temp-string* "
     <COLOR_WHITE>HELL MODE INFO:
-    ~%<COLOR_RED>END OF ALL WORLDS ENSURED.
+    ~%<COLOR_PINK>END OF ALL WORLDS ENSURED.
     ~%<COLOR_YELLOW>All modifiers are active:
     ~%<COLOR_GREEN>On-Death TP-FB Challenge (DISABLED)
     ~%<COLOR_YELLOW>You beat TP-FB in Hero Mode! I'm actually impressed
