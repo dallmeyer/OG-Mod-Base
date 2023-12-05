@@ -417,7 +417,7 @@
     (set! (-> self start-time) 0)
     (set! (-> self time-limit) (seconds 180))
     (when (= hell-mode-option #t)
-      (set! (-> self time-limit) (seconds 90))
+      (set! (-> self time-limit) (seconds 80))
     )
     (none)
     )

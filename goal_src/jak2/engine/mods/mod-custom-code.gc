@@ -482,7 +482,7 @@ FINISHED :D
  (set! target-explode #f)
  (set! (-> (level-get-target-inside *level*) mood-func)update-mood-nest)
  (when (= ohshiti 1)
-  (play-sound-file "goal_src/jak2/pc/csounds/deathhascome.mp3" 160)
+  (play-sound-file "goal_src/jak2/pc/csounds/deathhascome.mp3" 200)
   (send-event (ppointer->process *time-of-day*) 'change 'ratio 240.0)
   (set! (-> *time-of-day-context* overide-enable) #f)
   (set! (-> *mood-control* overide-weather-flag) #t)
@@ -548,7 +548,7 @@ FINISHED :D
   (+! ohshiti 1)
   (when (= ohshiti 1)
     (set! (-> *mood-control* overide-weather-flag) #t)
-    (play-sound-file "goal_src/jak2/pc/csounds/theendisnigh.mp3" 120)
+    (play-sound-file "goal_src/jak2/pc/csounds/theendisnigh.mp3" 200)
   )
     (when (and (>= ohshiti 1)(< gt-i 0.9))
       (+! gt-i 0.01)
@@ -3524,17 +3524,12 @@ FINISHED :D
     (+! di-i 1)
   )
 
-  (when 
-  (and 
-  (rand-vu-percent? 0.00001) ;normally 0.00002
-  (= (-> *game-info* task-deaths) 4)
-  (and 
-  (not *scene-player*)
-  (= (pause-allowed?) #t)
-  (= (paused?) #f)
-  (= stored-cp? #f)
-  (= on-table? #f)
-  (= jakisntdead #t))
+  (when (and (= ohshit #f)(= ohshitfirsttime #f)(rand-vu-percent? 0.00007) (= (-> *game-info* task-deaths) 4))
+    (set! ohshit #t)
+  )
+
+  #|;;;;;;;;;;;;;;;;;;;;;;;;;;
+(when (and  (rand-vu-percent? 0.0001) ;normally 0.00002 (= (-> *game-info* task-deaths) 4) (and  (not *scene-player*) (= (pause-allowed?) #t) (= (paused?) #f) (= stored-cp? #f) (= on-table? #f) (= jakisntdead #t))
   (or 
   (= (-> (level-get-target-inside *level*) name) 'ctyport)
   (= (-> (level-get-target-inside *level*) name) 'ctypal)
@@ -3550,8 +3545,7 @@ FINISHED :D
   (= (-> (level-get-target-inside *level*) name) 'ctyindb)
   (= (-> (level-get-target-inside *level*) name) 'ctymarka)
   (= (-> (level-get-target-inside *level*) name) 'ctymarkb)))
-    (set! ohshit #t)
-  )
+  |#
 
   (when (= granger-teleport #t)
     (set! (-> *target* fact health) 8.0)
@@ -3566,7 +3560,7 @@ FINISHED :D
         (send-event *target* 'continue (get-continue-by-name *game-info* "village1-start"))
       )
       (when (task-node-closed? (game-task-node mountain-lens-introduction))
-      (set! n (rand-vu-int-range 1 9))
+      (set! n (rand-vu-int-range 1 8))
         (when (= n 1)
           (send-event *target* 'continue (get-continue-by-name *game-info* "ruins-hut"))
         )
@@ -3590,9 +3584,6 @@ FINISHED :D
         )
         (when (= n 8)
           (send-event *target* 'continue (get-continue-by-name *game-info* "atoll-battle"))
-        )
-        (when (= n 9)
-          (send-event *target* 'continue (get-continue-by-name *game-info* "forest-tree"))
         )
       )
       p
