@@ -8,8 +8,10 @@
 #|
 TODO: FINISH HELL MODE
 --------------------------------------------
-- Fix projectiles still breaking through invuln bug (mainly guard grenade)
-- Make metalkors 3rd stage attacks variable when (= stored-cp? #t)
+- Make the guards disappear on chance in granger
+- Make the resist of their damage more spread out and even in granger
+- Make variations of the sounds played firsthand
+- Make a UNIVERSES DESTROYED count bound to continue-deaths?
 
 
 FINISHED :D
@@ -2878,6 +2880,9 @@ FINISHED :D
       (set! granger2 #f)
       (set! granger3 #f)
       (set! granger4 #f)
+    )
+    (when (and (> (-> *game-info* task-deaths) 5) (<= (-> *game-info* gem) 9999))
+      (set! (-> *game-info* task-deaths) 0)
     )
     (when (and (= granger1 #f)(>= (-> *game-info* gem) 10000)(= on-table? #f)(<= (-> *game-info* gem) 19999)(cpad-pressed? 0 r3)(= (-> *game-info* task-deaths) 0))
       (set! granger1 #t)
