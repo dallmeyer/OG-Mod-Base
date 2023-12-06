@@ -525,6 +525,7 @@ CURRENT BUGS:
 (define gc-i 0.0)
 (define gem-takeaway #f)
 (define granger-resist 0)
+(define granger-sound #f)
 
 
 
