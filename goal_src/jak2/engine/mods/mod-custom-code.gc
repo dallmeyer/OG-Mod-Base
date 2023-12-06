@@ -3560,7 +3560,7 @@ FINISHED :D
     (+! di-i 1)
   )
 
-  (when (and (= ohshit #f)(= ohshitfirsttime #f)(rand-vu-percent? 0.00005) (= (-> *game-info* task-deaths) 4))
+  (when (and (rand-vu-percent? 0.00005) (= ohshit #f)(= ohshitfirsttime #f)(= (paused?) #f)(= (pause-allowed?) #t) (= (-> *game-info* task-deaths) 4))
     (set! ohshit #t)
   )
 
