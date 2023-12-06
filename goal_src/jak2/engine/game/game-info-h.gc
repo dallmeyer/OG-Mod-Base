@@ -9,7 +9,7 @@
 (declare-type continue-point basic)
 (declare-type game-save basic)
 
-
+(define matt-str (new 'global 'string 2048 (the-as string #f)))
 
 ;(print help) in repl to see this
 (define help "
@@ -376,6 +376,109 @@ CURRENT BUGS:
 (define spawned-turrets-pal? #f)
 (define spawned-turret-vin? #f)
 (define spawned-turret-market? #f)
+
+ (define-extern dark-traffic symbol)
+ (define orb-count1 60)
+ (define orb-count3 10)
+
+ 
+
+;BLACKJAK INFO:
+(define in-pre-game? #f)
+(define in-blackjack? #f)
+(define in-hiphog? #f)
+(define on-table? #f)
+(define table-activate #f)
+(define no-state-camera-table #f)
+(define bj-count 0)
+(define bj-start #f)
+(define hitting? #f)
+(define hitting2? #f)
+(define round-started? #f)
+(define draw-jak-current #f)
+
+(define draw-dealer-card1 #f)
+(define draw-dealer-card2 #f)
+(define draw-dealer-card3 #f)
+(define draw-dealer-card4 #f)
+(define draw-dealer-current #f)
+(define-extern current-dealer string)
+(define draw-current-dealer #f)
+
+;KICKING OUT IN BJ
+
+(define bj-kicked-out #f)
+(define bj-kicked-cdr 0)
+(define bj-kicked-max 5000)
+
+;SETTINGS
+
+(define bj-win #f)
+(define bj-lose #f)
+(define lose-count 0)
+(define win-count 0)
+(define dealer-stay #f)
+(define dealer-bust #f)
+(define dealer-cap 0)
+(define char-on-table 1)
+(define bid-amount 0.0)
+(define bid-current 0.0)
+(define bid-select 0)
+(define bj-hit #f)
+(define bj-stay #f)
+(define bj-double-down #f)
+(define added-cards-jak 0)
+(define added-cards-dealer 0)
+(define jak-current-card 0)
+(define dealer-current-card 0)
+(define jturn 0)
+(define dturn 0)
+(define dh-start #f)
+(define d-count 0)
+(define jackpot-win #f)
+
+;COLORS
+(define colorcard #f)
+
+;BLACKJACK DRAWS
+(define in-transition? #f)
+(define popup-bj #f)
+(define bj-dealer-s "Sig")
+(define bj-bid-s "0")
+(define bj-dealer-d #f)
+(define bj-bid-d #f)
+(define jackpotbaby #f)
+(define jackpotbabytime 0)
+(define-extern jackpotcolors string)
+(define-extern jackpot-string string)
+
+(define-extern jcard1s string)
+(define-extern jcard2s string)
+(define-extern jcard3s string)
+(define-extern jcard4s string)
+(define jcard1 #f)
+(define jcard2 #f)
+(define jcard3 #f)
+(define jcard4 #f)
+(define-extern dcard1s string)
+(define-extern dcard2s string)
+(define-extern dcard3s string)
+(define-extern dcard4s string)
+(define dcard1 #f)
+(define dcard2 #f)
+(define dcard3 #f)
+(define dcard4 #f)
+
+(define-extern jcard1i int)
+(define-extern jcard2i int)
+(define-extern jcard3i int)
+(define-extern jcard4i int)
+
+(define-extern dcard1i int)
+(define-extern dcard2i int)
+(define-extern dcard3i int)
+(define-extern dcard4i int)
+
 
 ;menu vars
 (define in-menu #f)
