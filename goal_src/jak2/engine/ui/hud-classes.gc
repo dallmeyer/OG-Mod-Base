@@ -139,17 +139,17 @@
 ;POPUP MENU
 (when (and (= on-table? #f)(not (cpad-pressed? 0 r3))(not *scene-player*) (= (paused?) #f)(= in-granger? #f)(= weapon-mod-toggle #t)(= (-> (level-get-target-inside *level*) name) 'hiphog))
   (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
     (format matt-str "<COLOR_RED>R3:<COLOR_PINK> Play Eco War"
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 245 0.0 (font-color default) (font-flags shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
 )
 
 ;CONTROLS FOR ALL STATES
@@ -1266,7 +1266,7 @@ R1 - Double Down")
 (when (and (= on-table? #t) (cpad-hold? 0 down))
 (when (= in-hiphog? #t)
   (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
   (format matt-str "<COLOR_WHITE>LEFT/RIGHT: Browse
 ~%X:Select
 ~%Square: Hit
@@ -1274,14 +1274,14 @@ R1 - Double Down")
 ~%R1: Double Down!
 ~%<COLOR_WHITE>Triangle: Exit"
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       
       
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 300 0.0 (font-color default) (font-flags shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
 )
 
 )
@@ -1289,24 +1289,24 @@ R1 - Double Down")
 (when (and (= on-table? #t) (not (cpad-hold? 0 down)))
 (when (= in-transition? #f)
   (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
   (format matt-str "<COLOR_RED>Down:<COLOR_WHITE> Instructions/Buttons"
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       
       
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 400 0.0 (font-color default) (font-flags shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
 )
 
 )
 
   (when (and (= on-table? #t)(cpad-hold? 0 down))
     (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
   (format matt-str "
 Eco War is similar to BlackJack, but with a twist!
 ~%Upon bidding, both players will get dealt 2 ecos, each with their own amount.
@@ -1321,181 +1321,181 @@ Eco War is similar to BlackJack, but with a twist!
 ~%<COLOR_GREEN>Good Luck!
   "
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       
       
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 265 60 0.0 (font-color default) (font-flags middle shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
   )
 
   (when (not (cpad-hold? 0 down))
     (when (and (= in-hiphog? #t) (not (cpad-hold? 0 x)) (= round-started? #f) (= in-pre-game? #f) (= on-table? #t))
       (clear matt-str)
-      (clear *pc-encoded-temp-string*)
+      (clear *pc-encoded-matt-str*)
     (format matt-str "
   <COLOR_YELLOW>Choose your Dealer:
   ~%<COLOR_GREEN>~s
     "
   bj-dealer-s
       )
-      (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+      (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
       (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
         
         
         (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
         (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 260 130 0.0 (font-color default) (font-flags middle shadow kerning large))))
           (set! (-> font-ctx scale) 0.325)
-          (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+          (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
     )
     (when (and (= in-hiphog? #t) (cpad-hold? 0 x) (= round-started? #f) (= in-pre-game? #f) (= on-table? #t))
       (clear matt-str)
-      (clear *pc-encoded-temp-string*)
+      (clear *pc-encoded-matt-str*)
     (format matt-str "
   <COLOR_YELLOW>Choose your Dealer:
   ~%<COLOR_WHITE>~s
     "
   bj-dealer-s
       )
-      (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+      (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
       (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
         
         
         (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
         (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 260 130 0.0 (font-color default) (font-flags middle shadow kerning large))))
           (set! (-> font-ctx scale) 0.325)
-          (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+          (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
     )
 
     
     (when (and (= in-hiphog? #t) (not (cpad-hold? 0 x)) (= round-started? #f) (= in-pre-game? #t) (= on-table? #t))
       (clear matt-str)
-      (clear *pc-encoded-temp-string*)
+      (clear *pc-encoded-matt-str*)
     (format matt-str "
   <COLOR_YELLOW>Bid:
   ~%<COLOR_GREEN>~s
     "
   bj-bid-s
       )
-      (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+      (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
       (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
         
         
         (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
         (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 260 130 0.0 (font-color default) (font-flags middle shadow kerning large))))
           (set! (-> font-ctx scale) 0.325)
-          (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+          (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
     )
     (when (and (= in-hiphog? #t) (cpad-hold? 0 x) (= round-started? #f) (= in-pre-game? #t) (= on-table? #t))
       (clear matt-str)
-      (clear *pc-encoded-temp-string*)
+      (clear *pc-encoded-matt-str*)
     (format matt-str "
   <COLOR_YELLOW>Bid:
   ~%<COLOR_WHITE>~s
     "
   bj-bid-s
       )
-      (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+      (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
       (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
         
         
         (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
         (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 260 130 0.0 (font-color default) (font-flags middle shadow kerning large))))
           (set! (-> font-ctx scale) 0.325)
-          (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+          (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
     )
 
 
   (when (and (= round-started? #t) (= on-table? #t))
     (when (= in-hiphog? #t)
       (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
   (format matt-str "<COLOR_RED>Dealer's Eco Amount: <COLOR_WHITE>??"
     added-cards-dealer
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       
       
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 125 0.0 (font-color default) (font-flags right shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
     )
     (when (= in-hiphog? #f)
       (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
   (format matt-str "<COLOR_RED>Dealer's Eco Amount: <COLOR_WHITE>~d"
     added-cards-dealer
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       
       
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 125 0.0 (font-color default) (font-flags right shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
     )
     (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
   (format matt-str "<COLOR_YELLOW>Current Pot: <COLOR_WHITE>~d"
     (the int bid-current)
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       
       
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 290 135 0.0 (font-color default) (font-flags right shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
     (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
   (format matt-str "<COLOR_GREEN>Jak's Eco Amount: <COLOR_WHITE>~d"
     added-cards-jak
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       
       
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 145 0.0 (font-color default) (font-flags right shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
   )
   (when (and (= in-transition? #f)(= on-table? #t))
     (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
   (format matt-str "<COLOR_WHITE>Your Skull Gems: <COLOR_YELLOW>~d"
     (the int (-> *game-info* gem))
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       
       
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 280 0.0 (font-color default) (font-flags  shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
   )
 
   (when (= in-pre-game? #t)
     (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
   (format matt-str "<COLOR_YELLOW>Current Dealer: <COLOR_GREEN>~s"
     current-dealer
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       
       
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 1 0.0 (font-color default) (font-flags  shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
   )
   )
 
@@ -1634,124 +1634,124 @@ Eco War is similar to BlackJack, but with a twist!
 (when (and (= on-table? #t)(not (cpad-hold? 0 down)))
   (when (= jcard1 #t)
     (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
   (format matt-str jcard1s
     jcard1i
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       
       
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 400 240 0.0 (font-color default) (font-flags right shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
   )
   (when (= jcard2 #t)
     (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
   (format matt-str jcard2s
     jcard2i
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       
       
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 420 240 0.0 (font-color default) (font-flags right shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
   )
   (when (= jcard3 #t)
     (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
   (format matt-str jcard3s
     jcard3i
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       
       
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 440 240 0.0 (font-color default) (font-flags right shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
   )
   (when (= jcard4 #t)
     (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
   (format matt-str jcard4s
     jcard4i
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       
       
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 460 240 0.0 (font-color default) (font-flags right shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
   )
 
   (when (= dcard1 #t)
     (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
   (format matt-str dcard1s
     dcard1i
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       
       
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 140 60 0.0 (font-color default) (font-flags shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
   )
   (when (= dcard2 #t)
     (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
   (format matt-str dcard2s
     dcard2i
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       
       
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 160 60 0.0 (font-color default) (font-flags shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
   )
   (when (= dcard3 #t)
     (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
   (format matt-str dcard3s
     dcard3i
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       
       
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 180 60 0.0 (font-color default) (font-flags shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
   )
   (when (= dcard4 #t)
     (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
   (format matt-str dcard4s
     dcard4i
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       
       
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 200 60 0.0 (font-color default) (font-flags shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
   )
 
 
@@ -1777,18 +1777,18 @@ Eco War is similar to BlackJack, but with a twist!
   )
 
   (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
   (format matt-str jackpotcolors
     jackpot-string
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       
       
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 225 0.0 (font-color default) (font-flags right shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
     (when (= jackpotbabytime 500)
       (set! jackpotbabytime 0)
       (set! jackpotbaby #f)
@@ -2553,256 +2553,256 @@ Eco War is similar to BlackJack, but with a twist!
 )
 (when (and (= in-menu #f)(= recieved-gm #t)) ;looks for recieving a gun mod to alert for weapon id 1
   (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
     (format matt-str "<COLOR_WHITE>Recieved Gun Mod:~%<COLOR_GREEN>~S"
     recieved-gm-s ;the names of weapon mods
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 245 0.0 (font-color default) (font-flags shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
         (set! gm-start #t)
 )
 
 (when (and (= in-menu #f)(= recieved-gm2 #t)) ;looks for recieving a gun mod to alert for weapon id 2
   (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
     (format matt-str "<COLOR_WHITE>Recieved Gun Mod:~%<COLOR_GREEN>~S"
     recieved-gm-s2 ;the names of weapon mods
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 225 0.0 (font-color default) (font-flags shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
         (set! gm-start2 #t)
 )
 
 (when (and (= in-menu #f)(= recieved-gm3 #t)) ;looks for recieving a gun mod to alert for weapon id 3
   (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
     (format matt-str "<COLOR_WHITE>Recieved Gun Mod:~%<COLOR_GREEN>~S"
     recieved-gm-s3 ;the names of weapon mods
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 205 0.0 (font-color default) (font-flags shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
         (set! gm-start3 #t)
 )
 
 (when (and (= in-menu #f)(= recieved-gm4 #t)) ;looks for recieving a gun mod to alert for weapon id 4
   (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
     (format matt-str "<COLOR_WHITE>Recieved Gun Mod:~%<COLOR_GREEN>~S"
     recieved-gm-s4 ;the names of weapon mods
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 185 0.0 (font-color default) (font-flags shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
         (set! gm-start4 #t)
 )
 
 (when (and (= in-menu #f)(= recieved-gm5 #t)) ;looks for recieving a gun mod to alert for weapon id 5
   (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
     (format matt-str "<COLOR_YELLOW> | LEGENDARY <COLOR_WHITE>Recieved Gun Mod:~%<COLOR_RED>~S"
     recieved-gm-s5 ;the names of weapon mods
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 165 0.0 (font-color default) (font-flags shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
         (set! gm-start5 #t)
 )
 
 (when (and (= in-menu #f)(= recieved-gm6 #t)) ;looks for recieving a gun mod to alert for weapon id 6
   (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
     (format matt-str "<COLOR_YELLOW> | LEGENDARY | <COLOR_WHITE>Recieved Gun Mod:~%<COLOR_RED>~S"
     recieved-gm-s6 ;the names of weapon mods
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 165 0.0 (font-color default) (font-flags shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
         (set! gm-start6 #t)
 )
 
 (when (and (= in-menu #f)(= recieved-gm7 #t)) ;looks for recieving a gun mod to alert for weapon id 7
   (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
     (format matt-str "<COLOR_WHITE>Recieved Gun Mod:~%<COLOR_BLUE>~S"
     recieved-gm-s7 ;the names of weapon mods
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 145 0.0 (font-color default) (font-flags shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
         (set! gm-start7 #t)
 )
 
 (when (and (= in-menu #f)(= recieved-gm8 #t)) ;looks for recieving a gun mod to alert for weapon id 8
   (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
     (format matt-str "<COLOR_YELLOW> | LEGENDARY | <COLOR_WHITE>Recieved Gun Mod:~%<COLOR_BLUE>~S"
     recieved-gm-s8 ;the names of weapon mods
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 125 0.0 (font-color default) (font-flags shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
         (set! gm-start8 #t)
 )
 
 (when (and (= in-menu #f)(= recieved-gm9 #t)) ;looks for recieving mushroom movies secret.
   (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
     (format matt-str "<COLOR_WHITE>UPDATED GUN MOD MENU SETTINGS
 ~%<COLOR_BLUE>Mushroom Movies secret unlocked!"
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 115 0.0 (font-color default) (font-flags shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
         (set! gm-start9 #t)
 )
 
 )
 (when (and (= menu-pressed? #f)(= string-printed? #t)) ;draws the gunmod section
   (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
     (format matt-str "<COLOR_WHITE>GUN MODS:~%<COLOR_GREEN>~S"
     gun-mod-string ;the names of weapon mods
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 245 0.0 (font-color default) (font-flags right shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
 )
 
 (when (and (= menu-pressed? #t)(= string-printed? #t)) ;draws the sub menu for gun mod
   (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
     (format matt-str "<COLOR_WHITE>Attach <COLOR_GREEN>~S <COLOR_WHITE>to:~%<COLOR_RED>~S"
     mod-string ;the name of the mod
     gun-string ;the name of the colored gun
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 245 0.0 (font-color default) (font-flags right shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
 )
 
 (when (and (= in-menu #t)(= menu-pressed? #t)(cpad-hold? 0 square)) ;draws the sub menu yellow for when you attach a mod
 (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
   (format matt-str "<COLOR_WHITE>Attach <COLOR_GREEN>~S <COLOR_WHITE>to:~%<COLOR_YELLOW>~S"
     mod-string
     gun-string
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 245 0.0 (font-color default) (font-flags right shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
 )
 
 (when (= in-menu #t) ;displays modifier
   (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
     (format matt-str "<COLOR_WHITE>CURRENT MODIFIER:~%<COLOR_RED>~S"
     modifier-string
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 0 0.0 (font-color default) (font-flags right shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
 )
 
 (when (and (not (cpad-hold? 0 l3))(!= (-> *game-info* fuel) 10.0)(= in-menu #t)(= mod-reroll #f)) ;displays control menu
   (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
     (format matt-str "<COLOR_WHITE>CONTROLS:~%LEFT/RIGHT: Browse~%X: Select~%SQUARE: Attach Gun Mod~%CIRCLE: Back to Mods~%L3: Reroll Modifier (-25 gems)~%TRIANGLE: Exit Menu"
     modifier-string
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 30 0.0 (font-color default) (font-flags right shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
         (set! press-frame 0)
 )
 
 (when (and (= in-menu #t)(!= (-> *game-info* fuel) 10.0)(cpad-hold? 0 l3)) ;displays control menu when you do mod reroll
 (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
    (format matt-str "<COLOR_WHITE>CONTROLS:~%LEFT/RIGHT: Browse~%X: Select~%SQUARE: Attach Gun Mod~%CIRCLE: Back to Mods~%L3: <COLOR_RED>(PRESS AND HOLD):~S~%<COLOR_WHITE>TRIANGLE: Exit Menu"
     mod-reroll-string
     )
 
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 30 0.0 (font-color default) (font-flags right shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
         (when (< (-> *game-info* gem) 10.0)
         (set! mod-reroll-string "NOT ENOUGH GEMS")
         )
@@ -2813,24 +2813,24 @@ Eco War is similar to BlackJack, but with a twist!
 
 (when (and (= (-> *game-info* fuel) 10.0)(= in-menu #t)) ;displays control menu but in heromode. Removes mod-reroll
   (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
     (format matt-str "<COLOR_WHITE>CONTROLS:~%LEFT/RIGHT: Browse~%X: Select~%SQUARE: Attach Gun Mod~%CIRCLE: Back to Mods~%<COLOR_RED>Down: HellMode Info~%<COLOR_WHITE>TRIANGLE: Exit Menu"
     modifier-string
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 30 0.0 (font-color default) (font-flags right shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
         (set! press-frame 0)
 )
 
 (when (and (= in-menu #t)(= tp-fb-win #f)(!= (-> *game-info* task-deaths) 4)(= (-> *game-info* fuel) 10.0)(cpad-hold? 0 down)) ;draws the info screen
   (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
     (format matt-str "
     <COLOR_WHITE>HELL MODE INFO:
     ~%
@@ -2855,18 +2855,18 @@ Eco War is similar to BlackJack, but with a twist!
     ~%but Jak has a bomb strapped inside of him, any hits or bonks could set it off
     "
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 1 0.0 (font-color default) (font-flags shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
 )
 (when (and (= in-menu #t)(= tp-fb-win #f)(= (-> *game-info* task-deaths) 4)(= (-> *game-info* fuel) 10.0)(cpad-hold? 0 down)) ;draws the info screen
   (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
     (format matt-str "
     <COLOR_WHITE>HELL MODE INFO:
     ~%<COLOR_PINK>END OF ALL WORLDS ENSURED.
@@ -2891,19 +2891,19 @@ Eco War is similar to BlackJack, but with a twist!
     ~%but Jak has a bomb strapped inside of him, any hits or bonks could set it off
     "
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 1 0.0 (font-color default) (font-flags shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
 )
 
 (when (and (= in-menu #t)(= tp-fb-win #t)(!= (-> *game-info* task-deaths) 4)(= (-> *game-info* fuel) 10.0)(cpad-hold? 0 down)) ;draws the info screen
   (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
     (format matt-str "
     <COLOR_WHITE>HELL MODE INFO:
     ~%
@@ -2928,18 +2928,18 @@ Eco War is similar to BlackJack, but with a twist!
     ~%but Jak has a bomb strapped inside of him, any hits or bonks could set it off
     "
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 1 0.0 (font-color default) (font-flags shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
 )
 (when (and (= in-menu #t)(= tp-fb-win #t)(= (-> *game-info* task-deaths) 4)(= (-> *game-info* fuel) 10.0)(cpad-hold? 0 down)) ;draws the info screen
   (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
     (format matt-str "
     <COLOR_WHITE>HELL MODE INFO:
     ~%<COLOR_PINK>END OF ALL WORLDS ENSURED.
@@ -2964,14 +2964,14 @@ Eco War is similar to BlackJack, but with a twist!
     ~%but Jak has a bomb strapped inside of him, any hits or bonks could set it off
     "
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 0 1 0.0 (font-color default) (font-flags shadow kerning large))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
 )
 
 (when (and (= in-menu #t)(>= (-> *game-info* gem) 25.0))
@@ -3005,77 +3005,77 @@ Eco War is similar to BlackJack, but with a twist!
 
 (when (and (= mushie-unlocked? #t)(= done-it #f)(= in-menu #t)(= mushroom-movies #f)(not (cpad-hold? 0 r1)))
   (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
     (format matt-str "<COLOR_WHITE>R1: <COLOR_RED>Enable Mushroom Movies")
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 100 0.0 (font-color default) (font-flags shadow kerning large right))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
 )
 
 (when (and (= mushie-unlocked? #t)(= done-it #f)(= in-menu #t)(= mushroom-movies #t)(not (cpad-hold? 0 r1)))
   (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
     (format matt-str "<COLOR_WHITE>R1: <COLOR_GREEN>Disable Mushroom Movies")
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 100 0.0 (font-color default) (font-flags shadow kerning large right))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
 )
 
 (when (and (= mushie-unlocked? #t)(= done-it #f)(= in-menu #t)(cpad-hold? 0 r1))
   (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
     (format matt-str "<COLOR_WHITE>R1: <COLOR_YELLOW>~S"
     disable-mms
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 100 0.0 (font-color default) (font-flags shadow kerning large right))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
         (+! disable-mm 1)
 )
 (when (and (= mushie-unlocked? #t)(= mushroom-movies #t)(= done-it #t)(= in-menu #t)(cpad-hold? 0 r1))
   (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
     (format matt-str "<COLOR_WHITE>R1: <COLOR_GREEN>~S"
     disable-mms
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 100 0.0 (font-color default) (font-flags shadow kerning large right))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
 )
 (when (and (= mushie-unlocked? #t)(= mushroom-movies #f)(= done-it #t)(= in-menu #t)(cpad-hold? 0 r1))
   (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
     (format matt-str "<COLOR_WHITE>R1: <COLOR_RED>~S"
     disable-mms
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 100 0.0 (font-color default) (font-flags shadow kerning large right))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
 )
 (when (= disable-mm 1)
   (set! disable-mms "(Press and Hold)")
@@ -3126,33 +3126,33 @@ Eco War is similar to BlackJack, but with a twist!
 
 (when (and (= (-> *game-info* task-deaths) 4)(= in-menu #t))
   (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
     (format matt-str "<COLOR_PINK>END OF ALL WORLDS ENSURED")
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 120 0.0 (font-color default) (font-flags shadow kerning large right))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
 )
 
 (when (= in-menu #t)
   (set! death-counter-int (-> *game-info* total-deaths))
   (clear matt-str)
-    (clear *pc-encoded-temp-string*)
+    (clear *pc-encoded-matt-str*)
     (format matt-str "<COLOR_YELLOW>Death Counter: <COLOR_RED>~d"
     (the-as int (-> *game-info* total-deaths))
     )
-    (pc-encode-utf8-string matt-str *pc-encoded-temp-string*)
+    (pc-encode-utf8-string matt-str *pc-encoded-matt-str*)
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id debug-no-zbuf1))
       ;; reset bucket settings prior to drawing - font won't do this for us, and
       ;; draw-raw-image can sometimes mess them up. (intro sequence)
       (dma-buffer-add-gs-set-flusha buf (alpha-1 (new 'static 'gs-alpha :b #x1 :d #x1)) (tex1-1 (new 'static 'gs-tex1 :mmag #x1 :mmin #x1)))
       (let ((font-ctx (new 'stack 'font-context *font-default-matrix* 510 110 0.0 (font-color default) (font-flags shadow kerning large right))))
         (set! (-> font-ctx scale) 0.325)
-        (draw-string-adv *pc-encoded-temp-string* buf font-ctx)))
+        (draw-string-adv *pc-encoded-matt-str* buf font-ctx)))
 )
 
 

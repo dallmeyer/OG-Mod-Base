@@ -10,6 +10,7 @@
 (declare-type game-save basic)
 
 (define matt-str (new 'global 'string 2048 (the-as string #f)))
+(define *pc-encoded-matt-str* (new 'global 'string 2048 (the-as string #f)))
 
 ;(print help) in repl to see this
 (define help "
