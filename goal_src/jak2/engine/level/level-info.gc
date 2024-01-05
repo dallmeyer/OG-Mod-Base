@@ -14224,9 +14224,9 @@
     :continues '((new 'static 'continue-point
         :name "halfpipe"
         :level 'halfpipe
-        :trans (new 'static 'vector :x -1048.9856 :y -172047.97 :z -212555.78 :w 1.0)
-        :quat (new 'static 'vector :y 0.061 :w 0.9981)
-        :camera-trans (new 'static 'vector :x -9941.401 :y -150049.17 :z -159587.94 :w 1.0)
+        :trans (new 'static 'vector :x (meters 4135.90) :y (meters 135) :z (meters 4284.47) :w 1.0)
+        :quat (new 'static 'vector :y -0.9998 :w -0.0175)
+        :camera-trans (new 'static 'vector :x (meters 4135.90) :y (meters 135) :z (meters 4284.47) :w 1.0)
         :camera-rot (new 'static 'inline-array vector3s 3
           (new 'static 'vector3s :data (new 'static 'array float 3 -0.979 0.0 -0.2037))
           (new 'static 'vector3s :data (new 'static 'array float 3 0.0545 0.9634 -0.2622))

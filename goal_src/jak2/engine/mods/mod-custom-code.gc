@@ -32,6 +32,10 @@
       ;;     )
       ;;   )
 
+      (enableCollisionRenderer)
+      ;; hideskip noboard
+      (pc-set-collision-mask (pc-collision-mode skiphide) (the int (pc-pat-skip-hack nojak)) #t)
+
       (if *show-input-display* 
         (input-display-on)
         (input-display-off)

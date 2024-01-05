@@ -370,7 +370,7 @@
           "demo-start"
           )
          (*debug-segment*
-           "game-start"
+           "halfpipe" ;; "game-start"
            )
          (else
            "title-start"
