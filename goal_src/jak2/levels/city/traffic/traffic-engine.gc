@@ -410,6 +410,7 @@ The param object is updated with the ID of the box and can be later used with up
         )
     (let ((a2-1 (+ (-> v1-2 inactive-count) -1)))
       (when (>= a2-1 0)
+        (format 0 "get-from-inactive found handle~%")
         (set! v0-0 (-> v1-2 array a1-2))
         (set! (-> v1-2 array a1-2) (-> v1-2 array a2-1))
         (+! (-> v1-2 inactive-count) -1)
@@ -554,17 +555,21 @@ Process is recycled and moved to reserved, if it deactivates."
   (let ((gp-0 (-> arg0 object-type)))
     (set! (-> arg0 proc) #f)
     (let ((v1-2 (-> this traffic object-type-info-array gp-0)))
+      (format 0 "2 before traffic-activate attempt / inactive ~D reserve ~D~%" (-> v1-2 inactive-count) (-> v1-2 reserve-count))
       (when (and (> (-> v1-2 inactive-count) 0) (> (-> v1-2 reserve-count) 0))
         (set! sv-16 (get-from-inactive-by-type this gp-0))
         (let ((s3-0 (handle->process sv-16)))
+          (format 0 "before traffic-activate attempt~%")
           (when s3-0
             (cond
               ((send-event s3-0 'traffic-activate arg0 (-> this traffic))
+               (format 0 "traffic-activate success~%")
                (set! (-> arg0 proc) s3-0)
                (add-active-process this gp-0 sv-16)
                0
                )
               (else
+               (format 0 "traffic-activate fail~%")
                 (add-reserved-process this gp-0 sv-16)
                 )
               )
@@ -3109,7 +3114,11 @@ Process is recycled and moved to reserved, if it deactivates."
       (while (< (the-as uint s5-0) (the-as uint 21))
         (let ((s2-0 (-> this object-type-info-array s5-0)))
           (when (and (logtest? (-> s2-0 flags) (traffic-type-flags trtflags-3))
-                     (= (level-status *level* (-> s2-0 level)) 'active)
+                     ;; force allocate space for bikea in test-zone
+                     (or (and (= s5-0 (traffic-type bikea)) 
+                              (name= (-> (level-get-target-inside *level*) name) 'test-zone))
+                         (= (level-status *level* (-> s2-0 level)) 'active)
+                         )
                      )
             (+! s3-0 (-> s2-0 parking-spot-prob))
             (b! (>= (the-as uint s3-0) (the-as uint s4-0)) cfg-10)

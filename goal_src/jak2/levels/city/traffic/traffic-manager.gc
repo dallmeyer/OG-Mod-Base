@@ -147,7 +147,11 @@
   (dotimes (i 21)
     (let ((s4-0 (-> this traffic-engine object-type-info-array i)))
       (logclear! (-> s4-0 flags) (traffic-type-flags trtflags-3))
-      (if (= (level-status *level* (-> s4-0 level)) 'active)
+              ;; force allocate space for bikea in test-zone
+      (if (or (and (= i (traffic-type bikea)) 
+                   (name= (-> (level-get-target-inside *level*) name) 'test-zone))
+              (= (level-status *level* (-> s4-0 level)) 'active)
+              )
           (logior! (-> s4-0 flags) (traffic-type-flags trtflags-3))
           )
       )

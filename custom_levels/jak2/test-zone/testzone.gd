@@ -4,6 +4,24 @@
 ;; the actual file name still needs to be 8.3
 ("TSZ.DGO"
  (
-  "prison-obs.o"
+  "jak-pilot+0-ag.go"
+  "tpage-1264.go"
+  "tpage-1266.go"
+  "tpage-1265.go"
+  "tpage-1674.go"
+  "tpage-1118.go"
+  "tpage-1657.go"
+  "baron-statue-ag.go"
+  "cty-guard-turret-ag.go"
+  "vehicle-explosion-ag.go"
+  "barons-ship-lores-ag.go"
+  "propa-ag.go"
+  "vehicle-turret-ag.go"
+  "lurker-pipe-lid-ag.go"
+  "searchlight-ag.go"
+  "burning-bush-ag.go"
+  "stadium-barrier-ag.go"
+  "security-wall-ag.go"
+
   "test-zone.go"
   ))

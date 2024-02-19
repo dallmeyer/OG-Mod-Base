@@ -15728,7 +15728,7 @@
 ;; og:preserve-this added test-zone level
 (define test-zone
   (new 'static 'level-load-info
-    :index #x9e
+    :index #xf7
     :name 'test-zone
     :visname 'test-zone-vis
     :nickname 'tsz
@@ -15747,13 +15747,13 @@
     :continues '((new 'static 'continue-point
         :name "test-zone-start"
         :level 'test-zone
-        :trans (new 'static 'vector :x 0.0 :y (meters 10) :z (meters 10) :w 1.0)
-        :quat (new 'static 'vector :y 0.061 :w 0.9981)
-        :camera-trans (new 'static 'vector :x 0.0 :y (meters 1) :z 0.0 :w 1.0)
+        :trans (new 'static 'vector :x (meters 4214.28) :y (meters 10.81) :z (meters -4689.83) :w 1.0)
+        :quat (new 'static 'vector :y 0.9189 :w 0.3943)
+        :camera-trans (new 'static 'vector :x (meters 4204.8867) :y (meters 15.9435) :z (meters -4681.6572) :w 1.0)
         :camera-rot (new 'static 'inline-array vector3s 3
-          (new 'static 'vector3s :data (new 'static 'array float 3 1.0 0.0 0.0))
-          (new 'static 'vector3s :data (new 'static 'array float 3 0.0 1.0 0.0))
-          (new 'static 'vector3s :data (new 'static 'array float 3 0.0 0.0 1.0))
+          (new 'static 'vector3s :data (new 'static 'array float 3  -0.6571  -0.0000   -0.7537))
+          (new 'static 'vector3s :data (new 'static 'array float 3  0.0911   0.9926    -0.0795))
+          (new 'static 'vector3s :data (new 'static 'array float 3  0.7481   -0.1209   -0.6523))
           )
         :on-goto #f
         :vis-nick #f
@@ -15773,7 +15773,7 @@
     :load-commands '()
     :alt-load-commands '()
     :bsp-mask #xffffffffffffffff
-    :buttom-height (meters -10000000)
+    :buttom-height (meters -15)
     :run-packages '()
     :wait-for-load #t
     :login-func #f

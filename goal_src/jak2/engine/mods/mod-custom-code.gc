@@ -21,6 +21,9 @@
     ;; Begin function defintions.
     ;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(define POINTA (static-vector-meters 4462.1 13.734 -4912.1))
+(define POINTB (static-vector-meters 4856.8 13.381 -5266.1))
+
     (defun runs-every-frame ()
       ;; (increase-power-cell-by-one) This is a call to increase-power-cell-by-one defined in mod-common-functions.gc
 
@@ -35,6 +38,37 @@
       (if *show-input-display* 
         (input-display-on)
         (input-display-off)
+        )
+
+      (when (cpad-pressed? 0 l2)
+        (vector-! (-> *target* root trans) (-> *target* root trans) POINTB)
+        (vector+! (-> *target* root trans) (-> *target* root trans) POINTA)
+        (let ((gp-0 (new 'stack 'transformq)))
+          (vector-copy! (-> gp-0 trans) (-> *math-camera* trans))
+          (vector-! (-> gp-0 trans) (-> gp-0 trans) POINTB)
+          (vector+! (-> gp-0 trans) (-> gp-0 trans) POINTA)
+          (set-vector! (-> gp-0 scale) 1.0 1.0 1.0 1.0)
+          (matrix->quaternion (-> gp-0 quat) (-> *math-camera* inv-camera-rot))
+          (send-event *camera* 'teleport-to-transformq gp-0)
+          (vector-copy! (-> *math-camera* trans) (-> gp-0 trans))
+          (vector-copy! (-> *math-camera* prev-trans) (-> gp-0 trans))
+          (vector-copy! (-> *math-camera* trans-other) (-> gp-0 trans))
+          (vector-copy! (-> *camera-combiner* trans) (-> gp-0 trans))
+          )
+        (cond
+          ((focus-test? *target* pilot)
+            (vector-! (-> *target* pilot pilot-trans) (-> *target* pilot pilot-trans) POINTB)
+            (vector+! (-> *target* pilot pilot-trans) (-> *target* pilot pilot-trans) POINTA)
+            (let ((b-trans (-> *target* node-list data 0 bone transform trans))
+                  (v-trans (-> (the process-drawable (handle->process (-> *target* pilot vehicle))) root trans))
+                  )
+              (vector-! b-trans b-trans POINTB)
+              (vector+! b-trans b-trans POINTA)
+              (vector-! v-trans v-trans POINTB)
+              (vector+! v-trans v-trans POINTA)
+              )
+            )
+          )
         )
       
       (none)

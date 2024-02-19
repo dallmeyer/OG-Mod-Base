@@ -580,7 +580,9 @@
               )
             )
           )
-        (set-setting! 'string-camera-ceiling 'abs f0-0 0)
+        (when (not (name= (-> (level-get-target-inside *level*) name) 'test-zone))
+          (set-setting! 'string-camera-ceiling 'abs f0-0 0)
+          )
         )
       (cond
         ((logtest? (-> this flags) (rigid-body-object-flag in-air))
