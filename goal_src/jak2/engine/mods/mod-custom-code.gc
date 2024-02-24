@@ -21,8 +21,8 @@
     ;; Begin function defintions.
     ;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define POINTA (static-vector-meters 4462.1 13.734 -4912.1))
-(define POINTB (static-vector-meters 4856.8 13.381 -5266.1))
+(define POINTA (static-vector-meters 4462.1 53.734 -4912.1))
+(define POINTB (static-vector-meters 4856.8 53.381 -5266.1))
 
     (defun runs-every-frame ()
       ;; (increase-power-cell-by-one) This is a call to increase-power-cell-by-one defined in mod-common-functions.gc
@@ -45,11 +45,12 @@
           (lambda :behavior process ()
             (stack-size-set! (-> self main-thread) 512)
             (loop
-              (when (and *target* (cpad-pressed? 0 l2))
+              ;; (when (and *target* (cpad-pressed? 0 l2))
+              (when (and *target* (in-bubble-meters? 4660.92  53.18 -5085.33 20.0))
                 (cond
                   ((focus-test? *target* pilot)
                     (let* ((tq (new 'stack 'transformq))
-                          (v (the vehicle (handle->process (-> *target* pilot vehicle))))
+                          (v (the process-drawable (handle->process (-> *target* pilot vehicle))))
                           (v-trans (-> v rbody state position))
                           )
                       (vector-! v-trans v-trans POINTB)

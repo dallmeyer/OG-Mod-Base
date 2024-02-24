@@ -64,14 +64,15 @@
 
   "actors" : [
     {
-      "trans": [4222.28,  11.36, -4691.24], // translation
+      "trans": [4222.28,  51.36, -4691.24], // translation
       "etype": "parking-spot",  // actor type
       "game_task": 0, // associated game task (for powercells, etc)
       "kill_mask": 0,
       "quat": [-0.0275, 0.9111, 0.0652, 0.4058], // quaternion
-      "bsphere": [4222.28,  11.36, -4691.24, 10], // bounding sphere
+      "bsphere": [4222.28,  51.36, -4691.24, 10], // bounding sphere
       "lump": {
-        "name": "test-parking-spot-1"
+        "name": "test-parking-spot-1",
+        "rotoffset": ["float", 23803.6523]
       }
     }
     // {
