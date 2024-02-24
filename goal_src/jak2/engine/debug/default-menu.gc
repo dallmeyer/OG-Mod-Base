@@ -3058,7 +3058,18 @@
 (defun debug-menu-context-make-default-menus ((arg0 debug-menu-context))
   (local-vars (sv-16 debug-menu-context))
   (let ((s5-0 (new 'debug 'debug-menu arg0 "Main menu")))
-    (debug-menu-context-set-root-menu arg0 s5-0)
+    (debug-menu-context-set-root-menu arg0 s5-0)    
+    (debug-menu-append-item
+      s5-0
+      (debug-menu-make-from-template
+        arg0
+        '(menu
+           "Endless Drive"
+           (function "Rain On" #f ,(lambda () (set! (-> test-zone max-rain) 1.0)))
+           (function "Rain Off" #f ,(lambda () (set! (-> test-zone max-rain) 0.0)))
+           )
+        )
+      )
     (debug-menu-append-item
       s5-0
       (debug-menu-make-from-template
