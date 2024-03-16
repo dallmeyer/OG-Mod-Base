@@ -107,12 +107,12 @@ if the result of rand-vu-int-range is 1, then DANCE! if it is not 1, then Don't 
               (set-vector! (-> entity-actor extra trans) (meters x) (meters y) (meters z) 1.0)
               (set-vector! (-> (the process-drawable actor) root trans) (meters x) (meters y) (meters z) 1.0)
               (set-vector! (-> (the fuel-cell actor) base) (meters x) (meters y) (meters z) 1.0)
-              (set-vector! (-> (the fuel-cell actor) root-override trans) (meters x) (meters y) (meters z) 1.0)
+              (set-vector! (-> (the fuel-cell actor) root trans) (meters x) (meters y) (meters z) 1.0)
             (when (name= (-> (the fuel-cell actor) state name) 'wait)
               ;; only move collision when idle (messes up glowing in cutscene)
-              (set! (-> (the fuel-cell actor) root-override root-prim world-sphere x) (meters x))
-              (set! (-> (the fuel-cell actor) root-override root-prim world-sphere y) (meters y))
-              (set! (-> (the fuel-cell actor) root-override root-prim world-sphere z) (meters z))
+              (set! (-> (the fuel-cell actor) root root-prim world-sphere x) (meters x))
+              (set! (-> (the fuel-cell actor) root root-prim world-sphere y) (meters y))
+              (set! (-> (the fuel-cell actor) root root-prim world-sphere z) (meters z))
               )
             )
           ((orb-cache-top)
@@ -122,10 +122,10 @@ if the result of rand-vu-int-range is 1, then DANCE! if it is not 1, then Don't 
               (set-vector! (-> entity-actor extra trans) (meters x) (meters y) (meters z) 1.0)
               (set-vector! (-> (the process-drawable actor) root trans) (meters x) (meters y) (meters z) 1.0)
               (set-vector! (-> (the orb-cache-top actor) basetrans) (meters x) (meters y) (meters z) 1.0)
-              (set-vector! (-> (the orb-cache-top actor) root-override trans) (meters x) (meters y) (meters z) 1.0)
-              (set! (-> (the orb-cache-top actor) root-override root-prim world-sphere x) (meters x))
-              (set! (-> (the orb-cache-top actor) root-override root-prim world-sphere y) (meters y))
-              (set! (-> (the orb-cache-top actor) root-override root-prim world-sphere z) (meters z))
+              (set-vector! (-> (the orb-cache-top actor) root trans) (meters x) (meters y) (meters z) 1.0)
+              (set! (-> (the orb-cache-top actor) root root-prim world-sphere x) (meters x))
+              (set! (-> (the orb-cache-top actor) root root-prim world-sphere y) (meters y))
+              (set! (-> (the orb-cache-top actor) root root-prim world-sphere z) (meters z))
               (set-vector! (-> (the orb-cache-top actor) draw origin) (meters x) (meters y) (meters z) 1.0)
               (let ((radius (-> (the process-drawable actor) draw radius))
                     (bounds (res-lump-data entity-actor 'visvol (inline-array vector)))
@@ -142,10 +142,10 @@ if the result of rand-vu-int-range is 1, then DANCE! if it is not 1, then Don't 
               (set-vector! (-> entity-actor extra trans) (meters x) (meters y) (meters z) 1.0)
               (set-vector! (-> (the process-drawable actor) root trans) (meters x) (meters y) (meters z) 1.0)
               (set-vector! (-> (the money actor) base) (meters x) (meters y) (meters z) 1.0)
-              (set-vector! (-> (the money actor) root-override trans) (meters x) (meters y) (meters z) 1.0)
-              (set! (-> (the money actor) root-override root-prim world-sphere x) (meters x))
-              (set! (-> (the money actor) root-override root-prim world-sphere y) (meters y))
-              (set! (-> (the money actor) root-override root-prim world-sphere z) (meters z))
+              (set-vector! (-> (the money actor) root trans) (meters x) (meters y) (meters z) 1.0)
+              (set! (-> (the money actor) root root-prim world-sphere x) (meters x))
+              (set! (-> (the money actor) root root-prim world-sphere y) (meters y))
+              (set! (-> (the money actor) root root-prim world-sphere z) (meters z))
               )
             )
           ((crate crate-buzzer)
@@ -155,10 +155,10 @@ if the result of rand-vu-int-range is 1, then DANCE! if it is not 1, then Don't 
               (set-vector! (-> entity-actor extra trans) (meters x) (meters y) (meters z) 1.0)
               (set-vector! (-> (the process-drawable actor) root trans) (meters x) (meters y) (meters z) 1.0)
               (set-vector! (-> (the crate actor) base) (meters x) (meters y) (meters z) 1.0)
-              ;; (set-vector! (-> (the crate actor) root-override trans) (meters x) (meters y) (meters z) 1.0)
-              ;; (set! (-> (the crate actor) root-override root-prim world-sphere x) (meters x))
-              ;; (set! (-> (the crate actor) root-override root-prim world-sphere y) (meters y))
-              ;; (set! (-> (the crate actor) root-override root-prim world-sphere z) (meters z))
+              ;; (set-vector! (-> (the crate actor) root trans) (meters x) (meters y) (meters z) 1.0)
+              ;; (set! (-> (the crate actor) root root-prim world-sphere x) (meters x))
+              ;; (set! (-> (the crate actor) root root-prim world-sphere y) (meters y))
+              ;; (set! (-> (the crate actor) root root-prim world-sphere z) (meters z))
               )
             )
           ((darkvine)
@@ -178,6 +178,15 @@ if the result of rand-vu-int-range is 1, then DANCE! if it is not 1, then Don't 
     )
   (none)
   )
+
+(defun process-by-aid ((arg0 uint))
+  "Get the process for the entity with the given aid. If there is no entity or process, #f."
+  (let ((v1-0 (entity-by-aid arg0)))
+    (if v1-0
+      (-> v1-0 extra process)
+    )
+  )
+)
 
 (defun spawn-actor-by-name ((name string))
   ;; Takes in the string of name of a actor, and spawns a new process based on the entity.
@@ -371,7 +380,7 @@ if the result of rand-vu-int-range is 1, then DANCE! if it is not 1, then Don't 
   )
 
 
-;;This returns true or false if jak is within a bubble defined by coordiantes and width
+;; This returns true or false if jak is within a bubble defined by coordinates and width
 (defun in-bubble? ((x float) (y float) (z float) (w float))
   (<= 
     (vector-vector-distance 
@@ -388,24 +397,19 @@ if the result of rand-vu-int-range is 1, then DANCE! if it is not 1, then Don't 
 
 ;; (defun music-manager ()
 ;;   (stop-main-music)
-;;   (case (-> (level-get-target-inside *level*) name)
-;;     (('test-zone)
-;;       (if (> (knuth-rand-int-range 0 15) (+ 8 5))
-;;       (play-main-music "SND/music-test-zone.mp3" (the int (-> *setting-control* default music-volume)))
-;;       (play-main-music "SND/music-test-zone-track2.mp3" (the int (-> *setting-control* default music-volume))))
-;;     )
-;;     ;;Add more cases here for each level
-;;     (else
-;;       (play-main-music "" (the int (-> *setting-control* default music-volume)))
-;;       ;;(stop-main-music) This function is broken but playing a invalid sound does the same thing
-;;     )
-;;   )
+;;       (case (-> (level-get-target-inside *level*) name)
+;;          (('test-zone)
+;;         ;;  (if (> (knuth-rand-int-range 0 15) (+ 8 5))
+;;         ;;   (play-main-music "SND/music-test-zone.mp3" (the int (-> *setting-control* default music-volume)))
+;;         ;;   (play-main-music "SND/music-test-zone-track2.mp3" (the int (-> *setting-control* default music-volume))))
+;;          )
+;;          ;;Add more cases here for each level
+;;          (else
+;;           (play-main-music "" (the int (-> *setting-control* default music-volume)))
+;;           ;;(stop-main-music) This function is broken but playing a invalid sound does the same thing
+;;          )
+;;       )
 ;; (none)
-;; )
-
-;; (defbehavior music-manager-proc process ()
-;;   (music-manager)
-;;   (none)
 ;; )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;

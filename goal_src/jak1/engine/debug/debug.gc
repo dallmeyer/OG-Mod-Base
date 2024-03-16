@@ -60,7 +60,7 @@
     (when (transform-point-qword! (-> s5-0 vector 0) pt)
 
       (with-dma-buffer-add-bucket ((v1-7 (-> (current-frame) debug-buf)) bucket)
-    
+
         (with-cnt-vif-block (v1-7)
             (dma-buffer-add-gif-tag v1-7
                   (new 'static 'gif-tag64 :nloop 1 :eop 1 :pre 1 :nreg 8 :prim (gif-prim tri-strip))
@@ -144,7 +144,7 @@
         )
     (set! (-> p0 w) 1.0)
     (set! (-> p1 w) 1.0)
-    
+
     (when (and (transform-point-qword! (-> s4-0 vector 0) p0)
                (transform-point-qword! (-> s4-0 vector 1) p1)
                )
@@ -154,7 +154,7 @@
                                              :prim (gif-prim line))
                                   (gs-reg-list rgbaq xyzf2 rgbaq xyzf2)
                                   )
-          (case mode 
+          (case mode
                 (('fade-depth)
                  (let ((f0-3 (fminmax (* (1/ #xffffff) (the float (-> s4-0 vector 0 z))) 0.2 1.0)))
                    (set! (-> s1-0 vector 0 x) (the int (* (the float (-> first-color r)) f0-3)))
@@ -198,16 +198,16 @@
       )
     )
   )
-  
+
 
 (defun-debug internal-draw-debug-text-3d ((bucket bucket-id) (str string) (location vector) (font-color-id font-color) (offset vector2h))
   "Draw text at the given location (in 3D), with a 2D offset."
   (let ((s2-0 (new 'stack-no-clear 'vector4w)))
     (set! (-> s2-0 quad) (the-as uint128 0))
     (when (transform-point-qword! (the-as vector4w s2-0) location)
-      
+
       (with-dma-buffer-add-bucket ((s3-0 (-> (current-frame) debug-buf)) bucket)
-        
+
         (let ((a2-2 (new 'stack 'font-context *font-default-matrix*
                          (+ (+ (-> offset x) -1792) (/ (-> s2-0 x) 16))
                          (- (+ (+ (-> offset y) -8) (/ (-> s2-0 y) 16))
@@ -307,41 +307,33 @@
 
 
 (when *debug-segment*
-
 (deftype debug-line (structure)
-  ((flags  int32          :offset-assert 0)
-   (bucket bucket-id      :offset-assert 4)
-   (v1     vector :inline :offset-assert 16)
-   (v2     vector :inline :offset-assert 32)
-   (color  rgba           :offset-assert 48)
-   (mode   symbol         :offset-assert 52)
-   (color2 rgba           :offset-assert 56)
+  ((flags   int32)
+   (bucket  bucket-id)
+   (v1      vector  :inline)
+   (v2      vector  :inline)
+   (color   rgba)
+   (mode    symbol)
+   (color2  rgba)
    )
-  :method-count-assert 9
-  :size-assert         #x3c
-  :flag-assert         #x90000003c
   )
+
 
 (deftype debug-text-3d (structure)
-  ((flags  int32            :offset-assert 0)
-   (bucket bucket-id        :offset-assert 4)
-   (pos    vector   :inline :offset-assert 16)
-   (color  font-color       :offset-assert 32)
-   (offset vector2h :inline :offset-assert 40)
-   (str    string           :offset-assert 44)
+  ((flags   int32)
+   (bucket  bucket-id)
+   (pos     vector    :inline)
+   (color   font-color)
+   (offset  vector2h  :inline)
+   (str     string)
    )
-  :method-count-assert 9
-  :size-assert         #x30
-  :flag-assert         #x900000030
   )
 
+
 (deftype debug-tracking-thang (basic)
-  ((length           int32  :offset-assert 4)
-   (allocated-length int32  :offset-assert 8)
+  ((length            int32)
+   (allocated-length  int32)
    )
-  :method-count-assert 9
-  :size-assert         #xc
-  :flag-assert         #x90000000c
   )
 
 ;; allocate debug draw buffers

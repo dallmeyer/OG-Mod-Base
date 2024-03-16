@@ -17,32 +17,38 @@
   "Unpack run-length-encoded data. Has sections of repeated values, then normally copied."
   (local-vars (current-input int) (copy-length int))
   (nop!)
-  (while #t
-    (while #t
-      
+  (loop
+    (loop
+
       ;; read the input and see what kind it is, based on number.
       (set! current-input (-> in 0))
       (set! in (&-> in 1))
       (b! (<= current-input 0) cfg-5 :delay (nop!))
-      
+
       ;; it's a repated value, loop to copy it.
       (let ((repeated-value (-> in 0)))
         (set! in (&-> in 1))
         (label cfg-3)
+        (nop!)
+        (nop!)
+        (nop!)
+        (nop!)
         (set! (-> out 0) repeated-value)
         )
       (set! out (&-> out 1))
       (b! (> current-input 0) cfg-3 :delay (set! current-input (+ current-input -1)))
       )
-    
+
     (label cfg-5)
     ;; check for end
     (b! (zero? current-input) cfg-8 :delay (set! copy-length (- current-input)))
-    
+
     ;; copy
     (label cfg-6)
     (let ((src-val (-> in 0)))
       (set! in (&-> in 1))
+      (nop!)
+      (nop!)
       (set! (-> out 0) src-val)
       )
     (+! copy-length -1)
@@ -53,19 +59,17 @@
   (none)
   )
 
-
 (deftype huf-dictionary-node (structure)
-  ((zero uint16  :offset-assert   0)
-   (one  uint16  :offset-assert   2)
+  ((zero  uint16)
+   (one   uint16)
    )
-  :method-count-assert 9
-  :size-assert         #x4
-  :flag-assert         #x900000004
   )
+
 
 (defun unpack-comp-huf ((dst (pointer uint8)) (src (pointer uint8)) (arg2 uint) (dict huf-dictionary-node))
   "Unpack data compressed with huffman encoding."
   (local-vars (t1-1 uint) (t3-2 object))
+  (nop!)
   (let ((t1-0 (-> dict zero))
         (a2-1 (+ arg2 -1028))
         (t2-0 (-> dict one))
@@ -89,13 +93,9 @@
         (let ((t3-1 (* t1-1 4)))
           (b! (< (the-as int t2-1) 0) cfg-8 :delay (set! t3-2 (+ t3-1 a2-1)))
           )
-        (b! (zero? t2-1) cfg-10
-            :delay (set! t1-0 (-> (the-as (pointer uint16) t3-2) 0))
-            )
+        (b! (zero? t2-1) cfg-10 :delay (set! t1-0 (-> (the-as (pointer uint16) t3-2) 0)))
         )
-      (b! (nonzero? v1-4) cfg-2
-          :delay (set! t2-0 (-> (the-as (pointer uint16) t3-2) 1))
-          )
+      (b! (nonzero? v1-4) cfg-2 :delay (set! t2-0 (-> (the-as (pointer uint16) t3-2) 1)))
       (b! #t cfg-1 :delay (nop!))
       (label cfg-8)
       (set! (-> dst 0) t1-1)
@@ -113,11 +113,11 @@
   (none)
   )
 
-(defmethod update-vis! level ((this level) (vis-info level-vis-info) (arg1 uint) (arg2 uint))
+(defmethod update-vis! ((this level) (vis-info level-vis-info) (arg1 uint) (arg2 uint))
   "Update the vis-bits for the level with the given vis info.
    arg1 unused. if the vis-file flag isn't set, will use arg2 as vis data."
   (local-vars (t0-3 uint128) (vis-buffer object))
-  
+
   (let* ((cam-leaf-idx (-> vis-info from-bsp current-leaf-idx))   ;; current bsp leaf of camera
          (curr-vis-str (-> vis-info current-vis-string))          ;; currently loaded vis-string.
          (desired-vis-str (-> vis-info vis-string cam-leaf-idx))  ;; vis-string offset for bsp leaf.
@@ -126,7 +126,7 @@
     0
     (+ 16 #x70000000)
     (+ 2064 #x70000000)
-    
+
     ;; this is the same string we asked for last time.
     (when (= curr-vis-str desired-vis-str)
       (cond
@@ -147,7 +147,7 @@
           )
         )
       )
-    
+
     ;; wait for any pending load to finish before trying to change things.
     (when (logtest? (vis-info-flag waiting-for-iop-to-ee) (-> vis-info flags))
       (when (check-busy *ramdisk-rpc*)
@@ -155,7 +155,7 @@
           )
       (logclear! (-> vis-info flags) (vis-info-flag waiting-for-iop-to-ee))
       )
-    
+
     ;; ok, we can now change the current string and request from iop.
     (set! (-> vis-info current-vis-string) desired-vis-str)
     ;; this branch picks between .VIS file ramdisk and BSP file visibility data.
@@ -165,12 +165,12 @@
     (set! vis-buffer (the-as (pointer uint8) (+ arg2 desired-vis-str)))
     (b! #t cfg-27 :delay (nop!))
     (label cfg-15)
-    
+
     ;; start a ramdisk load.  This should have already been done as part of level loading anyway.
     ;; so this will just get the ramdisk file ID.
     (let ((vis-load-result (vis-load this)))
       (b! (nonzero? vis-load-result) cfg-21)
-      
+
       ;; ramdisk failed, make everything visible.
       (let* ((dest-bits (-> vis-info vis-bits))
              (len (-> this bsp visible-list-length))
@@ -212,8 +212,8 @@
           )
         (set! result #f)                ;; this takes time, so quit and report that we failed.
         (b! #t cfg-55 :delay (nop!))
-        
-        
+
+
         ;; we'll get here once the compressed vis data is in vis-buffer
         ;; this can come from IOP->EE or from the BSP file directly
         (label cfg-27)
@@ -233,9 +233,9 @@
             ;; but then copy the vis buffer directly.
             (mem-copy! (the-as pointer spad-start) (the-as pointer vis-buffer) list-len)
             )
-          
+
           (while (nonzero? lower-flag-bits)
-            (case (logand lower-flag-bits 7) 
+            (case (logand lower-flag-bits 7)
                   ((1) ;; decomp type 1: this unpacks data that exploits the BVH tree structure.
                        ;; it omits 0's for children of invisible parents. But to unpack, we need
                        ;; to know all the BVHs in the level.
@@ -277,7 +277,7 @@
             (set! spad-end (the-as int vis-buffer))
             (.sra lower-flag-bits lower-flag-bits 3)
             )
-          
+
           ;; now vis-buffer points to the uncompressed data.
           ;; if things went well, we shouldn't have any bits set for drawables that don't exist.
           ;; we can check this by anding with the all visible list, and confirming it doesn't
@@ -315,7 +315,7 @@
               0
               )
             )
-          
+
           ;; just in case we failed the above check, and with the all visible list anyway.
           ;; also copy from vis-buffer (may be spad) to the final vis-bits output
           (let ((v1-71 (the-as object vis-buffer))

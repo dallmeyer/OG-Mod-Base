@@ -2,7 +2,7 @@
 (in-package goal)
 
 ;; definition for method 37 of type widow-shot
-(defmethod deal-damage! widow-shot ((this widow-shot) (arg0 process) (arg1 event-message-block))
+(defmethod deal-damage! ((this widow-shot) (arg0 process) (arg1 event-message-block))
   "Constructs an [[attack-info]] according to the projectile's `options`"
   (let ((t9-0 (method-of-type projectile deal-damage!)))
     (when (t9-0 this arg0 arg1)
@@ -17,7 +17,7 @@
 
 ;; definition for method 44 of type widow
 ;; INFO: Used lq/sq
-(defmethod widow-method-44 widow ((this widow) (arg0 vector) (arg1 vector))
+(defmethod widow-method-44 ((this widow) (arg0 vector) (arg1 vector))
   (let ((gp-0 (new 'stack-no-clear 'collide-query)))
     (set! (-> gp-0 start-pos quad) (-> arg0 quad))
     (vector-normalize-copy! (-> gp-0 move-dist) arg1 81920.0)
@@ -39,7 +39,7 @@
 ;; definition for method 45 of type widow
 ;; INFO: Used lq/sq
 ;; WARN: Return type mismatch sound-id vs none.
-(defmethod widow-method-45 widow ((this widow) (arg0 vector) (arg1 vector) (arg2 vector))
+(defmethod widow-method-45 ((this widow) (arg0 vector) (arg1 vector) (arg2 vector))
   (let ((s5-0 (new 'stack-no-clear 'projectile-init-by-other-params)))
     (let ((f30-0 (/ 2013265900.0 (vector-length arg2)))
           (s3-0 (new 'stack-no-clear 'vector))
@@ -79,7 +79,7 @@
 ;; definition for method 46 of type widow
 ;; INFO: Used lq/sq
 ;; WARN: Return type mismatch int vs none.
-(defmethod widow-method-46 widow ((this widow) (arg0 vector) (arg1 int))
+(defmethod widow-method-46 ((this widow) (arg0 vector) (arg1 int))
   (let ((s4-0 (vector<-cspace! (new 'stack-no-clear 'vector) (-> this node-list data arg1)))
         (s3-0 (new 'stack-no-clear 'vector))
         )
@@ -93,7 +93,8 @@
   )
 
 ;; definition for method 10 of type widow
-(defmethod deactivate widow ((this widow))
+(defmethod deactivate ((this widow))
+  "Make a process dead, clean it up, remove it from the active pool, and return to dead pool."
   (if (nonzero? (-> this drill-spark-part))
       (kill-and-free-particles (-> this drill-spark-part))
       )
@@ -133,52 +134,52 @@
 
 ;; definition for method 7 of type widow
 ;; WARN: Return type mismatch process-drawable vs widow.
-(defmethod relocate widow ((this widow) (arg0 int))
+(defmethod relocate ((this widow) (offset int))
   (if (nonzero? (-> this left-cover-jm))
-      (&+! (-> this left-cover-jm) arg0)
+      (&+! (-> this left-cover-jm) offset)
       )
   (if (nonzero? (-> this right-cover-jm))
-      (&+! (-> this right-cover-jm) arg0)
+      (&+! (-> this right-cover-jm) offset)
       )
   (if (nonzero? (-> this left-drill-jm))
-      (&+! (-> this left-drill-jm) arg0)
+      (&+! (-> this left-drill-jm) offset)
       )
   (if (nonzero? (-> this right-drill-jm))
-      (&+! (-> this right-drill-jm) arg0)
+      (&+! (-> this right-drill-jm) offset)
       )
   (if (nonzero? (-> this drill-spark-part))
-      (&+! (-> this drill-spark-part) arg0)
+      (&+! (-> this drill-spark-part) offset)
       )
   (if (nonzero? (-> this drill-spark-part-alt))
-      (&+! (-> this drill-spark-part-alt) arg0)
+      (&+! (-> this drill-spark-part-alt) offset)
       )
   (if (nonzero? (-> this extract-stone-part))
-      (&+! (-> this extract-stone-part) arg0)
+      (&+! (-> this extract-stone-part) offset)
       )
   (if (nonzero? (-> this insert-stone-part))
-      (&+! (-> this insert-stone-part) arg0)
+      (&+! (-> this insert-stone-part) offset)
       )
   (if (nonzero? (-> this land-part))
-      (&+! (-> this land-part) arg0)
+      (&+! (-> this land-part) offset)
       )
   (if (nonzero? (-> this green-charge-part))
-      (&+! (-> this green-charge-part) arg0)
+      (&+! (-> this green-charge-part) offset)
       )
   (if (nonzero? (-> this green-fire-part))
-      (&+! (-> this green-fire-part) arg0)
+      (&+! (-> this green-fire-part) offset)
       )
   (dotimes (v1-44 5)
     (if (nonzero? (-> this lightning v1-44))
-        (&+! (-> this lightning v1-44) arg0)
+        (&+! (-> this lightning v1-44) offset)
         )
     )
-  (the-as widow ((method-of-type process-drawable relocate) this arg0))
+  (the-as widow ((method-of-type process-drawable relocate) this offset))
   )
 
 ;; definition for method 11 of type widow
 ;; INFO: Used lq/sq
 ;; WARN: Return type mismatch object vs none.
-(defmethod init-from-entity! widow ((this widow) (arg0 entity-actor))
+(defmethod init-from-entity! ((this widow) (arg0 entity-actor))
   "Typically the method that does the initial setup on the process, potentially using the [[entity-actor]] provided as part of that.
 This commonly includes things such as:
 - stack size

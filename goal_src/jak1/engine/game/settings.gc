@@ -5,14 +5,14 @@
 ;; name in dgo: settings
 ;; dgos: GAME, ENGINE
 
-(#when PC_PORT    
+(#when PC_PORT
   (define *progress-flava* -1)
   )
 
 ;; DECOMP BEGINS
 
-(defmethod update-from-engine setting-data ((this setting-data) (arg0 engine))
-  "this goes through the list of desired setting changes in 
+(defmethod update-from-engine ((this setting-data) (arg0 engine))
+  "this goes through the list of desired setting changes in
    the engine/connection list and updates the setting-data"
   (let ((conn (the-as connection (-> arg0 alive-list-end)))
         (s4-0 (-> arg0 alive-list-end prev0))
@@ -45,7 +45,7 @@
            )
          )
         (('sfx-volume)
-         (when (or (zero? (logand (-> *kernel-context* prevent-from-run) (process-mask progress)))
+         (when (or (not (logtest? (-> *kernel-context* prevent-from-run) (process-mask progress)))
                    (= (get-process conn) (ppointer->process *progress-process*))
                    )
            (case (the-as symbol (-> conn param1))
@@ -203,14 +203,14 @@
   this
   )
 
-(defmethod add-setting setting-control ((this setting-control) (arg0 process) (arg1 symbol) (arg2 object) (arg3 object) (arg4 object))
+(defmethod add-setting ((this setting-control) (arg0 process) (arg1 symbol) (arg2 object) (arg3 object) (arg4 object))
   "add a setting for the process."
   (add-connection (-> this engine) arg0 arg1 arg2 arg3 arg4)
   0
   (none)
   )
 
-(defmethod set-setting setting-control ((this setting-control) (arg0 process) (arg1 symbol) (arg2 object) (arg3 object) (arg4 object))
+(defmethod set-setting ((this setting-control) (arg0 process) (arg1 symbol) (arg2 object) (arg3 object) (arg4 object))
   "(re-)sets a setting for the process."
   (remove-setting this arg0 arg1)
   (add-connection (-> this engine) arg0 arg1 arg2 arg3 arg4)
@@ -218,7 +218,7 @@
   (none)
   )
 
-(defmethod remove-setting setting-control ((this setting-control) (arg0 process) (arg1 symbol))
+(defmethod remove-setting ((this setting-control) (arg0 process) (arg1 symbol))
   "remove a setting from the specified process.
    if arg1 = #t then remove ALL settings for that process"
   (when arg0
@@ -239,8 +239,7 @@
   (none)
   )
 
-
-(defmethod apply-settings setting-control ((this setting-control))
+(defmethod apply-settings ((this setting-control))
   "Update the current settings. This only updates settings that are 'safe' to do multiple times per frame."
   (let ((gp-0 (-> this current)))
     (let ((s5-0 (-> this target)))
@@ -278,31 +277,30 @@
     )
   )
 
-
-(defmethod update setting-control ((this setting-control))
+(defmethod update ((this setting-control))
   "Do a per-frame update of all settings"
   ;; compute all settings
   (apply-settings this)
-  
+
   ;; now handle the special ones.
   (let ((gp-0 (-> this current)))
     (let ((s5-1 (-> this target)))
       ;; the volume change is done slowly
       (when *sound-player-enable*
         (when (!= (-> gp-0 sfx-volume) (-> s5-1 sfx-volume))
-          (seek! (-> gp-0 sfx-volume) (-> s5-1 sfx-volume) (* 100.0 (-> *display* seconds-per-frame)))
+          (seek! (-> gp-0 sfx-volume) (-> s5-1 sfx-volume) (* 100.0 (seconds-per-frame)))
           (sound-set-volume (sound-group sfx) (-> gp-0 sfx-volume))
           )
         (when (!= (-> gp-0 music-volume) (-> s5-1 music-volume))
-          (seek! (-> gp-0 music-volume) (-> s5-1 music-volume) (* 100.0 (-> *display* seconds-per-frame)))
+          (seek! (-> gp-0 music-volume) (-> s5-1 music-volume) (* 100.0 (seconds-per-frame)))
           (sound-set-volume (sound-group music) (-> gp-0 music-volume))
           )
         (when (!= (-> gp-0 dialog-volume) (-> s5-1 dialog-volume))
-          (seek! (-> gp-0 dialog-volume) (-> s5-1 dialog-volume) (* 100.0 (-> *display* seconds-per-frame)))
+          (seek! (-> gp-0 dialog-volume) (-> s5-1 dialog-volume) (* 100.0 (seconds-per-frame)))
           (sound-set-volume (sound-group dialog) (-> gp-0 dialog-volume))
           )
         (when (!= (-> gp-0 ambient-volume) (-> s5-1 ambient-volume))
-          (seek! (-> gp-0 ambient-volume) (-> s5-1 ambient-volume) (* 100.0 (-> *display* seconds-per-frame)))
+          (seek! (-> gp-0 ambient-volume) (-> s5-1 ambient-volume) (* 100.0 (seconds-per-frame)))
           (sound-set-volume (sound-group ambient) (-> gp-0 ambient-volume))
           )
         )
@@ -326,14 +324,10 @@
         (set! (-> gp-0 language) (-> s5-1 language))
         (set-language (-> gp-0 language))
         )
-      
+
       ;; try to load music
       (when (and (!= (-> s5-1 music) (-> gp-0 music))
-                 (and (< 0.0 (-> *setting-control* current music-volume))
-                      (zero? (rpc-busy? 1))
-                      *sound-bank-1*
-                      *sound-bank-2*
-                      )
+                 (and (< 0.0 (-> *setting-control* current music-volume)) (zero? (rpc-busy? 1)) *sound-bank-1* *sound-bank-2*)
                  )
         (cond
           ((-> s5-1 music)
@@ -347,7 +341,7 @@
           )
         (set! (-> gp-0 music) (-> s5-1 music))
         )
-      
+
       ;; set sound flava
       (set! (-> s5-1 sound-flava) (the-as uint (flava-lookup (-> gp-0 music) (the-as music-flava (-> s5-1 sound-flava)))))
       (set! (-> gp-0 sound-flava) (-> s5-1 sound-flava))
@@ -357,7 +351,7 @@
               (sound-set-flava (-> gp-0 sound-flava))
               )
           )
-      
+
       ;; update display settings
       (when (!= (-> gp-0 aspect-ratio) (-> s5-1 aspect-ratio))
         (set! (-> gp-0 aspect-ratio) (-> s5-1 aspect-ratio))
@@ -377,14 +371,14 @@
         (set! (-> *video-parms* display-dy) (* (/ (-> s5-1 screeny) 2) 2))
         (set! (-> *video-parms* set-video-mode) #t)
         )
-      
+
       ;; update display bg color
       (set! (-> gp-0 bg-a-speed) (-> s5-1 bg-a-speed))
       (set! (-> gp-0 bg-a-force) (-> s5-1 bg-a-force))
       (set! (-> gp-0 bg-r) (-> s5-1 bg-r))
       (set! (-> gp-0 bg-g) (-> s5-1 bg-g))
       (set! (-> gp-0 bg-b) (-> s5-1 bg-b))
-      (seek! (-> gp-0 bg-a) (-> s5-1 bg-a) (* (-> s5-1 bg-a-speed) (-> *display* seconds-per-frame)))
+      (seek! (-> gp-0 bg-a) (-> s5-1 bg-a) (* (-> s5-1 bg-a-speed) (seconds-per-frame)))
       )
     (let ((v1-60 (-> *display* frames (-> *display* on-screen) display))
           (f0-39 (-> gp-0 bg-a))
@@ -397,14 +391,14 @@
       (set! (-> v1-60 bgcolor b) (the int (* 255.0 (-> gp-0 bg-b))))
       (set! (-> v1-60 pmode alp) (the int (* 255.0 (- 1.0 f0-39))))
       )
-    
+
     ;; ??
     (set! (-> *level* border?) (-> gp-0 border-mode))
     ;; common pool texture page mask
     (set! (-> *texture-pool* common-page-mask) (-> gp-0 common-page))
     (set! (-> *cpad-list* cpads 0 buzz) (-> gp-0 vibration))
-    
-    (case (-> gp-0 ocean-off) 
+
+    (case (-> gp-0 ocean-off)
           ((#t)
            (set! *ocean-off* #t)
            )

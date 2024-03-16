@@ -245,7 +245,7 @@
   (new 'static 'game-option :option-type (game-option-type menu) :name (text-id input-opts-binds-controller) :scale #t :param3 (game-option-menu controller-binds)
     :option-disabled-func (lambda () (<= (pc-get-controller-count) 0)))
   (new 'static 'game-option :option-type (game-option-type menu) :name (text-id input-opts-binds-keyboard) :scale #t :param3 (game-option-menu keyboard-binds)
-    :option-disabled-func (lambda () (not (-> *pc-settings* keyboard-enabled?))))
+    :option-disabled-func (lambda () (not (pc-get-keyboard-enabled?))))
   (new 'static 'game-option :option-type (game-option-type menu) :name (text-id input-opts-binds-mouse) :scale #t :param3 (game-option-menu mouse-binds)
     :option-disabled-func (lambda () (not (-> *pc-settings* mouse-enabled?))))
   (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
@@ -257,7 +257,8 @@
   (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id input-opts-enable-kb) :scale #t
     :on-change (lambda ((val object))
                 (let ((val-sym (the-as symbol val)))
-                  (set-enable-keyboard! *pc-settings* val-sym)
+                  (pc-set-keyboard-enabled! val-sym)
+                  (set! (-> *pc-settings* keyboard-enabled?) val-sym)
                   (none))))
   (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id input-opts-enable-mouse) :scale #t
     :on-change (lambda ((val object))
@@ -277,7 +278,7 @@
   (new 'static 'game-option :option-type (game-option-type confirmation) :name (text-id restore-defaults) :scale #t
     :on-confirm (lambda ()
                  (reset-input *pc-settings* 'input #t)
-                 (set-enable-keyboard! *pc-settings* (-> *pc-settings* keyboard-enabled?))
+                 (pc-set-keyboard-enabled! (-> *pc-settings* keyboard-enabled?))
                  (update-mouse-controls! *pc-settings*)
                  (none)))
   (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
@@ -507,11 +508,11 @@
   )
 
 (def-language-remap-info *language-remap-info-pc*
-        (english uk-english french german spanish italian japanese portuguese br-portuguese swedish finnish danish norwegian dutch hungarian catalan icelandic polish))
+        (english uk-english french german spanish italian japanese portuguese br-portuguese swedish finnish danish norwegian dutch hungarian catalan icelandic polish lithuanian))
 (define *text-languages* (static-text-list-array
-        english uk-english french german spanish italian japanese portuguese br-portuguese swedish finnish danish norwegian dutch hungarian polish))
+        english uk-english french german spanish italian japanese portuguese br-portuguese swedish finnish danish norwegian dutch hungarian polish lithuanian))
 (define *subtitle-languages* (static-text-list-array
-        english uk-english french german spanish italian br-portuguese swedish finnish danish dutch polish))
+        english uk-english french german spanish italian br-portuguese swedish finnish danish dutch polish lithuanian))
 
 
 
@@ -578,7 +579,7 @@
         (num-resolutions (pc-get-num-resolutions))
         (num-resolutions-added 0))
     (when (> num-resolutions 0)
-      (pc-get-window-size (the-as (pointer int32) (& window-width)) (the-as (pointer int32) (& window-height)))
+      (pc-get-window-size (& window-width) (& window-height))
       (set! window-aspect-ratio (/ (the float window-width) (the float window-height)))
       (dotimes (i num-resolutions)
         (let ((res-width 0)
@@ -589,18 +590,21 @@
           ;; Ignore those that aren't relevant to the current window's aspect ratio
           ;; we only do this when we aren't in windowed mode, because in windowed mode
           ;; you are using the resolution menu to change it...so it doesn't make sense to base it on the size
-          ;;
-          ;; Additionally, always show the PS2 resolutions or else they are never going to be seen due to the aspect ratio difference
           (when (or (= (pc-get-display-mode) 'windowed)
-                    (and (= res-width 512) (or (= res-height 448) (= res-height 224)))
-                    (< (fabs (- window-aspect-ratio res-aspect-ratio)) 0.1))
+                    (< (fabs (- window-aspect-ratio res-aspect-ratio)) 0.05))
             (add-resolution-option res-width res-height)
             (1+! num-resolutions-added)))))
-    ;; If all we displayed was the 2 PS2 resolutions, inform them they have a weird aspect ratio
-    (when (< num-resolutions-added 3)
-      (add-message-option (text-id progress-no-other-resolution-options)))
+    ;; if we didn't add any options, inform them they have a weird aspect ratio
+    (cond
+      ((zero? num-resolutions-added)
+        (add-message-option (text-id progress-no-other-resolution-options)))
+      ((fullscreen?)
+        ;; for the weird people that want a more "PS2-like" experience
+        (add-resolution-option 512 448)
+        (add-resolution-option 512 224)
+        )
       )
-    (add-back-option))
+    (add-back-option)))
 
 (defun build-flava-player-options ((mus-idx int))
 

@@ -134,7 +134,7 @@ an orb |#
     )
 
   ;; death deload on 0HP when not in death state, no iframes, and holding face button
-  (when (and (zero? (-> *target* fact-info-target health))
+  (when (and (zero? (-> *target* fact health))
              (not (logtest? (-> *target* state-flags) (state-flags timed-invulnerable)))
              (or (cpad-hold? 0 x) (cpad-hold? 0 square) (cpad-hold? 0 circle))
              )

@@ -10,7 +10,7 @@
 #include "common/log/log.h"
 #include "common/util/Assert.h"
 
-#include "third-party/fmt/core.h"
+#include "fmt/core.h"
 
 namespace {
 std::string reg_kind_to_string(RegClass kind) {
@@ -421,10 +421,12 @@ int Type::get_num_methods() const {
  * Add a method defined specifically for this type.
  */
 const MethodInfo& Type::add_method(const MethodInfo& info) {
-  for (auto it = m_methods.rbegin(); it != m_methods.rend(); it++) {
-    if (!it->overrides_parent && !it->only_overrides_docstring) {
-      ASSERT(it->id + 1 == info.id);
-      break;
+  if (!info.overrides_parent) {
+    for (auto it = m_methods.rbegin(); it != m_methods.rend(); it++) {
+      if (!it->overrides_parent && !it->only_overrides_docstring) {
+        ASSERT(it->id + 1 == info.id);
+        break;
+      }
     }
   }
 

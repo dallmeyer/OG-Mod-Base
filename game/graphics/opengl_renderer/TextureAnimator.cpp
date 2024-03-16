@@ -1,10 +1,12 @@
 #include "TextureAnimator.h"
 
 #include "common/global_profiler/GlobalProfiler.h"
+#include "common/log/log.h"
 #include "common/texture/texture_slots.h"
 #include "common/util/FileUtil.h"
 #include "common/util/Timer.h"
 
+#include "game/graphics/opengl_renderer/slime_lut.h"
 #include "game/graphics/texture/TexturePool.h"
 
 #include "third-party/imgui/imgui.h"
@@ -187,7 +189,7 @@ const tfrag3::Texture* tex_by_name(const tfrag3::Level* level, const std::string
   if (!ret) {
     lg::error("no texture named {}", name);
     for (const auto& t : level->textures) {
-      fmt::print("texture: {}\n", t.debug_name);
+      lg::print("texture: {}\n", t.debug_name);
     }
     lg::die("no texture named {}", name);
   } else {
@@ -426,6 +428,19 @@ TextureAnimator::TextureAnimator(ShaderLibrary& shaders, const tfrag3::Level* co
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV,
                data.data());
   glGenerateMipmap(GL_TEXTURE_2D);
+  glBindTexture(GL_TEXTURE_2D, 0);
+
+  // create the slime LUT texture
+  glGenTextures(1, &m_slime_lut_texture);
+  glBindTexture(GL_TEXTURE_1D, m_slime_lut_texture);
+  std::vector<u8> slime_data;
+  for (auto x : kSlimeLutData) {
+    slime_data.push_back(x * 255);
+  }
+  glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA, 256, 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV,
+               slime_data.data());
+  glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glBindTexture(GL_TEXTURE_2D, 0);
 
   shader.activate();
@@ -794,13 +809,13 @@ void TextureAnimator::handle_texture_anim_data(DmaFollower& dma,
           handle_slime(tf, texture_pool);
         } break;
         default:
-          fmt::print("bad imm: {}\n", vif0.immediate);
+          lg::print("bad imm: {}\n", vif0.immediate);
           ASSERT_NOT_REACHED();
       }
     } else {
-      printf("[tex anim] unhandled VIF in main loop\n");
-      fmt::print("{} {}\n", vif0.print(), tf.vifcode1().print());
-      fmt::print("dma address 0x{:x}\n", offset);
+      lg::print("[tex anim] unhandled VIF in main loop\n");
+      lg::print("{} {}\n", vif0.print(), tf.vifcode1().print());
+      lg::print("dma address 0x{:x}\n", offset);
       ASSERT_NOT_REACHED();
     }
   }
@@ -883,7 +898,7 @@ void TextureAnimator::force_to_gpu(int tbp) {
   auto& entry = m_textures.at(tbp);
   switch (entry.kind) {
     default:
-      printf("unhandled non-gpu conversion: %d (tbp = %d)\n", (int)entry.kind, tbp);
+      lg::print("unhandled non-gpu conversion: {} (tbp = {})\n", (int)entry.kind, tbp);
       ASSERT_NOT_REACHED();
     case VramEntry::Kind::CLUT16_16_IN_PSM32:
       // HACK: never convert known CLUT textures to GPU.
@@ -982,7 +997,7 @@ void debug_save_opengl_texture(const std::string& out, GLuint texture) {
   int w, h;
   glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &w);
   glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &h);
-  fmt::print("saving texture with size {} x {}\n", w, h);
+  lg::print("saving texture with size {} x {}\n", w, h);
   std::vector<u8> data(w * h * 4);
   glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, data.data());
   file_util::write_rgba_png(out, data.data(), w, h);
@@ -1157,7 +1172,7 @@ void TextureAnimator::handle_generic_upload(const DmaTransfer& tf, const u8* ee_
       }
       break;
     default:
-      fmt::print("Unhandled format: {}\n", upload->format);
+      lg::print("Unhandled format: {}\n", upload->format);
       ASSERT_NOT_REACHED();
   }
 }
@@ -1370,7 +1385,7 @@ void TextureAnimator::handle_draw(DmaFollower& dma, TexturePool& texture_pool) {
 void TextureAnimator::load_clut_to_converter() {
   const auto& clut_lookup = m_textures.find(m_current_shader.tex0.cbp());
   if (clut_lookup == m_textures.end()) {
-    printf("set shader referenced an unknown clut texture in %d\n", m_current_shader.tex0.cbp());
+    lg::print("set shader referenced an unknown clut texture in {}\n", m_current_shader.tex0.cbp());
     ASSERT_NOT_REACHED();
   }
 
@@ -1380,7 +1395,7 @@ void TextureAnimator::load_clut_to_converter() {
                                16);
       break;
     default:
-      printf("unhandled clut source kind: %d\n", (int)clut_lookup->second.kind);
+      lg::print("unhandled clut source kind: {}\n", (int)clut_lookup->second.kind);
       ASSERT_NOT_REACHED();
   }
 }
@@ -1406,7 +1421,7 @@ GLuint TextureAnimator::make_or_get_gpu_texture_for_current_shader(TexturePool& 
     if (tpool.has_value()) {
       return *tpool;
     }
-    // printf("referenced an unknown texture in %d\n", tbp);
+    // lg::print("referenced an unknown texture in {}\n", tbp);
     lg::error("unknown texture in {} (0x{:x})", tbp, tbp);
     return texture_pool.get_placeholder_texture();
 
@@ -1436,8 +1451,8 @@ GLuint TextureAnimator::make_or_get_gpu_texture_for_current_shader(TexturePool& 
 
           const auto& clut_lookup = m_textures.find(m_current_shader.tex0.cbp());
           if (clut_lookup == m_textures.end()) {
-            printf("set shader referenced an unknown clut texture in %d\n",
-                   m_current_shader.tex0.cbp());
+            lg::print("set shader referenced an unknown clut texture in {}\n",
+                      m_current_shader.tex0.cbp());
             ASSERT_NOT_REACHED();
           }
 
@@ -1445,7 +1460,7 @@ GLuint TextureAnimator::make_or_get_gpu_texture_for_current_shader(TexturePool& 
             case VramEntry::Kind::CLUT16_16_IN_PSM32:
               break;
             default:
-              printf("unhandled clut source kind: %d\n", (int)clut_lookup->second.kind);
+              lg::print("unhandled clut source kind: {}\n", (int)clut_lookup->second.kind);
               ASSERT_NOT_REACHED();
           }
 
@@ -1488,7 +1503,8 @@ GLuint TextureAnimator::make_or_get_gpu_texture_for_current_shader(TexturePool& 
               //              file_util::write_rgba_png("out.png", rgba_data.data(), 1 <<
               //              m_current_shader.tex0.tw(),
               //                                        1 << m_current_shader.tex0.th());
-              printf("Scrambler took the slow path %d x %d took %.3f ms\n", w, h, timer.getMs());
+              lg::print("Scrambler took the slow path {} x {} took {:.3f} ms\n", w, h,
+                        timer.getMs());
             }
           }
           auto ret = make_temp_gpu_texture(rgba_data.data(), w, h);
@@ -1498,7 +1514,7 @@ GLuint TextureAnimator::make_or_get_gpu_texture_for_current_shader(TexturePool& 
           ASSERT_NOT_REACHED();
         } break;
         default:
-          fmt::print("unhandled source texture format {}\n", (int)m_current_shader.tex0.psm());
+          lg::print("unhandled source texture format {}\n", (int)m_current_shader.tex0.psm());
           ASSERT_NOT_REACHED();
       }
       break;
@@ -1629,8 +1645,8 @@ bool TextureAnimator::set_up_opengl_for_shader(const ShaderContext& shader,
       glBlendEquation(GL_FUNC_ADD);
       glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
     } else {
-      fmt::print("unhandled blend: {} {} {} {}\n", (int)blend_a, (int)blend_b, (int)blend_c,
-                 (int)blend_d);
+      lg::print("unhandled blend: {} {} {} {}\n", (int)blend_a, (int)blend_b, (int)blend_c,
+                (int)blend_d);
       ASSERT_NOT_REACHED();
     }
 
@@ -1708,7 +1724,7 @@ VramEntry* TextureAnimator::setup_vram_entry_for_gpu_texture(int w, int h, int t
 const u32* TextureAnimator::get_clut_16_16_psm32(int cbp) {
   const auto& clut_lookup = m_textures.find(cbp);
   if (clut_lookup == m_textures.end()) {
-    printf("get_clut_16_16_psm32 referenced an unknown clut texture in %d\n", cbp);
+    lg::print("get_clut_16_16_psm32 referenced an unknown clut texture in {}\n", cbp);
     ASSERT_NOT_REACHED();
   }
 
@@ -1776,8 +1792,8 @@ void TextureAnimator::set_up_opengl_for_fixed(const FixedLayerDef& def,
       glBlendEquation(GL_FUNC_ADD);
       glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
     } else {
-      fmt::print("unhandled blend: {} {} {} {}\n", (int)blend_a, (int)blend_b, (int)blend_c,
-                 (int)blend_d);
+      lg::print("unhandled blend: {} {} {} {}\n", (int)blend_a, (int)blend_b, (int)blend_c,
+                (int)blend_d);
       ASSERT_NOT_REACHED();
     }
 
@@ -1814,7 +1830,7 @@ void TextureAnimator::set_uniforms_from_draw_data(const DrawData& dd, int dest_w
   convert_gs_position_to_vec3(pos + 9, dd.pos3, dest_w, dest_h);
   glUniform3fv(m_uniforms.positions, 4, pos);
   //  for (int i = 0; i < 4; i++) {
-  //    fmt::print("fan vp {}: {:.3f} {:.3f} {:.3f}\n", i, pos[i * 3], pos[1 + i * 3], pos[2 + i *
+  //    lg::print("fan vp {}: {:.3f} {:.3f} {:.3f}\n", i, pos[i * 3], pos[1 + i * 3], pos[2 + i *
   //    3]);
   //  }
 
@@ -1825,7 +1841,7 @@ void TextureAnimator::set_uniforms_from_draw_data(const DrawData& dd, int dest_w
   convert_gs_uv_to_vec2(uv + 6, dd.st3);
   glUniform2fv(m_uniforms.uvs, 4, uv);
   //  for (int i = 0; i < 4; i++) {
-  //    fmt::print("fan vt {}: {:.3f} {:.3f} \n", i, uv[i * 2], uv[1 + i * 2]);
+  //    lg::print("fan vt {}: {:.3f} {:.3f} \n", i, uv[i * 2], uv[1 + i * 2]);
   //  }
 }
 
@@ -2550,7 +2566,7 @@ void debug_save_opengl_u8_texture(const std::string& out, GLuint texture) {
   int w, h;
   glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &w);
   glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &h);
-  fmt::print("saving texture with size {} x {}\n", w, h);
+  lg::print("saving texture with size {} x {}\n", w, h);
   std::vector<u8> data_r(w * h);
   glGetTexImage(GL_TEXTURE_2D, 0, GL_RED, GL_UNSIGNED_BYTE, data_r.data());
   std::vector<u8> data(w * h * 4);
@@ -2750,6 +2766,10 @@ void TextureAnimator::run_slime(const SlimeInput& input) {
     glUniform3fv(m_uniforms.positions, 4, positions);
     float uv[2 * 4] = {0, 0, 1, 0, 1, 1, 0, 1};
     glUniform2fv(m_uniforms.uvs, 4, uv);
+
+    glActiveTexture(GL_TEXTURE10);
+    glBindTexture(GL_TEXTURE_1D, m_slime_lut_texture);
+    glActiveTexture(GL_TEXTURE0);
 
     // Anim 1:
     // noise (16x16)

@@ -1,7 +1,7 @@
 # Top Level CMakeLists.txt
 cmake_minimum_required(VERSION 3.12)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 project(jak)
 include(CTest)
 
@@ -18,8 +18,10 @@ option(STATICALLY_LINK "Build for release purposes (statically link everything)"
 message(STATUS "Statically Link? ${STATICALLY_LINK}")
 if(STATICALLY_LINK)
     set(BUILD_SHARED_LIBS OFF)
+    set(BUILD_STATIC_LIBS ON)
 else()
     set(BUILD_SHARED_LIBS ON)
+    set(BUILD_STATIC_LIBS OFF)
 endif()
 
 # For clangd
@@ -29,6 +31,7 @@ if (EXISTS "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json" )
         "${PROJECT_SOURCE_DIR}/build/compile_commands.json")
 endif()
 
+
 # Setup compiler flags
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     message(STATUS "Clang Detected - Setting Defaults")
@@ -37,7 +40,6 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
         -fcxx-exceptions \
         -fexceptions \
         -fdiagnostics-color=always \
-        -std=c++17 \
         -mavx \
         -Wall \
         -Wno-c++11-narrowing \
@@ -84,7 +86,6 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         -Wdisabled-optimization \
         -Wformat \
         -Wextra \
-        -Wmissing-include-dirs \
         -Woverloaded-virtual \
         -Wredundant-decls \
         -Wshadow \
@@ -111,7 +112,6 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
         -Wdisabled-optimization \
         -Wformat \
         -Wextra \
-        -Wmissing-include-dirs \
         -Woverloaded-virtual \
         -Wredundant-decls \
         -Wshadow \
@@ -184,13 +184,18 @@ include_directories(./)
 include_directories(SYSTEM third-party/inja)
 
 # libcurl for HTTP requests
-
 # Enable SSL Support, most URLs now-a-days use SSL!
+# TODO - probably integrate with ZSTD since we have it already
+set(CURL_USE_LIBSSH2 OFF)
+set(CURL_ZLIB OFF)
 if(WIN32)
     set(CURL_USE_SCHANNEL ON) # native Windows SSL support
 elseif(APPLE)
     set(CURL_USE_SECTRANSP ON) # native macOS SSL support
 else()
+    if(STATICALLY_LINK)
+        set(OPENSSL_USE_STATIC_LIBS TRUE)
+    endif()
     set(CURL_USE_OPENSSL ON) # not native, but seems to be the best choice for linux
 endif()
 include_directories(third-party/curl/include)
@@ -212,11 +217,15 @@ build_third_party_lib(sqlite3 sqlite3)
 
 # build tree-sitter parser
 include_directories(third-party/tree-sitter/tree-sitter/lib/include)
-include_directories(third-party/tree-sitter/tree-sitter-opengoal/include)
+include_directories(third-party/tree-sitter/tree-sitter-opengoal)
 build_third_party_lib(tree-sitter tree-sitter)
 
 # native OS dialogs for error messages
 build_third_party_lib(libtinyfiledialogs libtinyfiledialogs)
+
+# build format library
+include_directories(third-party/fmt/include)
+build_third_party_lib(fmt fmt)
 
 # build common library
 add_subdirectory(common)
@@ -288,9 +297,6 @@ include(test/CMakeLists.txt)
 
 # build lzokay library
 build_third_party_lib(lzokay lzokay)
-
-# build format library
-build_third_party_lib(fmt fmt)
 
 build_third_party_lib(stb_image stb_image)
 build_third_party_lib(tiny_gltf tiny_gltf)
