@@ -62,7 +62,7 @@
   // Note: You will still have to add them to your level's .gd file.
   // Removed so that the release builds don't have to double-decompile the game
   // "art_groups": ["plat-ag"],
-  "art_groups": [],
+  "art_groups": ["breakaway-left-ag"],
 
    // Any textures you want to include in your custom level. This is mainly useful for things such as the zoomer HUD,
    // which is not in the common level files and has no art group associated with it.
@@ -96,41 +96,75 @@
   ],
 
   "actors" : [
-    {
-      "trans": [-21.6238, 20.0496, 17.1191], // translation
-      "etype": "fuel-cell",  // actor type
-      "game_task": "(game-task none)", // associated game task (for powercells, etc)
-      "quat": [0, 0, 0, 1], // quaternion
-      "bsphere": [-21.6238, 19.3496, 17.1191, 10], // bounding sphere
-      "lump": {
-        "name": "test-fuel-cell",
-        "eco-info": ["cell-info", "(game-task none)"]
-      }
-    },
+    // {
+    //   "trans": [-21.6238, 20.0496, 17.1191], // translation
+    //   "etype": "fuel-cell",  // actor type
+    //   "game_task": "(game-task none)", // associated game task (for powercells, etc)
+    //   "quat": [0, 0, 0, 1], // quaternion
+    //   "bsphere": [-21.6238, 19.3496, 17.1191, 10], // bounding sphere
+    //   "lump": {
+    //     "name": "test-fuel-cell",
+    //     "eco-info": ["cell-info", "(game-task none)"]
+    //   }
+    // },
+
+    // {
+    //   "trans": [-15.2818, 15.2461, 17.1360], // translation
+    //   "etype": "crate",  // actor type
+    //   "game_task": "(game-task none)", // associated game task (for powercells, etc)
+    //   "quat": [0, 0, 0, 1], // quaternion
+    //   "bsphere": [-15.2818, 15.2461, 17.1360, 10], // bounding sphere
+    //   "lump": {
+    //     "name": "test-crate",
+    //     "crate-type": "'steel",
+    //     "eco-info": ["eco-info", "(pickup-type money)", 10]
+    //   }
+    // },
+
+    // {
+    //   "trans": [-5.4630, 17.4553, 1.6169], // translation
+    //   "etype": "eco-yellow",  // actor type
+    //   "game_task": "(game-task none)", // associated game task (for powercells, etc)
+    //   "quat": [0, 0, 0, 1], // quaternion
+    //   "bsphere": [-5.4630, 17.4553, 1.6169, 10], // bounding sphere
+    //   "lump": {
+    //     "name": "test-eco"
+    //   }
+    // }
 
     {
-      "trans": [-15.2818, 15.2461, 17.1360], // translation
-      "etype": "crate",  // actor type
+      "trans": [-5.4630, 3.4553, -11.59], // translation
+      "etype": "breakaway-left",  // actor type
       "game_task": "(game-task none)", // associated game task (for powercells, etc)
       "quat": [0, 0, 0, 1], // quaternion
-      "bsphere": [-15.2818, 15.2461, 17.1360, 10], // bounding sphere
+      "bsphere": [-5.4630, 3.4553, -11.59, 10], // bounding sphere
       "lump": {
-        "name": "test-crate",
-        "crate-type": "'steel",
-        "eco-info": ["eco-info", "(pickup-type money)", 10]
-      }
-    },
-
-    {
-      "trans": [-5.4630, 17.4553, 1.6169], // translation
-      "etype": "eco-yellow",  // actor type
-      "game_task": "(game-task none)", // associated game task (for powercells, etc)
-      "quat": [0, 0, 0, 1], // quaternion
-      "bsphere": [-5.4630, 17.4553, 1.6169, 10], // bounding sphere
-      "lump": {
-        "name": "test-eco"
+        "name": "test-breakaway-big",
+        "scale-mult": ["float", 3.0]
       }
     }
+    ,{
+      "trans": [-15.4630, 3.4553, -11.59], // translation
+      "etype": "breakaway-left",  // actor type
+      "game_task": "(game-task none)", // associated game task (for powercells, etc)
+      "quat": [0, 0, 0, 1], // quaternion
+      "bsphere": [-15.4630, 3.4553, -11.59, 10], // bounding sphere
+      "lump": {
+        "name": "test-breakaway-normal"
+      }
+    }
+    ,{
+      "trans": [-25.4630, 3.4553, -11.59], // translation
+      "etype": "breakaway-left",  // actor type
+      "game_task": "(game-task none)", // associated game task (for powercells, etc)
+      "quat": [0, 0, 0, 1], // quaternion
+      "bsphere": [-25.4630, 3.4553, -11.59, 10], // bounding sphere
+      "lump": {
+        "name": "test-breakaway-small",
+        "scale-mult": ["float", 0.2]
+      }
+    }
+
     // {
     //   "trans": [-7.41, 3.5, 28.42], // translation
     //   "etype": "plat",  // actor type
