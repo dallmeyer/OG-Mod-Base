@@ -64,9 +64,7 @@ void kmachine_init_globals_common() {
   vblank_interrupt_handler = 0;
   ee_clock_timer = Timer();
 
-  // initialize miniaudio stuff
   ma_engine_init(NULL, &maEngine);
-  
 }
 
 /*!
