@@ -42,6 +42,17 @@ an orb |#
 (define *currentSpoolName* "")
 
 (defun runs-every-frame ()
+  ;;(increase-power-cell-by-one) This is a call to increase-power-cell-by-one defined in mod-common-functions.gc
+  
+  (if *show-input-display* 
+    (input-display-on)
+    (input-display-off)
+    )
+
+  ;; ensure orb-placer is spawned/killed as requested, debug menu is updated
+  (when *debug-segment*
+    (orb-placer-maintenance)
+    )
   (when (handle->process (-> *art-control* spool-lock))
     (with-proc ((handle->process (-> *art-control* spool-lock)))
       (set! *currentCutsceneFrame* (the int (ja-aframe-num 0)))
@@ -50,7 +61,6 @@ an orb |#
     )
 
   ;; custom cutscene stuff
-  
   (when (string= *currentSpoolName* "green-sagecage-outro-big-finish")
     ;; (format 0 "~S ~D~%" *currentSpoolName* *currentCutsceneFrame*)
     (when (= *currentCutsceneFrame* 590)
@@ -59,7 +69,7 @@ an orb |#
         (lambda :behavior process () 
           (let ((stime (current-time)))
             (format 0 "playing zed select~%")
-            (play-sound-file "snd/Zed_Select.ogg" 60)
+            (play-sound-file "snd/Zed_Select.mp3" 60)
             (until (> (- (current-time) stime) (seconds 3.5))
               (suspend)
               )

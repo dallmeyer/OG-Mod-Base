@@ -337,6 +337,7 @@
   "prototype.o"
   "main-collide.o"
   "video.o"
+  "capture-pc.o" ;; added
   "pckernel-common.o" ;; added
   "pckernel.o" ;; added
   "subtitle2-h.o" ;; added
@@ -466,5 +467,7 @@
   "entity-debug.o" ;; added
   "mod-settings.o" ;; added
   "mod-common-functions.o" ;; added
+  "orb-placer.o"  ;; added
   "mod-custom-code.o" ;; added
+  "mod-debug.o" ;; added
  ))
