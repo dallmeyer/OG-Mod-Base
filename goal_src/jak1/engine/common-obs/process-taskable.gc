@@ -396,8 +396,16 @@
   )
 
 (defbehavior process-taskable-play-anim-code process-taskable ((arg0 art-joint-anim) (arg1 basic))
-  (when (and (nonzero? (-> self cell-for-task)) (not (-> self cell-x)))
-    (if (name= (-> self state name) "play-anim")
+  (when (nonzero? (-> self cell-for-task))
+    (cond
+      ((name= (-> self state name) "play-anim")
+        (when (and (-> self cell-x) (handle->process (-> self cell-x)))
+          ;; if we have another cell, kill it (prevent double rats cells)
+          (format 0 "killing existing cell-x ~%")
+          (deactivate (handle->process (-> self cell-x)))
+          (set! (-> self cell-x) (the-as handle #f))
+          )
+        
         (set! (-> self cell-x) (ppointer->handle (process-spawn
                                                    fuel-cell
                                                    :init fuel-cell-init-as-clone
@@ -407,8 +415,11 @@
                                                    )
                                                  )
               )
+        )
+      (else
         (format #t "ERROR<GMJ>: ~S ~S trying to give cell on release~%" (-> self name) (-> self state name))
         )
+      )
     )
   (cond
     ((and arg1 (type-type? (-> arg1 type) spool-anim))
