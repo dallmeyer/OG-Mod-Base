@@ -4878,7 +4878,7 @@
     },
 
     {
-      "trans": [ -586.72, 311.67, 182.87 ], // translation
+      "trans": [ -586.72, 311.67, 184.0 ], // translation
       "etype": "swingpole", // actor type
       "game_task": 0, // associated game task (for powercells, etc)
       "quat": [ 0.173, -0.703, -0.686, 0.080 ], // quaternion - Along Z axis in Blender
