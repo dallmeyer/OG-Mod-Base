@@ -1979,7 +1979,7 @@
                            :visname 'afoniddwr-vis ;; name + -vis
                            :nickname 'afo          ;; nickname
                            :packages '()
-                           :sound-banks '()
+                           :sound-banks '(robocave)
                            :music-bank 'beach
                            :ambient-sounds '()
                            :mood '*village1-mood*
@@ -1991,10 +1991,25 @@
                            (new 'static 'continue-point
                                              :name "afoniddwr-start"
                                              :level 'afoniddwr
-                                             :trans (new 'static 'vector :x (meters -246.64) :y (meters 192.43) :z (meters 402.68) :w 1.0) ;; -838.75 380.02 289.93(top) -246.64 192.43 402.68(bottom)
+                                             :trans (new 'static 'vector :x (meters -246.64) :y (meters 209.34) :z (meters 402.68) :w 1.0) ;; -838.75 380.02 289.93(top) -246.64 192.43 402.68(bottom)
                                              :quat (new 'static 'quaternion  :w 1.0)
                                              :camera-trans (new 'static 'vector :x -245.62 :y 211.01 :z 404.02 :w 1.0) 
                                              :camera-rot (new 'static 'array float 9 1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0)
+                                             :load-commands '()
+                                             :vis-nick 'none
+                                             :lev0 'afoniddwr
+                                             :disp0 'display
+                                             :lev1 #f
+                                             :disp1 #f
+                                             )
+
+                           (new 'static 'continue-point
+                                             :name "afoniddwr-checkpoint"
+                                             :level 'afoniddwr
+                                             :trans (new 'static 'vector :x (meters -584.21) :y (meters 300.22) :z (meters 226.59) :w 1.0) ;; -838.75 380.02 289.93(top) 
+                                             :quat (new 'static 'quaternion  :w 1.0)
+                                             :camera-trans (new 'static 'vector :x -245.62 :y 211.01 :z 404.02 :w 1.0) 
+                                             :camera-rot (new 'static 'array float 9 0.99 0.0 -0.1405 0.0169 -0.9927 -0.1192 0.1395 0.1204 -0.9828)
                                              :load-commands '()
                                              :vis-nick 'none
                                              :lev0 'afoniddwr
@@ -2025,7 +2040,7 @@
                            :alt-load-commands '()
                            :bsp-mask #xffffffffffffffff
                            :bsphere (new 'static 'sphere :w 50000167772160000.0) ;; 50000 was added by me - FUTURE ME: why did you do that?
-                           :bottom-height (meters -20)
+                           :bottom-height (meters 138.67)
                            :run-packages '()
                            :wait-for-load #t
                            )

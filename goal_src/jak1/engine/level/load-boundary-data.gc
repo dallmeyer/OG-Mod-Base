@@ -1095,6 +1095,15 @@
   :bwd (checkpt "finalboss-start" #f)
   )
 
+(static-load-boundary :flags (player )
+  ;;     y top                y bottom
+  :top (meters 350)  :bot (meters 280)
+  ;;          point 0 x        point 0 z      point 1 x        point 1 z 
+  :points (  (meters -600.41) (meters 228.67)  (meters -571.81) (meters 226.31) )
+  :fwd (checkpt "afoniddwr-checkpoint" #f)
+  :bwd (checkpt "afoniddwr-checkpoint" #f)
+  )
+
 ))
 
 (doarray (i *static-load-boundary-list*)
