@@ -1057,59 +1057,72 @@
   :post target-post
   )
 
+;; OG-bugged rewrote this whole function based on the corresponding Jak II code (abah bounces!)
 (defbehavior init-var-jump target ((arg0 float) (arg1 float) (arg2 vector) (arg3 vector) (arg4 vector))
   (logclear! (-> self control status) (cshape-moving-flags csmf14))
   (delete-back-vel)
-  (when (not (time-elapsed? (-> self control rider-time) (seconds 0.05)))
-    (let ((f0-1
-            (fmax
-              0.0
-              (fmin 28672.0 (* 0.5 (vector-dot (-> self control dynam gravity-normal) (-> self control rider-last-move))))
+  (let* ((f0-4 2.0)
+        (f1-2 0.0)
+        (f2-2 (+ (* 0.0016666667 (-> self control dynam gravity-length))
+                (fmax 0.0 (vector-dot (-> self control dynam gravity-normal) (-> self control transv)))
+                )
               )
-            )
-          )
-      (set! arg0 (+ arg0 f0-1))
-      (set! arg1 (+ arg1 f0-1))
-      )
-    (when (or (logtest? (-> self control unknown-surface01 flags) (surface-flags moving-ground))
-              (= (-> self control poly-pat material) (pat-material rotate))
-              )
-      (+! (-> self control transv x) (-> self control rider-last-move x))
-      (+! (-> self control transv z) (-> self control rider-last-move z))
-      )
-    )
-  (set! (-> self control unknown-float123) 0.0)
-  (set! (-> self control unknown-float124) 0.0)
-  (cond
-    (arg3
-      (set! (-> self control unknown-uint20)
-            (the-as uint (- arg0 (+ -409.6 (-> *TARGET-bank* jump-collide-offset))))
-            )
-      (set! (-> self control unknown-int21) (the-as int (- arg1 (-> *TARGET-bank* jump-collide-offset))))
-      )
-    (else
-      (set! (-> self control unknown-uint20) (the-as uint arg0))
-      (set! (-> self control unknown-int21) (the-as int arg1))
-      )
-    )
-  (when arg2
-    (let ((s4-1 (new-stack-vector0)))
-      (let ((f0-16 (vector-dot (-> self control dynam gravity-normal) arg4)))
-        0.0
-        (vector-! s4-1 arg4 (vector-float*! s4-1 (-> self control dynam gravity-normal) f0-16))
+        (f0-5 (* f0-4 (fmax f1-2 (/ (* 0.5 f2-2 f2-2) (-> self control dynam gravity-length)))))
+        (s3-1 (+ arg0 f0-5))
         )
-      (let* ((f0-17 (vector-length s4-1))
-             (f1-11 f0-17)
-             (f2-7
-               (- (sqrtf (* 2.0 (-> self control dynam gravity-length) arg0))
-                  (* 0.008333334 (- (-> self control dynam gravity-length)))
+    (let ((s2-1 (+ arg1 f0-5)))
+      (when (not (time-elapsed? (-> self control rider-time) (seconds 0.05)))
+        (let ((f0-1
+                (fmax
+                  0.0
+                  (fmin 28672.0 (* 0.5 (vector-dot (-> self control dynam gravity-normal) (-> self control rider-last-move))))
                   )
-               )
-             )
-        (vector+!
-          arg4
-          (vector-float*! arg4 (-> self control dynam gravity-normal) f2-7)
-          (vector-float*! s4-1 s4-1 (/ f0-17 f1-11))
+                )
+              )
+          (set! s3-1 (+ s3-1 f0-1))
+          (set! s2-1 (+ s2-1 f0-1))
+          )
+        )
+      (when (or (logtest? (-> self control unknown-surface01 flags) (surface-flags moving-ground))
+                (= (-> self control poly-pat material) (pat-material rotate))
+                )
+        (+! (-> self control transv x) (-> self control rider-last-move x))
+        (+! (-> self control transv z) (-> self control rider-last-move z))
+        )
+      (set! (-> self control unknown-float123) 0.0)
+      (set! (-> self control unknown-float124) 0.0)
+      (cond
+        (arg3
+          (set! (-> self control unknown-uint20)
+                (the-as uint (- s3-1 (+ -409.6 (-> *TARGET-bank* jump-collide-offset))))
+                )
+          (set! (-> self control unknown-int21) (the-as int (- s2-1 (-> *TARGET-bank* jump-collide-offset))))
+          )
+        (else
+          (set! (-> self control unknown-uint20) (the-as uint s3-1))
+          (set! (-> self control unknown-int21) (the-as int s2-1))
+          )
+        )
+      )
+    (when arg2
+      (let ((s4-1 (new-stack-vector0)))
+        (let ((f0-16 (vector-dot (-> self control dynam gravity-normal) arg4)))
+          0.0
+          (vector-! s4-1 arg4 (vector-float*! s4-1 (-> self control dynam gravity-normal) f0-16))
+          )
+        (let* ((f0-17 (vector-length s4-1))
+              (f1-11 f0-17)
+              (f2-7
+                (- (sqrtf (* 2.0 (-> self control dynam gravity-length) s3-1))
+                    (* 0.008333334 (- (-> self control dynam gravity-length)))
+                    )
+                )
+              )
+          (vector+!
+            arg4
+            (vector-float*! arg4 (-> self control dynam gravity-normal) f2-7)
+            (vector-float*! s4-1 s4-1 (/ f0-17 f1-11))
+            )
           )
         )
       )
@@ -2724,8 +2737,9 @@
     (set! (-> self control dynam gravity-length) (-> self control unknown-dynamics00 gravity-length))
     (set! (-> self control dynam gravity quad) (-> self control unknown-dynamics00 gravity quad))
     (target-danger-set! 'flop-down #f)
-    (ja :group! eichar-flop-down-loop-ja :num! min)
-    (ja :chan 1 :group! eichar-moving-flop-down-loop-ja :num! min)
+    ;; OG-bugged: jak II doesn't have this, allows you to slide for longer on wall surfaces (abah bounces)
+    ;; (ja :group! eichar-flop-down-loop-ja :num! min)
+    ;; (ja :chan 1 :group! eichar-moving-flop-down-loop-ja :num! min)
     (let ((f30-0 1.0))
       (let ((gp-3 (new-stack-vector0)))
         (let ((f0-18 (vector-dot (-> self control dynam gravity-normal) (-> self control unknown-vector120))))
