@@ -22,6 +22,7 @@ jobs:
     uses: open-goal/mod-bundling-tools/.github/workflows/mod-bundler.yml@v1
     with:
       semverBump: ${{ inputs.bump }}
+      releaseBranches: "main,master,afoniddwr"
       metadataName: "Test Mod Bundle"
       metadataDescription: "This is a test mod bundle. 2"
       metadataSupportedGames: "jak1"
