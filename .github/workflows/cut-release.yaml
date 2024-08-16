@@ -22,12 +22,12 @@ jobs:
     uses: open-goal/mod-bundling-tools/.github/workflows/mod-bundler.yml@v1
     with:
       semverBump: ${{ inputs.bump }}
-      metadataName: "Test Mod Bundle"
-      metadataDescription: "This is a test mod bundle. 2"
+      metadataName: "Bugged"
+      metadataDescription: "Over 25 bugs added to completely change the speedrun! Think you can find them all? Check the website for hints"
       metadataSupportedGames: "jak1"
-      metadataAuthors: "barg,vaser"
-      metadataTags: "rng,gameplay-mod"
-      metadataWebsiteUrl: "https://www.example.com/this/is/optional"
+      metadataAuthors: "bintendo42,barg"
+      metadataTags: "speedrunning,challenge,gameplay-mod"
+      metadataWebsiteUrl: "https://jakmods.dev/bugged/buglist.html"
       skipMacOS: true
       skipLinux: true
       toolingBinaryDir: "out/build/Release/bin"
