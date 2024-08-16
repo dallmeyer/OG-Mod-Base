@@ -23,12 +23,12 @@ jobs:
     with:
       semverBump: ${{ inputs.bump }}
       releaseBranches: "main,master,afoniddwr"
-      metadataName: "Test Mod Bundle"
-      metadataDescription: "This is a test mod bundle. 2"
+      metadataName: "River to Water"
+      metadataDescription: "Custom level River to Water (Afon i ddwr) of a winding mountain path with powercells, scoutflies and orbs guarded by lurkers! Visit via the warpgate once you complete the game or just use debug mode to visit early!"
       metadataSupportedGames: "jak1"
-      metadataAuthors: "barg,vaser"
-      metadataTags: "rng,gameplay-mod"
-      metadataWebsiteUrl: "https://www.example.com/this/is/optional"
+      metadataAuthors: "Cuttlefish"
+      metadataTags: "custom-level"
+      metadataWebsiteUrl: "https://github.com/Cuttlefishthesage/OG-Mod-Base/blob/main/README.md"
       skipMacOS: true
       skipLinux: true
       toolingBinaryDir: "out/build/Release/bin"
