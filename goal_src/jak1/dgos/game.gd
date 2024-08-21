@@ -277,6 +277,7 @@
   "collectables.o"
   "mods-common.o"
   "checkpoint-randomizer.o"
+  "hell-randomizer.o"
   "jak-size.o"
   "localmulti.o"
   "task-control.o"

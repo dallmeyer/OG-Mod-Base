@@ -690,7 +690,8 @@
     ;; left as "cells-needed-to-warp" in settings for backwards compatibility
     (format file "  (cells-needed-to-warp ~F)~%" (the-as float(-> obj collectables-needed-to-warp)))
     (format file "  (show-warp-counter? ~A)~%" (-> obj show-warp-counter?))
-    (format file "  (Randomizer? ~A)~%" (-> obj checkpoint-randomizer?))
+    (format file "  (cRandomizer? ~A)~%" (-> obj checkpoint-randomizer?))
+    (format file "  (mRandomizer? ~A)~%" (-> obj hell-randomizer?))
     (format file "  (use-random-seed? ~A)~%" (-> obj use-random-seed?))
     (format file "  (Seed ~D)~%" (-> obj current-seed))
     (format file "  (backup-next-idx ~D)~%" (-> obj backup-next-idx))
@@ -753,7 +754,8 @@
             ;;read through the file and set fields
             (dosettings (file)
               (case-str *pc-temp-string*
-                (("Randomizer?") (set! (-> obj checkpoint-randomizer?) (file-stream-read-symbol file)))
+                (("cRandomizer?") (set! (-> obj checkpoint-randomizer?) (file-stream-read-symbol file)))
+                (("mRandomizer?") (set! (-> obj hell-randomizer?) (file-stream-read-symbol file)))
                 ;; left as "cells-needed-to-warp" in settings for backwards compatibility
                 (("cells-needed-to-warp") (set! (-> obj collectables-needed-to-warp) (file-stream-read-float file)))
                 (("show-warp-counter?") (set! (-> obj show-warp-counter?) (file-stream-read-symbol file)))

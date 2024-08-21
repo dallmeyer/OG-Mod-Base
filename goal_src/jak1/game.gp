@@ -2006,6 +2006,7 @@
  "common-obs/baseplat.gc"
  "mods/mods-common.gc"
  "mods/checkpoint-randomizer.gc"
+ "mods/hell-randomizer.gc"
  "mods/jak-size.gc"
  "mods/localmulti.gc"
  "common-obs/collectables.gc"

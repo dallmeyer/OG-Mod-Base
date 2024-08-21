@@ -246,6 +246,7 @@
     (new 'static 'game-option :option-type (game-option-type checkpoint-logic) :name (text-id checkpoint-logic) :scale #t)
     (new 'static 'game-option :option-type (game-option-type menu) :name (text-id randomizer-warp-options) :scale #t :param3 (game-option-menu randomizer-warp-options))
     (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id show-warp-counter?) :scale #t)
+    (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id hell-randomizer) :scale #t)
     (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)
     )
   )
@@ -2156,6 +2157,7 @@
   (set! (-> *randomizer-main-options* 2 value-to-modify) (&-> *progress-carousell* int-backup)) ;; checkpoint-logic
   ;; index 3 - randomizer-warp-options menu
   (set! (-> *randomizer-main-options* 4 value-to-modify) (&-> *randomizer-settings* show-warp-counter?))
+  (set! (-> *randomizer-main-options* 5 value-to-modify) (&-> *randomizer-settings* hell-randomizer?))
 
   (set! (-> *randomizer-warp-options* 0 value-to-modify) (&-> *randomizer-settings* warp-on-cell?))
   (set! (-> *randomizer-warp-options* 1 value-to-modify) (&-> *randomizer-settings* warp-on-orb?))

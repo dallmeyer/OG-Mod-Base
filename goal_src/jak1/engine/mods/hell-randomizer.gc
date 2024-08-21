@@ -1,0 +1,18 @@
+;;-*-Lisp-*-
+(in-package goal)
+
+;; name: hell-randomizer.gc
+;; name in dgo: hell-randomizer
+;; dgos: GAME, ENGINE
+
+
+(defun hell-run-each-frame ()
+;;Hell Randomizer stuff that needs to run constantly
+(if (-> *randomizer-settings* hell-randomizer?)
+(begin
+
+(none)
+
+)
+)
+(none))

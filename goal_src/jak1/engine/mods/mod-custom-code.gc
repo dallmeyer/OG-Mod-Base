@@ -24,6 +24,7 @@
     (defun runs-every-frame ()
       ;;(increase-power-cell-by-one) This is a call to increase-power-cell-by-one defined in mod-common-functions.gc
 
+      (hell-run-each-frame)
       (randomizer-run-each-frame)
       (jak-size-run-each-frame)
       (mods-common-run-each-frame)

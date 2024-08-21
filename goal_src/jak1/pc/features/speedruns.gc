@@ -477,19 +477,40 @@
                                           (if (-> *randomizer-settings* warp-on-eco-vents?) "V" "")
                                           (if (-> *randomizer-settings* warp-on-death?) "D" "")
                                           (the int (-> *randomizer-settings* collectables-needed-to-warp)))
-            (string-format "Speedrunner Mode ~%Checkpoint Randomizer ~S ~%Category: ~S ~S~S ~%Seed: ~D"
+            (cond 
+              ((-> *randomizer-settings* hell-randomizer?) 
+                (string-format "Speedrunner Mode ~%Checkpoint Randomizer [Hell] ~S ~%Category: ~S ~S~S ~%Seed: ~D"
+                                    *mod-version-text*
+                                    category-str
+                                    warps1-str
+                                    warps2-str
+                                    (-> *randomizer-settings* current-seed)
+                                    ))
+              (else
+                (string-format "Speedrunner Mode ~%Checkpoint Randomizer ~S ~%Category: ~S ~S~S ~%Seed: ~D"
                                     *mod-version-text*
                                     category-str
                                     warps1-str
                                     warps2-str
                                     (-> *randomizer-settings* current-seed)
                                     )
+                )
+            )
             )
           (else
-            (string-format "Speedrunner Mode ~%Checkpoint Randomizer ~S ~%Category: ~S N/A ~%Seed: N/A"
+            (cond ((-> *randomizer-settings* hell-randomizer?)
+              (string-format "Speedrunner Mode ~%Checkpoint Randomizer [Hell] ~S ~%Category: ~S N/A ~%Seed: N/A"
                                     *mod-version-text*
                                     (enum->string speedrun-category (-> *speedrun-info* category))
                                     )
+                    )
+              (else
+                (string-format "Speedrunner Mode ~%Checkpoint Randomizer ~S ~%Category: ~S N/A ~%Seed: N/A"
+                                    *mod-version-text*
+                                    (enum->string speedrun-category (-> *speedrun-info* category))
+                                    )
+                )
+              )
             )
           )
           buf 0 (- 220 (* 8 4)) (font-color flat-yellow) (font-flags shadow kerning))))

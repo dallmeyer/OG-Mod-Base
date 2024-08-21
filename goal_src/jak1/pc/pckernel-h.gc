@@ -300,6 +300,7 @@
     (
       (version uint64) ;; version of this settings
       (checkpoint-randomizer? symbol) ;; enable Zed's checkpoint randomizer
+      (hell-randomizer? symbol) ;; enable Stellar's hell randomizer
       (use-random-seed? symbol) ;; boolean (#t = random seed / #f = set seed)
       (current-seed uint) ;; seed used to generate random checkpoint.
       (backup-next-idx int) ;; backup in case of game crash
@@ -335,6 +336,7 @@
 
   (set! (-> obj version) RANDO_SETTINGS_VERSION)
   (set! (-> obj checkpoint-randomizer?) #t)
+  (set! (-> obj hell-randomizer?) #t)
   (set! (-> obj collectables-needed-to-warp) 1.0)
   (set! (-> obj show-warp-counter?) #f)
   (set! (-> obj use-random-seed?) #t)
