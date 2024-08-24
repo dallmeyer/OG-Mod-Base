@@ -58,8 +58,8 @@
     )
     (set-modifier-param (-> *modifier-info* modifiers 1) 
       "flipped-sticks" 
-      (lambda () (set! (-> *TARGET-bank* punch-radius) (meters 1.3)) (none))
-      (lambda () (set! (-> *TARGET-bank* punch-radius) (meters 1.3)) (none))
+      (the-as (function none) #f)
+      (the-as (function none) #f)
       2
     )
     )
@@ -97,15 +97,6 @@
   0
 )
 
-;;Reads settings to enact user choices from modifier-toggle-options. For testing only
-(defun enact-modifier-toggles ()
-  (when (-> *hell-settings* hell-randomizer?)
-    (set! (-> *modifier-info* modifiers (modifier-by-name "pacifist") active?) (-> *hell-settings* pacifist?))
-    (set! (-> *modifier-info* modifiers (modifier-by-name "flipped-sticks") active?) (-> *hell-settings* flipped-sticks?))
-  )
-(none)
-)
-
 (defun hell-run-each-frame ()
 ;;Hell Randomizer stuff that needs to run constantly
   (when (-> *hell-settings* hell-randomizer?)
@@ -120,16 +111,16 @@
 
 (defun modifierCloser ((mod int)) ;;Mod = 0 -> Toggle off all , Mod 1+ -> Toggle off specified modifier (1 -> no. of modifiers)
 
-  #| 
-    if statement to ensure 'mod' is >= 0 && <= size of modifiersArray
-  |#
-  
   ;;Mod 0 -> toggle off all modifiers (randomizer)
   #| 
     Here a loop will toggle off every modifier.
   |#
 
-  ;;Mod 1+ -> toggle off specified modifier (crowd-control)
+  ;;Toggle off specific modifier
+  (when (and (> mod 0) (<= mod NUM_MODIFIERS))
+    (set! (-> *modifier-info* modifiers mod active?) #f)
+    (if (!= (-> *modifier-info* modifiers mod off-func) #f) (-> *modifier-info* modifiers mod off-func))
+  )
 
 (none)
 )
@@ -151,32 +142,23 @@
 (none)
 )
 
-(defun valuesToBeSet ()
-;;Sets all necessary values for appropriate modifiers
-  
-  #| 
-    Here via a series of if statements, various values/variables will be modified
-    as long as at least one relevant modifier has been toggled on in modifierOpener.
+(defun modifierOpener ((mod int))
+;;Enables/activates modifiers
 
-    If no relevant modifiers are toggled on, values will be set to their defaults.
-  |#
-
+  (when (and (> mod 0) (<= mod NUM_MODIFIERS))
+    (set! (-> *modifier-info* modifiers mod active?) #t)
+    (if (!= (-> *modifier-info* modifiers mod on-func) #f) (-> *modifier-info* modifiers mod on-func))
+  )
+  ;;Modify appropriate values/variables
 (none)
 )
 
-(defun modifierOpener ()
-;;Enables/activates new modifiers
-
-  ;;Toggle on all new modifiers
-  #|
-    Here a loop will run through a list of the in-use modifiers and enable their appropriate boolean toggle.
-    This list will have been generated in modifierBank.
-  |#
-
-  ;;Modify all appropriate values/variables
-  (valuesToBeSet)
-
-
+;;Reads settings to enact user choices from modifier-toggle-options. For testing only
+(defun enact-modifier-toggles ()
+  (when (-> *hell-settings* hell-randomizer?)
+    (if (-> *hell-settings* pacifist?) (modifierOpener (modifier-by-name "pacifist")) (modifierCloser (modifier-by-name "pacifist")))
+    (if (-> *hell-settings* flipped-sticks?) (modifierOpener (modifier-by-name "flipped-sticks")) (modifierCloser (modifier-by-name "flipped-sticks")))
+  )
 (none)
 )
 
@@ -188,8 +170,6 @@
     (modifierCloser 0)
 
     (modifierBank 1)
-
-    (modifierOpener)
     
   )
 
