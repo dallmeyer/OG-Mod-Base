@@ -236,6 +236,7 @@
     ;; (new 'static 'game-option :option-type (game-option-type rng-lib) :name (text-id rng-lib) :scale #t)
     ;; (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id mod-powercellcutscenes) :scale #t)
     (new 'static 'game-option :option-type (game-option-type menu) :name (text-id additional-checkpoints) :scale #t :param3 (game-option-menu additional-checkpoint-options))
+    (new 'static 'game-option :option-type (game-option-type menu) :name (text-id hell-randomizer) :scale #t :param3 (game-option-menu hell-main-options))
     (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)
     )
   )
@@ -285,6 +286,20 @@
     (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id checkpoint-jungle-far) :scale #t)
     (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id checkpoint-swamp-flutflut) :scale #t)
     (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id checkpoint-village3-cart) :scale #t)
+    (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)
+    )
+  )
+
+(define *hell-main-options* (new 'static 'boxed-array :type game-option
+    (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id hell-randomizer) :scale #t)
+    (new 'static 'game-option :option-type (game-option-type menu) :name (text-id modifier-toggle-options) :scale #t :param3 (game-option-menu modifier-toggle-options))
+    (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)
+    )
+  )
+
+(define *modifier-toggle-options* (new 'static 'boxed-array :type game-option
+    (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id pacifist?) :scale #t)
+    (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id flipped-sticks?) :scale #t)
     (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)
     )
   )
@@ -2110,6 +2125,8 @@
   (set! (-> *options-remap* (progress-screen randomizer-main-options))    *randomizer-main-options*)
   (set! (-> *options-remap* (progress-screen randomizer-warp-options))    *randomizer-warp-options*)
   (set! (-> *options-remap* (progress-screen challenges-options))         *challenges-options*)
+  (set! (-> *options-remap* (progress-screen hell-main-options))          *hell-main-options*)
+  (set! (-> *options-remap* (progress-screen modifier-toggle-options))    *modifier-toggle-options*)
   (set! (-> *options-remap* (progress-screen mod-options))                *mod-options*)
   (set! (-> *options-remap* (progress-screen memcard-disable-auto-save)) *yes-no-options*)
   (set! (-> *options-remap* (progress-screen memcard-auto-save-disabled)) *ok-options*)
@@ -2157,7 +2174,6 @@
   (set! (-> *randomizer-main-options* 2 value-to-modify) (&-> *progress-carousell* int-backup)) ;; checkpoint-logic
   ;; index 3 - randomizer-warp-options menu
   (set! (-> *randomizer-main-options* 4 value-to-modify) (&-> *randomizer-settings* show-warp-counter?))
-  (set! (-> *randomizer-main-options* 5 value-to-modify) (&-> *randomizer-settings* hell-randomizer?))
 
   (set! (-> *randomizer-warp-options* 0 value-to-modify) (&-> *randomizer-settings* warp-on-cell?))
   (set! (-> *randomizer-warp-options* 1 value-to-modify) (&-> *randomizer-settings* warp-on-orb?))
@@ -2189,6 +2205,12 @@
   (set! (-> *additional-checkpoint-options* 4 value-to-modify) (&-> *mods-settings* checkpoint-jungle-far))
   (set! (-> *additional-checkpoint-options* 5 value-to-modify) (&-> *mods-settings* checkpoint-swamp-flutflut))
   (set! (-> *additional-checkpoint-options* 6 value-to-modify) (&-> *mods-settings* checkpoint-village3-cart))
+
+  ;;Hell Randomizer settings
+  (set! (-> *hell-main-options* 0 value-to-modify) (&-> *hell-settings* hell-randomizer?))
+
+  (set! (-> *modifier-toggle-options* 0 value-to-modify) (&-> *hell-settings* pacifist?))
+  (set! (-> *modifier-toggle-options* 1 value-to-modify) (&-> *hell-settings* flipped-sticks?))
 
   (set! (-> *camera-options* 0 value-to-modify) (&-> *pc-settings* first-camera-h-inverted?))
   (set! (-> *camera-options* 1 value-to-modify) (&-> *pc-settings* first-camera-v-inverted?))
@@ -3577,6 +3599,12 @@
              (hide-progress-icons)
              (draw-options self 115 25 0.75))
             (((progress-screen randomizer-warp-options))
+             (hide-progress-icons)
+             (draw-options self 115 25 0.75))
+            (((progress-screen hell-main-options))
+             (hide-progress-icons)
+             (draw-options self 115 25 0.75))
+             (((progress-screen modifier-toggle-options))
              (hide-progress-icons)
              (draw-options self 115 25 0.75))
             (((progress-screen additional-checkpoint-options))

@@ -516,6 +516,7 @@
 (define-once *randomizer-settings* (new 'global 'randomizer-settings))
 (define-once *challenges-settings* (new 'global 'challenges-settings))
 (define-once *mods-settings* (new 'global 'mods-settings))
+(define-once *hell-settings* (new 'global 'hell-settings))
 (define-once *pc-settings* (new 'global 'pc-settings-jak1))
 
 ;; This function updates all settings files, if a new settings type is added it needs to be added to this function.

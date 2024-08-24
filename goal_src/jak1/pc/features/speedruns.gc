@@ -478,7 +478,7 @@
                                           (if (-> *randomizer-settings* warp-on-death?) "D" "")
                                           (the int (-> *randomizer-settings* collectables-needed-to-warp)))
             (cond 
-              ((-> *randomizer-settings* hell-randomizer?) 
+              ((-> *hell-settings* hell-randomizer?) 
                 (string-format "Speedrunner Mode ~%Checkpoint Randomizer [Hell] ~S ~%Category: ~S ~S~S ~%Seed: ~D"
                                     *mod-version-text*
                                     category-str
@@ -498,7 +498,7 @@
             )
             )
           (else
-            (cond ((-> *randomizer-settings* hell-randomizer?)
+            (cond ((-> *hell-settings* hell-randomizer?)
               (string-format "Speedrunner Mode ~%Checkpoint Randomizer [Hell] ~S ~%Category: ~S N/A ~%Seed: N/A"
                                     *mod-version-text*
                                     (enum->string speedrun-category (-> *speedrun-info* category))

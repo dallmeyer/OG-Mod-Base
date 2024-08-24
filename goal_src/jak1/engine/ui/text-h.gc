@@ -850,6 +850,11 @@
   (checkpoint-swamp-flutflut    #x1755)
   (checkpoint-village3-cart     #x1756)
 
+  ;;Hell Randomizer
+  (modifier-toggle-options      #x1760)
+  (pacifist?                    #x1761)
+  (flipped-sticks?              #x1762)
+
   ;; mod text mod-base-change
   (pad-triangle #x2000)
   (pad-circle #x2001)

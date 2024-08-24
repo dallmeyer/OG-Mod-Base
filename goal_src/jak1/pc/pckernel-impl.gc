@@ -84,6 +84,7 @@
 (define *randomizer-settings* (the randomizer-settings #f))
 (define *challenges-settings* (the challenges-settings #f))
 (define *mods-settings* (the mods-settings #f))
+(define *hell-settings* (the hell-settings #f))
 
 ;; jak 1 discord rpc structure
 (deftype discord-info (structure)

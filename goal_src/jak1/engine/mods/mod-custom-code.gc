@@ -146,8 +146,14 @@
 
       ;;uncomment this to use custom music for custom levels - the function is in mod-common-functions.gc
       ;;(process-spawn-function process music-manager-proc)
-      (none)
-      )
+
+      (set-up-modifier-info)
+      
+      ;;Testing
+      (enact-modifier-toggles)
+
+    (none)
+    )
 
     (defun runs-on-jak-death ((death-event symbol))
       (case death-event

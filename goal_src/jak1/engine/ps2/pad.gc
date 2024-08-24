@@ -15,6 +15,9 @@
 
 (define-extern get-integral-current-time (function time-frame))
 
+;; in hell-randomizer.gc
+(define-extern modifier-is-active? (function string symbol))
+
 (#when PC_PORT
   ;;;;;;;;;;;;;;;;;;;;;;
   ;; opengoal territory override
@@ -364,6 +367,15 @@
                 (when (pc-cheats? (-> *pc-settings* cheats) mirror)
                   (set! (-> pad leftx) (- 255 (-> pad leftx)))
                   (set! (-> pad rightx) (- 255 (-> pad rightx)))))
+              ;;Hell Randomizer "flipped-sticks" modifier
+              (let ((tempx (-> pad leftx)) (tempy (-> pad lefty)))
+                (when (modifier-is-active? "flipped-sticks")
+                  (set! (-> pad leftx) (-> pad rightx))
+                  (set! (-> pad lefty) (-> pad righty))
+                  (set! (-> pad rightx) tempx)
+                  (set! (-> pad righty) tempy)
+                )
+              )
               ;; compute speed and direction, with deadband.
               (let ((f30-0 (* 0.0078125 (the float (+ (-> pad leftx) -128))))
                     (f28-0 (* 0.0078125 (the float (- 127 (the-as int (-> pad lefty)))))))

@@ -300,7 +300,6 @@
     (
       (version uint64) ;; version of this settings
       (checkpoint-randomizer? symbol) ;; enable Zed's checkpoint randomizer
-      (hell-randomizer? symbol) ;; enable Stellar's hell randomizer
       (use-random-seed? symbol) ;; boolean (#t = random seed / #f = set seed)
       (current-seed uint) ;; seed used to generate random checkpoint.
       (backup-next-idx int) ;; backup in case of game crash
@@ -336,7 +335,6 @@
 
   (set! (-> obj version) RANDO_SETTINGS_VERSION)
   (set! (-> obj checkpoint-randomizer?) #t)
-  (set! (-> obj hell-randomizer?) #t)
   (set! (-> obj collectables-needed-to-warp) 1.0)
   (set! (-> obj show-warp-counter?) #f)
   (set! (-> obj use-random-seed?) #t)
@@ -443,6 +441,34 @@
   (set! (-> obj checkpoint-village3-cart) #t)
 
   (none))
+
+(deftype hell-settings (basic)
+    (
+      (version uint64) ;; version of this settings
+      (hell-randomizer? symbol) ;; enable Stellar's hell randomizer
+      ;;Modifiers
+      (pacifist? symbol)
+      (flipped-sticks? symbol) 
+    )
+
+    (:methods
+      (new (symbol type) _type_)
+      (reset (_type_) none)
+      )
+    )
+
+(defmethod reset ((obj hell-settings))
+  "Set all Hell Randomizer settings to their defaults"
+
+  (format 0 "resetting hell settings~%")
+
+  (set! (-> obj version) RANDO_SETTINGS_VERSION)
+  (set! (-> obj hell-randomizer?) #t)
+  (set! (-> obj pacifist?) #f)
+  (set! (-> obj flipped-sticks?) #f)
+
+  (none)
+)
 
 ;; This is the end of defining settings type in pckernal-h.gc, the rest need to be added in pc-kernal.gc
 
