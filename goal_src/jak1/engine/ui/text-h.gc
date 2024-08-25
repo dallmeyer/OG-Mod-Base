@@ -854,6 +854,15 @@
   (modifier-toggle-options      #x1760)
   (pacifist?                    #x1761)
   (flipped-sticks?              #x1762)
+  (scrambled-buttons?             #x1763)
+  (flipped-buttons?             #x1764)
+  (crack-enemies?               #x1765)
+  (fragile?                     #x1766)
+  (hell?                        #x1767)
+  (sonic?                       #x1768)
+  (run-jak-run?                 #x1769)
+  (farts?                       #x1770)
+  (invisible?                   #x1771)
 
   ;; mod text mod-base-change
   (pad-triangle #x2000)

@@ -5,12 +5,21 @@
 ;; dgos: GAME, ENGINE
 
 #|  Modifiers =========== 
-  1. pacifist - attacks do nothing
-  2. flipped-sticks - Left & Right sticks are flipped
+  0. pacifist - attacks do nothing
+  1. flipped-sticks - Left & Right sticks are flipped
+  2. scrambled-buttons - buttons are randomized
+  3. flipped-buttons - dpad and symbol buttons are flipped.
+  4. crack-enemies - enemies move a lot faster and insta-kill
+  5. fragile - increased fall damage, everything insta-kills including bonks
+  6. hell - flipped-buttons + flipped-sticks + crack-enemies + fragile
+  7. sonic - Jak moves incredibly fast
+  8. run-jak-run - Jak runs forward constantly, left stick control disabled
+  9. farts - sound effects are replaced by random farts
+  10. invisible - Jak & Daxter are invisible
 
 |#
 
-(defconstant NUM_MODIFIERS 2)
+(defconstant NUM_MODIFIERS 11)
 
 (deftype modifier (structure)
   (
@@ -31,7 +40,7 @@
 (define *modifier-info* (new 'static 'modifier-info))
 
 (defun set-modifier-param ((self modifier) (name string) (on-func (function none)) (off-func (function none)) (index int))
-  (format 0 "HELL: running set-modifier-param for ~A~%" name)
+  (format 0 "[HELL] running set-modifier-param for ~A~%" name)
   (if (> index NUM_MODIFIERS)
     (return #f)
   )
@@ -47,27 +56,154 @@
 
 (defun set-up-modifier-info ()
 "This function runs on startup, and it checks if modifier-info has been setup. If modifier-info is not set up then it sets it up"
-  (format 0 "HELL: run set-up-modifier-info?~%")
+  (format 0 "[HELL] run set-up-modifier-info?~%")
   (if (= (-> *modifier-info* modifiers 1 name) 0)
     (begin
-      (format 0 "HELL: yes!~%")
-    ;; Modifier info has not been setup so lets set it up
-    ;;setup functions with set-modifier-param modifier name on-func off-func index
+      (format 0 "[HELL] yes!~%")
+      ;; Modifier info has not been setup so lets set it up
+      ;;setup functions with set-modifier-param modifier name on-func off-func index
       (set-modifier-param (-> *modifier-info* modifiers 0) 
         "pacifist" 
-        (lambda () (set! (-> *TARGET-bank* punch-radius) (meters -1.0))(set! (-> *TARGET-bank* spin-radius) (meters -1.0))(set! (-> *TARGET-bank* flop-radius) (meters -1.0))(set! (-> *TARGET-bank* uppercut-radius) (meters -1.0)) (format 0 "HELL: just made Jak a pacifist!~%") (none))
-        (lambda () (set! (-> *TARGET-bank* punch-radius) (meters 1.3))(set! (-> *TARGET-bank* spin-radius) (meters 2.2))(set! (-> *TARGET-bank* flop-radius) (meters 1.4))(set! (-> *TARGET-bank* uppercut-radius) (meters 1)) (format 0 "HELL: Jak is no longer a pacifist!~%") (none))
+        (lambda () (set! (-> *TARGET-bank* punch-radius) (meters -1.0))(set! (-> *TARGET-bank* spin-radius) (meters -1.0))(set! (-> *TARGET-bank* flop-radius) (meters -1.0))(set! (-> *TARGET-bank* uppercut-radius) (meters -1.0)) 
+          ;;(format 0 "[HELL] just made Jak a pacifist!~%") 
+          (none)
+        )
+        (lambda () (set! (-> *TARGET-bank* punch-radius) (meters 1.3))(set! (-> *TARGET-bank* spin-radius) (meters 2.2))(set! (-> *TARGET-bank* flop-radius) (meters 1.4))(set! (-> *TARGET-bank* uppercut-radius) (meters 1)) 
+          ;;(format 0 "[HELL] Jak is no longer a pacifist!~%") 
+          (none)
+        )
         0
       )
       (set-modifier-param (-> *modifier-info* modifiers 1) 
         "flipped-sticks" 
-        (the-as (function none) #f)
-        (the-as (function none) #f)
+        (the-as (function none) #f 
+          ;;lambda () (format 0 "[HELL] Sticks have been flipped!~%") (none)
+        )
+        (the-as (function none) #f
+          ;;lambda () (format 0 "[HELL] Sticks are no longer flipped!~%") (none)
+        )
         1
+      )
+      (set-modifier-param (-> *modifier-info* modifiers 2) 
+        "scrambled-buttons" 
+        (;;the-as (function none) #f
+          lambda ()
+          (dotimes (i 12)
+            (format 0 "[HELL] case ~D~%" i)
+            (let ((button-assigned? #f))
+              (while (not button-assigned?)
+                (let ((random (+ (rand-vu-int-count 12) 4)))  ;; Add 4 to avoid selecting first 4 entries in *button-assignments*
+                  (when (= (-> *button-assignments* random) 16)
+                    (set! (-> *button-assignments* random) i)
+                    (set! button-assigned? #t)
+                    (format 0 "[HELL] button at index ~D was assigned ~D~%" random i)
+                  )
+                ) 
+              )
+            )
+          )
+          (format 0 "[HELL] Buttons have been scrambled!~%")
+          (dotimes (i 16)
+            (format 0 "[HELL] *button-assignments* ~D is set to ~D~%" i (-> *button-assignments* i))
+          ) 
+          (none)
+        )
+        (;;the-as (function none) #f 
+          lambda ()
+          (dotimes (i 12)
+            (set! (-> *button-assignments* (+ i 4)) 16)
+          )
+          (format 0 "[HELL] Buttons are no longer scrambled!~%") 
+          (none)
+        )
+        2
+      )
+      (set-modifier-param (-> *modifier-info* modifiers 3) 
+        "flipped-buttons" 
+        (the-as (function none) #f 
+          ;;lambda () (format 0 "[HELL] Buttons have been flipped!~%") (none)
+        )
+        (the-as (function none) #f 
+          ;;lambda () (format 0 "[HELL] Buttons are no longer flipped!~%") (none)
+        )
+        3
+      )
+      (set-modifier-param (-> *modifier-info* modifiers 4) 
+        "crack-enemies" 
+        (the-as (function none) #f
+          ;;lambda () (format 0 "[HELL] Enemies are now on crack!~%") (none)
+        )
+        (the-as (function none) #f
+          ;;lambda () (format 0 "[HELL] Enemies are no longer on crack!~%") (none)
+        )
+        4
+      )
+      (set-modifier-param (-> *modifier-info* modifiers 5) 
+        "fragile" 
+        (the-as (function none) #f
+          ;;lambda () (format 0 "[HELL] Jak is now fragile!~%") (none)
+        )
+        (the-as (function none) #f
+          ;;lambda () (format 0 "[HELL] Jak is no longer fragile!~%") (none)
+        )
+        5
+      )
+      (set-modifier-param (-> *modifier-info* modifiers 6) 
+        "hell" 
+        (the-as (function none) #f 
+          ;;lambda () (format 0 "[HELL] You are now in hell!~%") (none)
+        )
+        (the-as (function none) #f 
+          ;;lambda () (format 0 "[HELL] You are no longer in hell!~%") (none)
+        )
+        6
+      )
+      (set-modifier-param (-> *modifier-info* modifiers 7) 
+        "sonic" 
+        (the-as (function none) #f
+          ;;lambda () (format 0 "[HELL] Jak is now fast like Sonic!~%") (none)
+        )
+        (the-as (function none) #f
+          ;;lambda () (format 0 "[HELL] Jak is no longer fast like Sonic!~%") (none)
+        )
+        7
+      )
+      (set-modifier-param (-> *modifier-info* modifiers 8) 
+        "run-jak-run" 
+        (the-as (function none) #f
+          ;;lambda () (format 0 "[HELL] Jak can't stop running!~%") (none)
+        )
+        (the-as (function none) #f
+          ;;lambda () (format 0 "[HELL] Jak isn't running anymore!~%") (none)
+        )
+        8
+      )
+      (set-modifier-param (-> *modifier-info* modifiers 9) 
+        "farts" 
+        (the-as (function none) #f
+          ;;lambda () (format 0 "[HELL] Geez that stinks!~%") (none)
+        )
+        (the-as (function none) #f
+          ;;lambda () (format 0 "[HELL] Smelling like a rose!~%") (none)
+        )
+        9
+      )
+      (set-modifier-param (-> *modifier-info* modifiers 10) 
+        "invisible" 
+        (the-as (function none) #f
+          ;;lambda () (format 0 "[HELL] Jak is now invisible!~%") (none)
+        )
+        (the-as (function none) #f
+          ;;lambda () (format 0 "[HELL] Jak is no longer invisible!~%") (none)
+        )
+        10
       )
     )
     ;; Modifier info has been setup lets just return
-    (return #f)
+    (begin
+      (format 0 "[HELL] no!~%")
+      (return #f)
+    )
   )
   (none)
 )
@@ -90,10 +226,10 @@
 (defun modifier-by-name ((input string))
   
   (dotimes (i NUM_MODIFIERS)
-    (format 0 "HELL: modifier-by-name checking index ~D for ~A modifier...~%" i input)
+    ;;(format 0 "[HELL] modifier-by-name checking index ~D for ~A modifier...~%" i input)
     (if (string= input (-> *modifier-info* modifiers i name))
       ;; match!
-      (begin (format 0 "HELL: modifier-by-name matched index ~D with ~A modifier!~%" i input) 
+      (begin ;;(format 0 "[HELL] modifier-by-name matched index ~D with ~A modifier!~%" i input) 
         (return i)
       )
     )
@@ -115,7 +251,7 @@
 )
 
 (defun modifierCloser ((mod int)) ;;Mod = -1 -> Toggle off all , Mod 0+ -> Toggle off specified modifier (1 -> no. of modifiers)
-  (format 0 "HELL: modifierCloser received index ~D...~%" mod)
+  ;;(format 0 "[HELL] modifierCloser received index ~D...~%" mod)
   ;;Mod -1 -> toggle off all modifiers (randomizer)
   #| 
     Here a loop will toggle off every modifier.
@@ -123,10 +259,10 @@
 
   ;;Toggle off specific modifier
   (when (and (>= mod 0) (< mod NUM_MODIFIERS))
-    (format 0 "HELL: closing ~A modifier!~%" (-> *modifier-info* modifiers mod name))
+    ;;(format 0 "[HELL] closing ~A modifier!~%" (-> *modifier-info* modifiers mod name))
     (set! (-> *modifier-info* modifiers mod active?) #f)
     (when (!= (-> *modifier-info* modifiers mod off-func) #f)
-      (format 0 "HELL: running off-func for ~A!~%" (-> *modifier-info* modifiers mod name))  
+      ;;(format 0 "[HELL] running off-func for ~A!~%" (-> *modifier-info* modifiers mod name))  
       ((-> *modifier-info* modifiers mod off-func))
     )
   )
@@ -153,13 +289,13 @@
 
 (defun modifierOpener ((mod int))
 ;;Enables/activates modifiers
-  (format 0 "HELL: modifierOpener received index ~D...~%" mod)
+  (format 0 "[HELL] modifierOpener received index ~D...~%" mod)
 
   (when (and (>= mod 0) (< mod NUM_MODIFIERS))
-    (format 0 "HELL: opening ~A modifier!~%" (-> *modifier-info* modifiers mod name))
+    (format 0 "[HELL] opening ~A modifier!~%" (-> *modifier-info* modifiers mod name))
     (set! (-> *modifier-info* modifiers mod active?) #t)
     (when (!= (-> *modifier-info* modifiers mod on-func) #f)
-      (format 0 "HELL: running on-func for ~A!~%" (-> *modifier-info* modifiers mod name)) 
+      (format 0 "[HELL] running on-func for ~A!~%" (-> *modifier-info* modifiers mod name)) 
       ((-> *modifier-info* modifiers mod on-func)) 
     )
   )
@@ -171,12 +307,92 @@
 (defun enact-modifier-toggles ()
   (when (-> *hell-settings* hell-randomizer?)
     (if (-> *hell-settings* pacifist?) 
-      (begin (modifierOpener (modifier-by-name "pacifist")) (format 0 "HELL: *hell-settings* pacifist? read as #t~%")) 
-      (begin (modifierCloser (modifier-by-name "pacifist")) (format 0 "HELL: *hell-settings* pacifist? read as #f~%"))
+      (begin (modifierOpener (modifier-by-name "pacifist")) 
+        ;;(format 0 "[HELL] *hell-settings* pacifist? read as #t~%")
+      ) 
+      (begin (modifierCloser (modifier-by-name "pacifist")) 
+        ;;(format 0 "[HELL] *hell-settings* pacifist? read as #f~%")
+      )
     )
     (if (-> *hell-settings* flipped-sticks?) 
-      (begin (modifierOpener (modifier-by-name "flipped-sticks")) (format 0 "HELL: *hell-settings* flipped-sticks? read as #t~%")) 
-      (begin (modifierCloser (modifier-by-name "flipped-sticks")) (format 0 "HELL: *hell-settings* flipped-sticks? read as #f~%"))
+      (begin (modifierOpener (modifier-by-name "flipped-sticks")) 
+        ;;(format 0 "[HELL] *hell-settings* flipped-sticks? read as #t~%")
+      ) 
+      (begin (modifierCloser (modifier-by-name "flipped-sticks")) 
+        ;;(format 0 "[HELL] *hell-settings* flipped-sticks? read as #f~%")
+      )
+    )
+    (if (-> *hell-settings* scrambled-buttons?) 
+      (begin (modifierOpener (modifier-by-name "scrambled-buttons")) 
+        (format 0 "[HELL] *hell-settings* scrambled-buttons? read as #t~%")
+      ) 
+      (begin (modifierCloser (modifier-by-name "scrambled-buttons")) 
+        (format 0 "[HELL] *hell-settings* scrambled-buttons? read as #f~%")
+      )
+    )
+    (if (-> *hell-settings* flipped-buttons?) 
+      (begin (modifierOpener (modifier-by-name "flipped-buttons")) 
+        ;;(format 0 "[HELL] *hell-settings* flipped-buttons? read as #t~%")
+      ) 
+      (begin (modifierCloser (modifier-by-name "flipped-buttons")) 
+        ;;(format 0 "[HELL] *hell-settings* flipped-buttons? read as #f~%")
+      )
+    )
+    (if (-> *hell-settings* crack-enemies?) 
+      (begin (modifierOpener (modifier-by-name "crack-enemies")) 
+        ;;(format 0 "[HELL] *hell-settings* crack-enemies? read as #t~%")
+      ) 
+      (begin (modifierCloser (modifier-by-name "crack-enemies")) 
+        ;;(format 0 "[HELL] *hell-settings* crack-enemies? read as #f~%")
+      )
+    )
+    (if (-> *hell-settings* fragile?) 
+      (begin (modifierOpener (modifier-by-name "fragile")) 
+        ;;(format 0 "[HELL] *hell-settings* fragile? read as #t~%")
+      ) 
+      (begin (modifierCloser (modifier-by-name "fragile")) 
+        ;;(format 0 "[HELL] *hell-settings* fragile? read as #f~%")
+      )
+    )
+    (if (-> *hell-settings* hell?) 
+      (begin (modifierOpener (modifier-by-name "hell")) 
+        ;;(format 0 "[HELL] *hell-settings* hell? read as #t~%")
+      ) 
+      (begin (modifierCloser (modifier-by-name "hell")) 
+        ;;(format 0 "[HELL] *hell-settings* hell? read as #f~%")
+      )
+    )
+    (if (-> *hell-settings* sonic?) 
+      (begin (modifierOpener (modifier-by-name "sonic")) 
+        ;;(format 0 "[HELL] *hell-settings* sonic? read as #t~%")
+      ) 
+      (begin (modifierCloser (modifier-by-name "sonic")) 
+        ;;(format 0 "[HELL] *hell-settings* sonic? read as #f~%")
+      )
+    )
+    (if (-> *hell-settings* run-jak-run?) 
+      (begin (modifierOpener (modifier-by-name "run-jak-run")) 
+        ;;(format 0 "[HELL] *hell-settings* run-jak-run? read as #t~%")
+      ) 
+      (begin (modifierCloser (modifier-by-name "run-jak-run")) 
+        ;;(format 0 "[HELL] *hell-settings* run-jak-run? read as #f~%")
+      )
+    )
+    (if (-> *hell-settings* farts?) 
+      (begin (modifierOpener (modifier-by-name "farts")) 
+        ;;(format 0 "[HELL] *hell-settings* farts? read as #t~%")
+      ) 
+      (begin (modifierCloser (modifier-by-name "farts")) 
+        ;;(format 0 "[HELL] *hell-settings* farts? read as #f~%")
+      )
+    )
+    (if (-> *hell-settings* invisible?) 
+      (begin (modifierOpener (modifier-by-name "invisible")) 
+        ;;(format 0 "[HELL] *hell-settings* invisible? read as #t~%")
+      ) 
+      (begin (modifierCloser (modifier-by-name "invisible")) 
+        ;;(format 0 "[HELL] *hell-settings* invisible? read as #f~%")
+      )
     )
   )
 (none)

@@ -15,7 +15,10 @@
 
 (define-extern get-integral-current-time (function time-frame))
 
-;; in hell-randomizer.gc
+;; Debug printing frame counter
+(define debug-print-frame-counter 1)
+
+;; hell-randomizer.gc
 (define-extern modifier-is-active? (function string symbol))
 
 (#when PC_PORT
@@ -265,6 +268,110 @@
 
 (#if PC_PORT (defconstant STICK_DEADZONE (-> *pc-settings* stick-deadzone)) (defconstant STICK_DEADZONE 0.3))
 
+;; Swaps the state of any two buttons, including their pressure values
+(defun swap-buttons! ((cpad cpad-info) (button-a pad-buttons) (button-a-pressure pad-buttons) (button-b pad-buttons) (button-b-pressure pad-buttons))
+  ;;thanks Vaser
+  (if (= debug-print-frame-counter 1)
+    (begin 
+      (format 0 "[HELL] swap-buttons! called with arguments:~%")
+      (format 0 "       cpad: ~A~%" cpad)
+      (format 0 "       button-a: ~A~%" button-a)
+      (format 0 "       button-a-pressure: ~A~%" button-a-pressure)
+      (format 0 "       button-b: ~A~%" button-b)
+      (format 0 "       button-b-pressure: ~A~%" button-b-pressure)
+    )
+  )
+
+  (let ((a-pressed? (logtest? (-> cpad button0) button-a))
+    (a-pressure (-> cpad abutton (the-as int button-a-pressure)))
+    (b-pressed? (logtest? (-> cpad button0) button-b))
+    (b-pressure (-> cpad abutton (the-as int button-b-pressure))))
+
+    (when a-pressed?
+      (logclear! (-> cpad button0) button-a)
+      (logior! (-> cpad button0) button-b))
+    (when b-pressed?
+      (logclear! (-> cpad button0) button-b)
+      (logior! (-> cpad button0) button-a))
+    (set! (-> cpad abutton (the-as int button-a-pressure)) b-pressure)
+    (set! (-> cpad abutton (the-as int button-b-pressure)) a-pressure)
+  )
+)
+
+;; Mod addition
+(define *button-assignments* (new 'static 'array int 16
+  -1 -1 -1 -1 16 16 16 16 16 16 16 16 16 16 16 16)
+)
+
+;; Scrambles all the pad buttons [up down left right triangle x square circle l1 l2 r1 r2]
+(defun scramble-buttons! ((pad cpad-info))
+  (format 0 "[HELL] debug-print-frame-counter = ~D~%" debug-print-frame-counter)
+  (if (= debug-print-frame-counter 600)
+    (set! debug-print-frame-counter 1)
+  )
+  ;;(format 0 "[HELL] attempting to scramble buttons...~%")
+  (if (!= (-> *button-assignments* 15) 16) ;;are *button-assignments* ready?
+      (dotimes (i 6) 
+        (begin
+          
+          (let ((button1-idx 16) 
+            (button2-idx 16))
+
+            (if (= debug-print-frame-counter 1)
+              (format 0 "[HELL] Begin i = ~D~%" i)
+            )
+            
+            (let ((j 4)) ;; Start at index 4 to avoid using first 4 entries in *button-assignments*
+              (while (or (= button1-idx 16) (= button2-idx 16))
+
+                (if (= debug-print-frame-counter 1)
+                  (format 0 "[HELL] j = ~D~%" j)
+                )
+
+                (if (= (-> *button-assignments* j) (* 2 i))
+                  (begin (set! button1-idx j)
+                    (if (= debug-print-frame-counter 1)
+                      (format 0 "[HELL] button1-idx just set to ~D~%" button1-idx)
+                    )
+                  )
+                  (if (= (-> *button-assignments* j) (+ 1 (* 2 i)))
+                    (begin (set! button2-idx j) 
+                      (if (= debug-print-frame-counter 1)
+                        (format 0 "[HELL] button2-idx just set to ~D~%" button2-idx)
+                      )
+                    )
+                  )
+                )
+                (+! j 1)
+              )
+            )
+
+            (if (= debug-print-frame-counter 1)
+              (begin
+                (format 0 "[HELL] swap-buttons! about to be called during i=~D with arguments:~%" i)
+                (format 0 "       pad: ~A~%" pad)
+                (format 0 "       button-a: ~A~%" (begin (bit-enum->string pad-buttons (raise-to-pos-power 2 button1-idx) (clear *temp-string*)) *temp-string*))
+                (format 0 "       button-a-pressure: ~A~%" (begin (bit-enum->string pad-buttons (raise-to-pos-power 2 button1-idx) (clear *temp-string*)) *temp-string*))
+                (format 0 "       button-b: ~A~%" (begin (bit-enum->string pad-buttons (raise-to-pos-power 2 button2-idx) (clear *temp-string*)) *temp-string*))
+                (format 0 "       button-b-pressure: ~A~%" (begin (bit-enum->string pad-buttons (raise-to-pos-power 2 button2-idx) (clear *temp-string*)) *temp-string*))
+              )
+            )
+            
+            (swap-buttons! pad 
+              (the-as pad-buttons (raise-to-pos-power 2 button1-idx)) 
+              (the-as pad-buttons (raise-to-pos-power 2 button1-idx)) 
+              (the-as pad-buttons (raise-to-pos-power 2 button2-idx)) 
+              (the-as pad-buttons (raise-to-pos-power 2 button2-idx))
+            )
+          )
+
+        )
+      )
+    (format 0 "[HELL] scramble-buttons! called but *button-assignments* are not ready!~%")
+  )
+  (+! debug-print-frame-counter 1)
+)
+
 (defun service-cpads ()
   "Read from cpads and update vibration"
   ;; iterate over pads
@@ -274,33 +381,45 @@
 	    (history (-> *cpad-history-list* cpads pad-idx)))
         ;; read from hardware.
         (cpad-get-data pad)
+
+        ;; apply button scramble, if Hell Randomizer modifier "scrambled-buttons" is active
+        (when (modifier-is-active? "scrambled-buttons") (scramble-buttons! pad))
+
+        ;; apply symbol <-> dpad button flips, if Hell Randomizer modifier "flipped-buttons" is active
+        (when (and (modifier-is-active? "flipped-buttons") (not (modifier-is-active? "scrambled-buttons")))
+          (swap-buttons! pad (pad-buttons triangle) (pad-buttons triangle) (pad-buttons up) (pad-buttons up))
+          (swap-buttons! pad (pad-buttons x) (pad-buttons x) (pad-buttons down) (pad-buttons down))
+          (swap-buttons! pad (pad-buttons square) (pad-buttons square) (pad-buttons left) (pad-buttons left))
+          (swap-buttons! pad (pad-buttons circle) (pad-buttons circle) (pad-buttons right) (pad-buttons right))
+        )
+
         (cond
           ((zero? (logand (-> pad valid) 128))
-           (dotimes (buzz-idx 2)
-             (cond
-               ;; check if okay to buzz:
-               ((and (-> pad buzz) (< (get-current-time) (-> pad buzz-time buzz-idx)) (= *master-mode* 'game))
-                (let ((v1-10 buzz-idx))
-                  (cond
-                    ((zero? v1-10)
-                     ;; vibration motor 0 only has on/off. This pulses it to approximate
-                     ;; an analog control
-                     (set! (-> pad direct buzz-idx) (logand (ash (-> pad buzz-val buzz-idx) (- (logand (get-integral-current-time) 7))) 1)))
-                    ((= v1-10 1)
-                     ;; vibration motor 1 has analog control. set the speed.
-                     (set! (-> pad direct buzz-idx) (-> pad buzz-val buzz-idx))))))
-               (else
-                ;; not okay to buzz this motor, set to zero.
-                (set! (-> pad buzz-val buzz-idx) (the-as uint 0))
-                (set! (-> pad direct buzz-idx) (the-as uint 0)))))
-           ;; update button history.
-           (set! (-> pad button0-abs 2) (-> pad button0-abs 1))
-           (set! (-> pad button0-abs 1) (-> pad button0-shadow-abs 0))
-           (set! (-> pad button0-rel 2) (-> pad button0-rel 1))
-           (set! (-> pad button0-rel 1) (-> pad button0-rel 0))
+            (dotimes (buzz-idx 2)
+              (cond
+                ;; check if okay to buzz:
+                ((and (-> pad buzz) (< (get-current-time) (-> pad buzz-time buzz-idx)) (= *master-mode* 'game))
+                  (let ((v1-10 buzz-idx))
+                    (cond
+                      ((zero? v1-10)
+                        ;; vibration motor 0 only has on/off. This pulses it to approximate
+                        ;; an analog control
+                        (set! (-> pad direct buzz-idx) (logand (ash (-> pad buzz-val buzz-idx) (- (logand (get-integral-current-time) 7))) 1)))
+                      ((= v1-10 1)
+                        ;; vibration motor 1 has analog control. set the speed.
+                        (set! (-> pad direct buzz-idx) (-> pad buzz-val buzz-idx))))))
+                (else
+                  ;; not okay to buzz this motor, set to zero.
+                  (set! (-> pad buzz-val buzz-idx) (the-as uint 0))
+                  (set! (-> pad direct buzz-idx) (the-as uint 0)))))
+            ;; update button history.
+            (set! (-> pad button0-abs 2) (-> pad button0-abs 1))
+            (set! (-> pad button0-abs 1) (-> pad button0-shadow-abs 0))
+            (set! (-> pad button0-rel 2) (-> pad button0-rel 1))
+            (set! (-> pad button0-rel 1) (-> pad button0-rel 0))
 
-	   ;; og:preserve-this high fps fix
-           (when (>= (-> *pc-settings* target-fps) 300)
+	          ;; og:preserve-this high fps fix
+            (when (>= (-> *pc-settings* target-fps) 300)
               (set! (-> history button0-abs 14) (-> history button0-abs 13))
               (set! (-> history button0-abs 13) (-> history button0-abs 12))
               (set! (-> history button0-abs 12) (-> history button0-abs 11))
@@ -309,7 +428,7 @@
               (set! (-> history button0-rel 13) (-> history button0-rel 12))
               (set! (-> history button0-rel 12) (-> history button0-rel 11))
             )
-           (when (>= (-> *pc-settings* target-fps) 240)
+            (when (>= (-> *pc-settings* target-fps) 240)
               (set! (-> history button0-abs 11) (-> history button0-abs 10))
               (set! (-> history button0-abs 10) (-> history button0-abs 9))
               (set! (-> history button0-abs  9) (-> history button0-abs 8))
@@ -317,86 +436,86 @@
               (set! (-> history button0-rel 10) (-> history button0-rel 9))
               (set! (-> history button0-rel  9) (-> history button0-rel 8))
             )
-           (when (>= (-> *pc-settings* target-fps) 165)
+            (when (>= (-> *pc-settings* target-fps) 165)
               (set! (-> history button0-abs 8) (-> history button0-abs 7))
               (set! (-> history button0-rel 8) (-> history button0-rel 7))
-             )
-	   (when (>= (-> *pc-settings* target-fps) 150)
-	     (set! (-> history button0-abs 7) (-> history button0-abs 6))
-	     (set! (-> history button0-abs 6) (-> history button0-abs 5))
-
-	     (set! (-> history button0-rel 7) (-> history button0-rel 6))
-             (set! (-> history button0-rel 6) (-> history button0-rel 5))
             )
-           (when (>= (-> *pc-settings* target-fps) 120)
+            (when (>= (-> *pc-settings* target-fps) 150)
+              (set! (-> history button0-abs 7) (-> history button0-abs 6))
+              (set! (-> history button0-abs 6) (-> history button0-abs 5))
+
+              (set! (-> history button0-rel 7) (-> history button0-rel 6))
+              (set! (-> history button0-rel 6) (-> history button0-rel 5))
+            )
+            (when (>= (-> *pc-settings* target-fps) 120)
               (set! (-> history button0-abs 5) (-> history button0-abs 4))
               (set! (-> history button0-abs 4) (-> history button0-abs 3))
               (set! (-> history button0-rel 5) (-> history button0-rel 4))
               (set! (-> history button0-rel 4) (-> history button0-rel 3))
             )
-           (when (>= (-> *pc-settings* target-fps) 75)
+            (when (>= (-> *pc-settings* target-fps) 75)
               (set! (-> history button0-abs 3) (-> history button0-abs 2))
               (set! (-> history button0-rel 3) (-> history button0-rel 2))
             )
-           (set! (-> history button0-abs 2) (-> history button0-abs 1))
-           (set! (-> history button0-abs 1) (-> pad button0-shadow-abs 0))
-           (set! (-> history button0-rel 2) (-> history button0-rel 1))
-           (set! (-> history button0-rel 1) (-> pad button0-rel 0))
+            (set! (-> history button0-abs 2) (-> history button0-abs 1))
+            (set! (-> history button0-abs 1) (-> pad button0-shadow-abs 0))
+            (set! (-> history button0-rel 2) (-> history button0-rel 1))
+            (set! (-> history button0-rel 1) (-> pad button0-rel 0))
 
-           ;; we might want to clear a button after it is pressed, so we back it up in a "shadow" field
-           (let ((current-button0 (-> pad button0)))
-             (set! (-> pad button0-shadow-abs 0) (the-as pad-buttons current-button0))
-             (set! (-> pad button0-abs 0) (the-as pad-buttons current-button0))
-	     (set! (-> history button0-abs 0) (-> pad button0-abs 0))
-	     )
-           ;; buttons going down
-           (set! (-> pad button0-rel 0) (logclear (-> pad button0-abs 0) (-> pad button0-abs 1)))
-	   (set! (-> history button0-rel 0) (-> pad button0-rel 0))
+            ;; we might want to clear a button after it is pressed, so we back it up in a "shadow" field
+            (let ((current-button0 (-> pad button0)))
+              (set! (-> pad button0-shadow-abs 0) (the-as pad-buttons current-button0))
+              (set! (-> pad button0-abs 0) (the-as pad-buttons current-button0))
+              (set! (-> history button0-abs 0) (-> pad button0-abs 0))
+            )
+            ;; buttons going down
+            (set! (-> pad button0-rel 0) (logclear (-> pad button0-abs 0) (-> pad button0-abs 1)))
+            (set! (-> history button0-rel 0) (-> pad button0-rel 0))
 
-           ;; some debugging thing they wrote at some point
-           (when *cpad-debug*
-             (set! (-> pad leftx) (the-as uint 255))
-             (set! (-> pad rightx) (the-as uint 255)))
-           ;; compute a speed and direction for stick0
-           (set! (-> pad stick0-speed) 1.0)
-           (cond
-             ;; check if controller is a valid dualshock 2
-             ((= (shr (-> pad status) 4) 7)
-              ;; invert analogs if mirrored mode. trust me, you'll need this.
-              (#when PC_PORT
-                (when (pc-cheats? (-> *pc-settings* cheats) mirror)
-                  (set! (-> pad leftx) (- 255 (-> pad leftx)))
-                  (set! (-> pad rightx) (- 255 (-> pad rightx)))))
-              ;;Hell Randomizer "flipped-sticks" modifier
-              (let ((tempx (-> pad leftx)) (tempy (-> pad lefty)))
-                (when (modifier-is-active? "flipped-sticks")
-                  (set! (-> pad leftx) (-> pad rightx))
-                  (set! (-> pad lefty) (-> pad righty))
-                  (set! (-> pad rightx) tempx)
-                  (set! (-> pad righty) tempy)
+            ;; some debugging thing they wrote at some point
+            (when *cpad-debug*
+              (set! (-> pad leftx) (the-as uint 255))
+              (set! (-> pad rightx) (the-as uint 255)))
+            ;; compute a speed and direction for stick0
+            (set! (-> pad stick0-speed) 1.0)
+            (cond
+              ;; check if controller is a valid dualshock 2
+              ((= (shr (-> pad status) 4) 7)
+                ;; invert analogs if mirrored mode. trust me, you'll need this.
+                (#when PC_PORT
+                  (when (pc-cheats? (-> *pc-settings* cheats) mirror)
+                    (set! (-> pad leftx) (- 255 (-> pad leftx)))
+                    (set! (-> pad rightx) (- 255 (-> pad rightx)))))
+                ;;Hell Randomizer "flipped-sticks" modifier
+                (let ((tempx (-> pad leftx)) (tempy (-> pad lefty)))
+                  (when (modifier-is-active? "flipped-sticks")
+                    (set! (-> pad leftx) (-> pad rightx))
+                    (set! (-> pad lefty) (-> pad righty))
+                    (set! (-> pad rightx) tempx)
+                    (set! (-> pad righty) tempy)
+                  )
                 )
-              )
-              ;; compute speed and direction, with deadband.
-              (let ((f30-0 (* 0.0078125 (the float (+ (-> pad leftx) -128))))
-                    (f28-0 (* 0.0078125 (the float (- 127 (the-as int (-> pad lefty)))))))
-                (set! (-> pad stick0-dir) (atan (- f30-0) f28-0))
-                (set! (-> pad stick0-speed) (fmin 1.0 (sqrtf (+ (* f30-0 f30-0) (* f28-0 f28-0))))))
-              (if (< (-> pad stick0-speed) STICK_DEADZONE) (set! (-> pad stick0-speed) 0.0)))
-             (else
-              ;; analog is invalid? set to zero.
-              (set! (-> pad leftx) (the-as uint 128))
-              (set! (-> pad lefty) (the-as uint 128))
-              (set! (-> pad rightx) (the-as uint 128))
-              (set! (-> pad righty) (the-as uint 128))
-              (set! (-> pad stick0-dir) 0.0)
-              (set! (-> pad stick0-speed) 0.0)))
-           ;; if the pad was changed or stick0 pushed, update the last changed time.
-           (if (or (!= (-> pad button0-abs 0) (-> pad button0-abs 1))
-                   (or (< STICK_DEADZONE (-> pad stick0-speed)) (zero? (-> pad change-time))))
-             (set! (-> pad change-time) (get-current-time))))
+                ;; compute speed and direction, with deadband.
+                (let ((f30-0 (* 0.0078125 (the float (+ (-> pad leftx) -128))))
+                      (f28-0 (* 0.0078125 (the float (- 127 (the-as int (-> pad lefty)))))))
+                  (set! (-> pad stick0-dir) (atan (- f30-0) f28-0))
+                  (set! (-> pad stick0-speed) (fmin 1.0 (sqrtf (+ (* f30-0 f30-0) (* f28-0 f28-0))))))
+                (if (< (-> pad stick0-speed) STICK_DEADZONE) (set! (-> pad stick0-speed) 0.0)))
+              (else
+                ;; analog is invalid? set to zero.
+                (set! (-> pad leftx) (the-as uint 128))
+                (set! (-> pad lefty) (the-as uint 128))
+                (set! (-> pad rightx) (the-as uint 128))
+                (set! (-> pad righty) (the-as uint 128))
+                (set! (-> pad stick0-dir) 0.0)
+                (set! (-> pad stick0-speed) 0.0)))
+            ;; if the pad was changed or stick0 pushed, update the last changed time.
+            (if (or (!= (-> pad button0-abs 0) (-> pad button0-abs 1))
+                  (or (< STICK_DEADZONE (-> pad stick0-speed)) (zero? (-> pad change-time))))
+              (set! (-> pad change-time) (get-current-time))))
           (else
-           ;; invalid bits set, controller is not connected.
-           (cpad-invalid! pad))))))
+            ;; invalid bits set, controller is not connected.
+            (cpad-invalid! pad))))))
   *cpad-list*)
 
 (defun buzz-stop! ((idx int))

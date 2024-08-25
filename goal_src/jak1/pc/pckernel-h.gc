@@ -448,7 +448,16 @@
       (hell-randomizer? symbol) ;; enable Stellar's hell randomizer
       ;;Modifiers
       (pacifist? symbol)
-      (flipped-sticks? symbol) 
+      (flipped-sticks? symbol)
+      (scrambled-buttons? symbol)
+      (flipped-buttons? symbol)
+      (crack-enemies? symbol)
+      (fragile? symbol)
+      (hell? symbol)
+      (sonic? symbol)
+      (run-jak-run? symbol)
+      (farts? symbol)
+      (invisible? symbol) 
     )
 
     (:methods
@@ -466,6 +475,15 @@
   (set! (-> obj hell-randomizer?) #t)
   (set! (-> obj pacifist?) #f)
   (set! (-> obj flipped-sticks?) #f)
+  (set! (-> obj scrambled-buttons?) #f)
+  (set! (-> obj flipped-buttons?) #f)
+  (set! (-> obj crack-enemies?) #f)
+  (set! (-> obj fragile?) #f)
+  (set! (-> obj hell?) #f)
+  (set! (-> obj sonic?) #f)
+  (set! (-> obj run-jak-run?) #f)
+  (set! (-> obj farts?) #f)
+  (set! (-> obj invisible?) #f)
 
   (none)
 )
