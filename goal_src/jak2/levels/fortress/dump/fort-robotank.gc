@@ -177,7 +177,7 @@
   (new 'static 'inline-array fort-robotank-segment 4
     (new 'static 'fort-robotank-segment
       :flags #x17
-      :max-speed 6.0
+      :max-speed 26.0
       :next-segment 1
       :event-count 5
       :event-tbl (new 'static 'inline-array fort-robotank-segment-event 5
@@ -200,7 +200,7 @@
       )
     (new 'static 'fort-robotank-segment
       :flags #x7
-      :max-speed 9.0
+      :max-speed 29.0
       :next-segment 2
       :event-count 4
       :event-tbl (new 'static 'inline-array fort-robotank-segment-event 5
@@ -235,7 +235,7 @@
       )
     (new 'static 'fort-robotank-segment
       :flags #x20
-      :max-speed 10.0
+      :max-speed 50.0
       :next-segment 3
       :event-count 4
       :event-tbl (new 'static 'inline-array fort-robotank-segment-event 4
@@ -253,13 +253,13 @@
           )
         )
       )
-    (new 'static 'fort-robotank-segment :flags #x20 :max-speed 8.0 :next-segment 3)
+    (new 'static 'fort-robotank-segment :flags #x20 :max-speed 16.0 :next-segment 3)
     )
   )
 
 (define *fort-robotank-2-segment-table*
   (new 'static 'inline-array fort-robotank-segment 1
-    (new 'static 'fort-robotank-segment :flags #x8 :max-speed 6.0 :next-segment-start 7.586)
+    (new 'static 'fort-robotank-segment :flags #x8 :max-speed 16.0 :next-segment-start 7.586)
     )
   )
 

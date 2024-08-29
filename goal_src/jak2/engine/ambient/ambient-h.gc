@@ -88,7 +88,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "DSbop002"
+      :name "JAK075"
       :channel (gui-channel daxter)
       :flags #x3
       :speech #x3
@@ -98,7 +98,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "DSbop004"
+      :name "JAK075"
       :channel (gui-channel daxter)
       :flags #x3
       :speech #x4
@@ -108,7 +108,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "DSbop008"
+      :name "JAK075"
       :channel (gui-channel daxter)
       :flags #x3
       :speech #x5
@@ -118,7 +118,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "DSbop009"
+      :name "JAK075"
       :channel (gui-channel daxter)
       :flags #x3
       :speech #x6
@@ -126,7 +126,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "DSbop010"
+      :name "JAK075"
       :channel (gui-channel daxter)
       :flags #x3
       :speech #x7
@@ -136,7 +136,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "DSbop011"
+      :name "JAK075"
       :channel (gui-channel daxter)
       :flags #x3
       :speech #x8
@@ -144,7 +144,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "DSbop016"
+      :name "JAK075"
       :channel (gui-channel daxter)
       :flags #x3
       :speech #x9
@@ -154,7 +154,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "DSbop017"
+      :name "JAK075"
       :channel (gui-channel daxter)
       :flags #x3
       :speech #xa
@@ -162,7 +162,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "ds020"
+      :name "JAK075"
       :channel (gui-channel daxter)
       :flags #x3
       :speech #xb
@@ -172,7 +172,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "ds043"
+      :name "JAK075"
       :channel (gui-channel daxter)
       :flags #x11
       :speech #xc
@@ -182,7 +182,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "ds043m"
+      :name "JAK075"
       :channel (gui-channel message)
       :flags #x10
       :speech #xd
@@ -192,7 +192,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "ds046"
+      :name "JAK075"
       :channel (gui-channel daxter)
       :flags #x11
       :speech #xe
@@ -202,7 +202,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "ds046m"
+      :name "JAK075"
       :channel (gui-channel message)
       :flags #x10
       :speech #xf
@@ -212,7 +212,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "ds162"
+      :name "JAK075"
       :channel (gui-channel daxter)
       :flags #x3
       :speech #x10
@@ -220,7 +220,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "ds165"
+      :name "JAK075"
       :channel (gui-channel daxter)
       :flags #x3
       :speech #x11
@@ -228,7 +228,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "cityv039"
+      :name "EROL002"
       :channel (gui-channel alert)
       :flags #x3
       :speech #x12
@@ -236,7 +236,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "cityv037"
+      :name "EROL002"
       :channel (gui-channel alert)
       :flags #x3
       :speech #x13
@@ -244,7 +244,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "cityv056"
+      :name "EROL002"
       :channel (gui-channel alert)
       :flags #x3
       :speech #x14
@@ -252,7 +252,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "cityv054"
+      :name "EROL002"
       :channel (gui-channel alert)
       :flags #x3
       :speech #x15
@@ -260,7 +260,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "cityv055"
+      :name "EROL002"
       :channel (gui-channel alert)
       :flags #x3
       :speech #x16
@@ -268,7 +268,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "cityv107"
+      :name "EROL002"
       :channel (gui-channel alert)
       :flags #x3
       :speech #x17
@@ -276,7 +276,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "kg100a"
+      :name "ORA011"
       :channel (gui-channel alert)
       :flags #x3
       :speech #x18
@@ -284,7 +284,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "kg104a"
+      :name "ORA011"
       :channel (gui-channel alert)
       :flags #x3
       :speech #x19
@@ -292,7 +292,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "kg102a"
+      :name "ORA011"
       :channel (gui-channel alert)
       :flags #x3
       :speech #x1a
@@ -300,7 +300,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "kg071a"
+      :name "ORA011"
       :channel (gui-channel alert)
       :flags #x3
       :speech #x1b
@@ -308,7 +308,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "kg107a"
+      :name "ORA011"
       :channel (gui-channel alert)
       :flags #x3
       :speech #x1c
@@ -316,7 +316,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "kg097a"
+      :name "ORA011"
       :channel (gui-channel alert)
       :flags #x3
       :speech #x1d
@@ -332,42 +332,42 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "cityv063"
+      :name "CITYV098"
       :channel (gui-channel alert)
       :speech #x1f
       :neg #x1
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "cityv064"
+      :name "CITYV190"
       :channel (gui-channel alert)
       :speech #x20
       :neg #x1
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "cityv065"
+      :name "CITYV190"
       :channel (gui-channel alert)
       :speech #x21
       :neg #x1
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "cityv067"
+      :name "CITYV190"
       :channel (gui-channel alert)
       :speech #x22
       :neg #x1
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "cityv068"
+      :name "CITYV190"
       :channel (gui-channel alert)
       :speech #x23
       :neg #x1
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "cityv069"
+      :name "DS493"
       :channel (gui-channel alert)
       :speech #x24
       :text-message (text-id tutorial-hover-zones)
@@ -376,14 +376,14 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "cityv070"
+      :name "DS495"
       :channel (gui-channel alert)
       :speech #x25
       :neg #x1
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "cityv130"
+      :name "DS495"
       :channel (gui-channel voicebox)
       :flags #x3
       :speech #x26
@@ -391,7 +391,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "cityv132"
+      :name "DS493"
       :channel (gui-channel voicebox)
       :flags #x3
       :speech #x27
@@ -399,56 +399,56 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "cityv071"
+      :name "DS493"
       :channel (gui-channel alert)
       :speech #x28
       :neg #x1
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "cityv072"
+      :name "DS493"
       :channel (gui-channel alert)
       :speech #x29
       :neg #x1
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "cityv073"
+      :name "DS493"
       :channel (gui-channel alert)
       :speech #x2a
       :neg #x1
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "cityv074"
+      :name "DS493"
       :channel (gui-channel alert)
       :speech #x2b
       :neg #x1
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "cityv075"
+      :name "DS493"
       :channel (gui-channel alert)
       :speech #x2c
       :neg #x1
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "cityv076"
+      :name "DS493"
       :channel (gui-channel alert)
       :speech #x2d
       :neg #x1
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "cityv077"
+      :name "DS495"
       :channel (gui-channel alert)
       :speech #x2e
       :neg #x1
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "cityv078"
+      :name "DS495"
       :channel (gui-channel alert)
       :speech #x2f
       :neg #x1
@@ -462,7 +462,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "tor007"
+      :name "TSWM004"
       :channel (gui-channel voicebox)
       :flags #x3
       :speech #x31
@@ -470,7 +470,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "tor008"
+      :name "TSWM010"
       :channel (gui-channel voicebox)
       :flags #x3
       :speech #x32
@@ -478,7 +478,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "mess004"
+      :name "TSWM013"
       :channel (gui-channel message)
       :flags #x7
       :speech #x33
@@ -488,7 +488,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "krew010"
+      :name "KWBF042"
       :channel (gui-channel voicebox)
       :flags #x7
       :speech #x34
@@ -505,7 +505,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "mess005"
+      :name "DS120"
       :channel (gui-channel message)
       :flags #x3
       :speech #x36
@@ -515,7 +515,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "mess006"
+      :name "TSWM011"
       :channel (gui-channel message)
       :speech #x37
       :text-message (text-id tutorial-double-jump)
@@ -2823,7 +2823,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "cityv176"
+      :name "DS232"
       :channel (gui-channel alert)
       :speech #x174
       :delay (seconds 3)
@@ -2831,7 +2831,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "cityv177"
+      :name "DS232"
       :channel (gui-channel alert)
       :speech #x175
       :delay (seconds 3)
@@ -2839,7 +2839,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "cityv179"
+      :name "DS232"
       :channel (gui-channel alert)
       :flags #x2
       :speech #x176
@@ -2847,7 +2847,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "cityv180"
+      :name "DS232"
       :channel (gui-channel alert)
       :flags #x2
       :speech #x177
@@ -2855,7 +2855,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "cityv181"
+      :name "DS232"
       :channel (gui-channel alert)
       :flags #x2
       :speech #x178
@@ -3528,7 +3528,7 @@
       :on-close #f
       )
     (new 'static 'talker-speech-class
-      :name "krew006"
+      :name "KWBF036"
       :channel (gui-channel voicebox)
       :flags #x2
       :speech #x1d0

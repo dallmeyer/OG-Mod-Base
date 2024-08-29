@@ -137,7 +137,7 @@
       penetrate-63
       )
     :movement-gravity (meters -100)
-    :friction 0.7
+    :friction 2.7
     :attack-shove-back (meters 3)
     :attack-shove-up (meters 2)
     :attack-mode 'generic
@@ -190,9 +190,9 @@
     :turn-anim -1
     :run-anim 33
     :taunt-anim -1
-    :run-travel-speed (meters 10)
-    :run-acceleration (meters 14)
-    :run-turning-acceleration (meters 9)
+    :run-travel-speed (meters 100)
+    :run-acceleration (meters 104)
+    :run-turning-acceleration (meters 90)
     :walk-travel-speed (meters 3)
     :walk-acceleration (meters 8)
     :walk-turning-acceleration (meters 6)
@@ -725,8 +725,8 @@
   (set-as-offset-from! (-> this sprites 3) (the-as vector4w (-> this sprites 2)) 15 2)
   (set-hud-piece-position!
     (-> this sprites 6)
-    (the int (+ 100.0 (* -130.0 (-> this offset))))
-    (the int (+ 15.0 (* -100.0 (-> this offset))))
+    (the int (+ 10.0 (* -130.0 (-> this offset))))
+    (the int (+ 5.0 (* -100.0 (-> this offset))))
     )
   (set! (-> this sprites 4 angle) (* 182.04445 (the float (- 270 (/ (* 90 (-> this values 1 current)) 100)))))
   (set-as-offset-from! (-> this sprites 4) (the-as vector4w (-> this sprites 6)) 40 16)
@@ -747,9 +747,9 @@
   )
 
 (defmethod update-values ((this hud-ruffians))
-  (set! (-> this values 0 target) (the int (* 100.0 (-> *game-info* bot-health 0))))
-  (set! (-> this values 1 target) (the int (* 100.0 (-> *game-info* bot-health 1))))
-  (set! (-> this values 2 target) (the int (* 100.0 (-> *game-info* bot-health 2))))
+  (set! (-> this values 0 target) (the int (* 10.0 (-> *game-info* bot-health 0))))
+  (set! (-> this values 1 target) (the int (* 10.0 (-> *game-info* bot-health 1))))
+  (set! (-> this values 2 target) (the int (* 10.0 (-> *game-info* bot-health 2))))
   ((method-of-type hud update-values) this)
   0
   (none)

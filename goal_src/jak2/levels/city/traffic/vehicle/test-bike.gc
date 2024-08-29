@@ -25,7 +25,7 @@
       )
     :extra (new 'static 'rigid-body-object-extra-info
       :max-time-step 0.033333335
-      :gravity (meters 40)
+      :gravity (meters 0)
       :idle-distance (meters 50)
       :attack-force-scale 1.0
       )
@@ -261,7 +261,7 @@
       )
     :extra (new 'static 'rigid-body-object-extra-info
       :max-time-step 0.033333335
-      :gravity (meters 40)
+      :gravity (meters 0)
       :idle-distance (meters 50)
       :attack-force-scale 1.0
       )

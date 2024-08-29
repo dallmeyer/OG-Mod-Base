@@ -22,8 +22,6 @@
 (declare-type eco collectable)
 (declare-type ammo collectable)
 
-(define-extern orb-placer-list-maintenace (function symbol none))
-
 ;; DECOMP BEGINS
 
 (defskelgroup skel-health collectables collectables-health-lod0-jg collectables-health-idle-ja
@@ -1492,12 +1490,6 @@ This commonly includes things such as:
   :virtual #t
   :code (behavior ((arg0 symbol) (arg1 handle))
     (process-entity-status! self (entity-perm-status dead) #t)
-    )
-  :exit (behavior ()
-    ;; refresh orb-placer list in debug mode
-    (when *debug-segment*
-      (orb-placer-list-maintenace #t)
-      )
     )
   )
 

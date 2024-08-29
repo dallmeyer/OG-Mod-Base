@@ -1231,7 +1231,7 @@
             ((logtest? (-> self water flags) (water-flags under-water))
              (set! (-> gp-8 duration) (seconds 8))
              (set! (-> gp-8 gravity) -20480.0)
-             (set! (-> gp-8 rot-speed) 4.2)
+             (set! (-> gp-8 rot-speed) 18.2)
              (set-vector! (-> gp-8 fountain-rand-transv-lo) -20480.0 12288.0 -20480.0 1.0)
              (set-vector! (-> gp-8 fountain-rand-transv-hi) 20480.0 24576.0 20480.0 1.0)
              )

@@ -396,64 +396,64 @@
       :inv-mass 0.5
       :linear-damping 0.995
       :angular-damping 0.995
-      :bounce-factor 0.25
-      :friction-factor 0.2516
+      :bounce-factor 0.00
+      :friction-factor 0.00
       :cm-offset-joint (new 'static 'vector :y -2048.0 :z -2048.0 :w 1.0)
       :inertial-tensor-box (new 'static 'array meters 3 (meters 1.5) (meters 2) (meters 5))
       )
     :extra (new 'static 'rigid-body-object-extra-info
       :max-time-step 0.033333335
-      :gravity (meters 40)
+      :gravity (meters 20)
       :idle-distance (meters 50)
       :attack-force-scale 1.0
       )
     :name '*race-bike-d-constants*
-    :flags #x791
+    :flags #x70
     :object-type #xd
     :guard-type #x7
-    :max-engine-thrust (meters 50)
-    :inv-max-engine-thrust 0.0000048828124
+    :max-engine-thrust (meters 250)
+    :inv-max-engine-thrust 0.0000248828124
     :engine-response-rate 32.0
     :engine-intake-factor 1.0
-    :brake-factor 2.0
-    :turbo-boost-factor 1.0
-    :max-xz-speed (meters 100)
+    :brake-factor 4.0
+    :turbo-boost-factor 2.0
+    :max-xz-speed (meters 992100)
     :ground-probe-distance (meters 5)
     :ground-probe-offset (meters 0.5)
     :cos-ground-effect-angle -0.00000004371139
     :spring-lift-factor 0.35
     :air-drag-factor 1.2
-    :steering-fin-angle 1820.4445
-    :steering-thruster-factor 6.0
-    :steering-thruster-max-gain 2.0
-    :steering-thruster-half-gain-speed (meters 80)
+    :steering-fin-angle 2820.4445
+    :steering-thruster-factor 12.0
+    :steering-thruster-max-gain 8.0
+    :steering-thruster-half-gain-speed (meters 180)
     :tire-steering-angle 1274.3112
-    :tire-static-friction 0.5
-    :tire-static-friction-speed (meters 1)
-    :tire-dynamic-friction 0.25
-    :tire-dynamic-friction-speed (meters 3)
-    :tire-inv-max-friction-speed 0.000024414063
+    :tire-static-friction 5.5
+    :tire-static-friction-speed (meters 10)
+    :tire-dynamic-friction 1.25
+    :tire-dynamic-friction-speed (meters 5)
+    :tire-inv-max-friction-speed 0.100024414063
     :airfoil-factor 8.0
-    :drag-force-factor 1.0
-    :speed-limiting-drag 0.5
-    :pitch-control-factor 0.5
-    :roll-control-factor 1.0
+    :drag-force-factor 8.0
+    :speed-limiting-drag 8.5
+    :pitch-control-factor 8.5
+    :roll-control-factor 8.0
     :roll-angle 7281.778
-    :jump-thrust-factor 0.625
-    :buoyancy-factor 1.0
+    :jump-thrust-factor 2.625
+    :buoyancy-factor 0.0
     :player-weight 163840.0
     :player-shift-x (meters 0.6)
     :player-shift-z (meters 0.125)
-    :target-speed-offset (meters 4)
+    :target-speed-offset (meters 14)
     :turning-accel (meters 20)
     :toughness-factor 1.0
-    :damage-factor 4.0
+    :damage-factor 11111110.0000
     :camera-string-min-height (meters 2.5)
     :camera-string-max-height (meters 2.5)
     :camera-string-min-length (meters 2.4)
     :camera-string-max-length (meters 2.5)
-    :camera-min-fov 16384.0
-    :camera-max-fov 18204.445
+    :camera-min-fov 18384.0
+    :camera-max-fov 19204.445
     :camera-head-offset 4096.0
     :camera-foot-offset -4096.0
     :camera-air-max-angle-offset 5461.3335
@@ -578,64 +578,64 @@
       :inv-mass 0.5
       :linear-damping 0.995
       :angular-damping 0.995
-      :bounce-factor 0.25
-      :friction-factor 0.2516
+      :bounce-factor 0.00
+      :friction-factor 0.00
       :cm-offset-joint (new 'static 'vector :y -2048.0 :z -2048.0 :w 1.0)
       :inertial-tensor-box (new 'static 'array meters 3 (meters 1.5) (meters 2) (meters 5))
       )
     :extra (new 'static 'rigid-body-object-extra-info
       :max-time-step 0.033333335
-      :gravity (meters 40)
-      :idle-distance (meters 50)
+      :gravity (meters 20)
+      :idle-distance (meters 250)
       :attack-force-scale 1.0
       )
     :name '*race-bike-e-constants*
-    :flags #x791
+    :flags #x70
     :object-type #xd
     :guard-type #x7
-    :max-engine-thrust (meters 50)
-    :inv-max-engine-thrust 0.0000048828124
+    :max-engine-thrust (meters 250)
+    :inv-max-engine-thrust 0.0000248828124
     :engine-response-rate 32.0
     :engine-intake-factor 1.0
-    :brake-factor 2.0
-    :turbo-boost-factor 1.0
-    :max-xz-speed (meters 100)
+    :brake-factor 4.0
+    :turbo-boost-factor 2.0
+    :max-xz-speed (meters 992100)
     :ground-probe-distance (meters 5)
     :ground-probe-offset (meters 0.5)
     :cos-ground-effect-angle -0.00000004371139
     :spring-lift-factor 0.35
     :air-drag-factor 1.2
-    :steering-fin-angle 1820.4445
-    :steering-thruster-factor 6.0
-    :steering-thruster-max-gain 2.0
-    :steering-thruster-half-gain-speed (meters 80)
+    :steering-fin-angle 2820.4445
+    :steering-thruster-factor 12.0
+    :steering-thruster-max-gain 8.0
+    :steering-thruster-half-gain-speed (meters 180)
     :tire-steering-angle 1274.3112
-    :tire-static-friction 0.5
-    :tire-static-friction-speed (meters 1)
-    :tire-dynamic-friction 0.25
-    :tire-dynamic-friction-speed (meters 3)
-    :tire-inv-max-friction-speed 0.000024414063
+    :tire-static-friction 5.5
+    :tire-static-friction-speed (meters 10)
+    :tire-dynamic-friction 1.25
+    :tire-dynamic-friction-speed (meters 5)
+    :tire-inv-max-friction-speed 0.100024414063
     :airfoil-factor 8.0
-    :drag-force-factor 1.0
-    :speed-limiting-drag 0.5
-    :pitch-control-factor 0.5
-    :roll-control-factor 1.0
+    :drag-force-factor 8.0
+    :speed-limiting-drag 8.5
+    :pitch-control-factor 8.5
+    :roll-control-factor 8.0
     :roll-angle 7281.778
-    :jump-thrust-factor 0.625
-    :buoyancy-factor 1.0
+    :jump-thrust-factor 2.625
+    :buoyancy-factor 0.0
     :player-weight 163840.0
     :player-shift-x (meters 0.6)
     :player-shift-z (meters 0.125)
-    :target-speed-offset (meters 4)
+    :target-speed-offset (meters 14)
     :turning-accel (meters 20)
     :toughness-factor 1.0
-    :damage-factor 4.0
+    :damage-factor 0.00000
     :camera-string-min-height (meters 2.5)
     :camera-string-max-height (meters 2.5)
     :camera-string-min-length (meters 2.4)
     :camera-string-max-length (meters 2.5)
-    :camera-min-fov 16384.0
-    :camera-max-fov 18204.445
+    :camera-min-fov 18384.0
+    :camera-max-fov 19204.445
     :camera-head-offset 4096.0
     :camera-foot-offset -4096.0
     :camera-air-max-angle-offset 5461.3335

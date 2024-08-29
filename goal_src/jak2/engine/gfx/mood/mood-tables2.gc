@@ -15,86 +15,88 @@
 (define *overide-mood-color-table*
   (new 'static 'mood-color-table :data (new 'static 'inline-array mood-color 8
                                          (new 'static 'mood-color
-                                           :lgt-color (new 'static 'vector :x 1.375 :y 1.157)
+                                           :lgt-color (new 'static 'vector :x 2.75 :y 2.314 :z 2.4)
                                            :amb-color (new 'static 'vector :x 0.625 :y 0.553 :z 0.725 :w 1.0)
                                            )
                                          (new 'static 'mood-color
-                                           :lgt-color (new 'static 'vector :x 1.473 :y 1.337 :z 1.0)
+                                           :lgt-color (new 'static 'vector :x 2.946 :y 2.674 :z 2.0)
                                            :amb-color (new 'static 'vector :x 0.527 :y 0.652 :z 0.75 :w 1.0)
                                            )
                                          (new 'static 'mood-color
-                                           :lgt-color (new 'static 'vector :x 1.473 :y 1.348 :z 1.15)
+                                           :lgt-color (new 'static 'vector :x 2.946 :y 2.696 :z 2.3)
                                            :amb-color (new 'static 'vector :x 0.527 :y 0.652 :z 0.75 :w 1.0)
                                            )
                                          (new 'static 'mood-color
-                                           :lgt-color (new 'static 'vector :x 1.473 :y 1.337 :z 1.0)
+                                           :lgt-color (new 'static 'vector :x 2.946 :y 2.674 :z 2.0)
                                            :amb-color (new 'static 'vector :x 0.527 :y 0.652 :z 0.75 :w 1.0)
                                            )
                                          (new 'static 'mood-color
-                                           :lgt-color (new 'static 'vector :x 1.5 :y 1.148)
+                                           :lgt-color (new 'static 'vector :x 3.0 :y 2.296 :z 2.6)
                                            :amb-color (new 'static 'vector :x 0.5 :y 0.562 :z 0.75 :w 1.0)
                                            )
                                          (new 'static 'mood-color
-                                           :lgt-color (new 'static 'vector :x 0.05 :y 0.149 :z 0.375)
+                                           :lgt-color (new 'static 'vector :x 0.1 :y 0.298 :z 0.75)
                                            :amb-color (new 'static 'vector :x 0.35 :y 0.451 :z 0.625 :w 1.0)
                                            )
                                          (new 'static 'mood-color
-                                           :lgt-color (new 'static 'vector :x 0.1 :y 0.35 :z 0.5)
+                                           :lgt-color (new 'static 'vector :x 0.2 :y 0.7 :z 1.0)
                                            :amb-color (new 'static 'vector :x 0.3 :y 0.35 :z 0.5 :w 1.0)
                                            )
                                          (new 'static 'mood-color
-                                           :lgt-color (new 'static 'vector :x 0.1 :y 0.575 :z 0.4)
+                                           :lgt-color (new 'static 'vector :x 0.2 :y 1.15 :z 0.8)
                                            :amb-color (new 'static 'vector :x 0.3 :y 0.425 :z 0.5 :w 1.0)
                                            )
-                                         )
+                                         ))
+
                                  )
-  )
+  
 
 (define *overide-mood-fog-table*
   (new 'static 'mood-fog-table :data (new 'static 'inline-array mood-fog 8
                                        (new 'static 'mood-fog
-                                         :fog-color (new 'static 'vector :x 160.0 :y 150.0 :z 200.0 :w 128.0)
+                                         :fog-color (new 'static 'vector :x 320.0 :y 300.0 :z 400.0 :w 128.0)
                                          :fog-dists (new 'static 'vector :x 262144.0 :y 3690496.0 :z 255.0 :w 64.0)
                                          :erase-color (new 'static 'vector :w 128.0)
                                          )
                                        (new 'static 'mood-fog
-                                         :fog-color (new 'static 'vector :x 150.0 :y 165.0 :z 220.0 :w 128.0)
+                                         :fog-color (new 'static 'vector :x 300.0 :y 330.0 :z 440.0 :w 128.0)
                                          :fog-dists (new 'static 'vector :x 262144.0 :y 3690496.0 :z 255.0 :w 64.0)
                                          :erase-color (new 'static 'vector :w 128.0)
                                          )
                                        (new 'static 'mood-fog
-                                         :fog-color (new 'static 'vector :x 128.0 :y 180.0 :z 243.0 :w 128.0)
+                                         :fog-color (new 'static 'vector :x 256.0 :y 360.0 :z 486.0 :w 128.0)
                                          :fog-dists (new 'static 'vector :x 262144.0 :y 3690496.0 :z 255.0 :w 64.0)
                                          :erase-color (new 'static 'vector :w 128.0)
                                          )
                                        (new 'static 'mood-fog
-                                         :fog-color (new 'static 'vector :x 150.0 :y 165.0 :z 220.0 :w 128.0)
+                                         :fog-color (new 'static 'vector :x 300.0 :y 330.0 :z 440.0 :w 128.0)
                                          :fog-dists (new 'static 'vector :x 262144.0 :y 3690496.0 :z 255.0 :w 64.0)
                                          :erase-color (new 'static 'vector :w 128.0)
                                          )
                                        (new 'static 'mood-fog
-                                         :fog-color (new 'static 'vector :x 160.0 :y 150.0 :z 200.0 :w 128.0)
+                                         :fog-color (new 'static 'vector :x 320.0 :y 300.0 :z 400.0 :w 128.0)
                                          :fog-dists (new 'static 'vector :x 262144.0 :y 3690496.0 :z 255.0 :w 64.0)
                                          :erase-color (new 'static 'vector :w 128.0)
                                          )
                                        (new 'static 'mood-fog
-                                         :fog-color (new 'static 'vector :x 16.0 :y 32.0 :z 100.0 :w 128.0)
+                                         :fog-color (new 'static 'vector :x 32.0 :y 64.0 :z 200.0 :w 128.0)
                                          :fog-dists (new 'static 'vector :x 262144.0 :y 3690496.0 :z 255.0 :w 64.0)
                                          :erase-color (new 'static 'vector :w 128.0)
                                          )
                                        (new 'static 'mood-fog
-                                         :fog-color (new 'static 'vector :y 24.0 :z 64.0 :w 128.0)
+                                         :fog-color (new 'static 'vector :y 48.0 :z 128.0 :w 128.0)
                                          :fog-dists (new 'static 'vector :x 262144.0 :y 3690496.0 :z 255.0 :w 64.0)
                                          :erase-color (new 'static 'vector :w 128.0)
                                          )
                                        (new 'static 'mood-fog
-                                         :fog-color (new 'static 'vector :y 56.0 :z 72.0 :w 128.0)
+                                         :fog-color (new 'static 'vector :y 112.0 :z 144.0 :w 128.0)
                                          :fog-dists (new 'static 'vector :x 262144.0 :y 3690496.0 :z 255.0 :w 64.0)
                                          :erase-color (new 'static 'vector :w 128.0)
                                          )
-                                       )
+                                       ))
+
                                )
-  )
+  
 
 ;; WARN: Return type mismatch pointer vs none.
 (defun init-overide-table ((arg0 mood-table))

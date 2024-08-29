@@ -290,7 +290,7 @@
   "Init relevant settings for the [[projectile]] such as gravity, speed, timeout, etc"
   (set! (-> this part) (create-launch-control (-> *part-group-id-table* 1120) this))
   (set! (-> this attack-mode) 'squid-grenade)
-  (set! (-> this max-speed) 655360.0)
+  (set! (-> this max-speed) 9655360.0)
   (set! (-> this move) squid-grenade-move)
   (set! (-> this timeout) (seconds 5))
   (set! (-> this stop-speed) 4.096)

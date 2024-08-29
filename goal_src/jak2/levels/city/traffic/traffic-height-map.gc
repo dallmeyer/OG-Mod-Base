@@ -13,23 +13,27 @@
                                :offset (new 'static 'array float 3 -3178496.0 71680.0 -3178496.0)
                                :x-inv-spacing 0.000010172526
                                :z-inv-spacing 0.000010172526
-                               :y-scale 4096.0
+                               :y-scale 6000.0  ;; Échelle de hauteur extrêmement élevée
                                :dim (new 'static 'array int16 2 80 #x70)
                                :data (new 'static 'array int8 8960
-                                 0
-                                 0
-                                 0
-                                 0
-                                 0
-                                 0
-                                 0
-                                 0
-                                 0
-                                 0
-                                 0
-                                 0
-                                 0
-                                 0
+                                 10  ;; Valeur maximale pour int8 (hauteur maximale pour chaque point)
+                                 10
+                                 10
+                                 10
+                                 10
+                                 10
+                                 10
+                                 10
+                                 10
+                                 10
+                                 10
+                                 10
+                                 10
+                                 10
+                                 10
+                                 10
+                                 10
+                                 10
                                  0
                                  0
                                  0

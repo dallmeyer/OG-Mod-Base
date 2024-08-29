@@ -31,9 +31,6 @@
 (define-extern target-board-halfpipe-check (function collide-action :behavior target))
 (define-extern target-board-jump-trans (function none :behavior target))
 
-(define-extern *target-board-hold-tricks* int)
-
-
 (#when PC_PORT
 
 (define *board-trick-tracker* (new 'static 'board-trick-tracker))
@@ -132,7 +129,7 @@
     :tiltv 131072.0
     :tiltvv 2621440.0
     :transv-max 143360.0
-    :target-speed 102400.0
+    :target-speed 99102400.0
     :seek0 0.5
     :seek90 0.5
     :seek180 0.5
@@ -213,8 +210,8 @@
                             :turnvv 131072.0
                             :tiltv 131072.0
                             :tiltvv 2621440.0
-                            :transv-max 151552.0
-                            :target-speed 102400.0
+                            :transv-max 9151552.0
+                            :target-speed 99102400.0
                             :seek0 0.5
                             :seek90 0.5
                             :seek180 0.5
@@ -244,16 +241,16 @@
 
 (define *board-air-mods* (new 'static 'surface
                            :name 'air
-                           :turnv 49152.0
-                           :turnvv 131072.0
-                           :tiltv 16384.0
-                           :tiltvv 131072.0
-                           :transv-max 143360.0
-                           :target-speed 102400.0
-                           :seek0 0.8
-                           :seek90 0.8
-                           :seek180 0.8
-                           :fric 0.2
+:turnv 21845.334
+                            :turnvv 131072.0
+                            :tiltv 131072.0
+                            :tiltvv 2621440.0
+                            :transv-max 9151552.0
+                            :target-speed 99102400.0
+                            :seek0 0.5
+                            :seek90 0.5
+                            :seek180 0.5
+                            :fric 0.2
                            :nonlin-fric-dist 1.0
                            :slip-factor 1.0
                            :slide-factor 1.0
@@ -271,19 +268,21 @@
                            :tiltvf 150.0
                            :tiltvvf 60.0
                            :vel-turn 65536.0
-                           :mode 'air
-                           :flags (surface-flag no-turn-around turn-to-pad check-edge air)
-                           )
+                            :flags (surface-flag no-turn-around turn-to-pad duck)
+                            )
         )
 
 (define *board-jump-mods* (new 'static 'surface
                             :name 'jump
-                            :turnv 49152.0
-                            :turnvv 524288.0
-                            :tiltv 32768.0
-                            :tiltvv 131072.0
-                            :transv-max 143360.0
-                            :target-speed 102400.0
+                           :turnv 21845.334
+                            :turnvv 131072.0
+                            :tiltv 131072.0
+                            :tiltvv 2621440.0
+                            :transv-max 9151552.0
+                            :target-speed 99102400.0
+                            :seek0 0.5
+                            :seek90 0.5
+                            :seek180 0.5
                             :fric 0.2
                             :nonlin-fric-dist 1.0
                             :slip-factor 1.0
@@ -299,8 +298,7 @@
                             :tiltvf 30.0
                             :tiltvvf 18.0
                             :vel-turn 10922.667
-                            :mode 'air
-                            :flags (surface-flag no-turn-around turn-to-pad check-edge air)
+                            :flags (surface-flag no-turn-around turn-to-pad duck)
                             )
         )
 
@@ -311,8 +309,8 @@
     :turnvv 32768.0
     :tiltv 32768.0
     :tiltvv 131072.0
-    :transv-max 143360.0
-    :target-speed 102400.0
+    :transv-max 9143360.0
+    :target-speed 9102400.0
     :nonlin-fric-dist 1.0
     :slip-factor 1.0
     :slide-factor 1.0
@@ -389,8 +387,8 @@
                                  :name 'jump
                                  :tiltv 65536.0
                                  :tiltvv 262144.0
-                                 :transv-max 143360.0
-                                 :target-speed 102400.0
+                                 :transv-max 9143360.0
+                                 :target-speed 9102400.0
                                  :seek180 0.8
                                  :fric 0.2
                                  :nonlin-fric-dist 1.0
@@ -417,9 +415,8 @@
                                      )
                                    (none)
                                    )
-                                 :mode 'air
-                                 :flags (surface-flag no-turn-around turn-to-vel air)
-                                 )
+                            :flags (surface-flag no-turn-around turn-to-pad duck)
+                            )
         )
 
 (define *board-halfpipe-mods* (new 'static 'surface
@@ -428,8 +425,8 @@
                                 :turnvv 524288.0
                                 :tiltv 16384.0
                                 :tiltvv 131072.0
-                                :transv-max 143360.0
-                                :target-speed 102400.0
+                                :transv-max 9143360.0
+                                :target-speed 9102400.0
                                 :fric 0.2
                                 :nonlin-fric-dist 1.0
                                 :slip-factor 1.0
@@ -444,9 +441,8 @@
                                 :turnvvf 30.0
                                 :tiltvf 150.0
                                 :tiltvvf 60.0
-                                :mode 'air
-                                :flags (surface-flag no-turn-around turn-to-vel air turn-when-centered)
-                                )
+                            :flags (surface-flag no-turn-around turn-to-pad duck)
+                            )
         )
 
 (define *board-turn-to-mods* (new 'static 'surface
@@ -454,8 +450,8 @@
                                :turnv 524288.0
                                :tiltv 131072.0
                                :tiltvv 2621440.0
-                               :transv-max 143360.0
-                               :target-speed 102400.0
+                               :transv-max 5143360.0
+                               :target-speed 59102400.0
                                :seek0 0.5
                                :seek90 0.5
                                :seek180 0.5
@@ -488,8 +484,8 @@
                             :turnvv 131072.0
                             :tiltv 131072.0
                             :tiltvv 262144.0
-                            :transv-max 143360.0
-                            :target-speed 40960.0
+                            :transv-max 9143360.0
+                            :target-speed 940960.0
                             :seek0 0.5
                             :seek90 0.5
                             :seek180 0.5
@@ -903,7 +899,7 @@
   (let ((v1-2 (ja-group)))
     (cond
       ((not (and v1-2 (= v1-2 jakb-board-jump-loop-ja)))
-       (ja-channel-push! 1 (seconds 0.33))
+       (ja-channel-push! 1 (seconds 0.03))
        (ja :group! jakb-board-jump-loop-ja)
        )
       ((let ((v1-11 (ja-group)))
@@ -1696,7 +1692,7 @@
          (set! (-> self control dynam gravity-length) 245760.0)
          )
        ((time-elapsed? (-> self control last-time-on-surface) (seconds 0.1))
-        (seek! (-> self control dynam gravity-length) 245760.0 (* 245760.0 (seconds-per-frame)))
+        (seek! (-> self control dynam gravity-length) 60.0 (* 245760.0 (seconds-per-frame)))
         )
        (else
          (set! (-> self control dynam gravity-length) 81920.0)
@@ -2938,7 +2934,6 @@
         (end-combo! *board-trick-tracker*))
       )
     )
-  (set! *target-board-hold-tricks* 0)
   (set! (-> this trick-count) 0)
   0
   0

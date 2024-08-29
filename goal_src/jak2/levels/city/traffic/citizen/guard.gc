@@ -169,11 +169,11 @@
       penetrate-63
       )
     :movement-gravity (meters -100)
-    :friction 0.5
-    :attack-shove-back (meters 3)
-    :attack-shove-up (meters 2)
+    :friction 10.5
+    :attack-shove-back (meters 30)
+    :attack-shove-up (meters 20)
     :attack-mode 'generic
-    :attack-damage 2
+    :attack-damage 99
     :recover-gnd-collide-with (collide-spec backgnd crate obstacle hit-by-others-list pusher)
     :jump-height-min (meters 0.5)
     :jump-height-factor 0.1
@@ -222,12 +222,12 @@
     :turn-anim 5
     :run-anim 6
     :taunt-anim -1
-    :run-travel-speed (meters 12)
-    :run-acceleration (meters 2)
-    :run-turning-acceleration (meters 30)
-    :walk-travel-speed (meters 3)
-    :walk-acceleration (meters 1)
-    :walk-turning-acceleration (meters 8)
+    :run-travel-speed (meters 42)
+    :run-acceleration (meters 30)
+    :run-turning-acceleration (meters 60)
+    :walk-travel-speed (meters 30)
+    :walk-acceleration (meters 10)
+    :walk-turning-acceleration (meters 80)
     :maximum-rotation-rate (degrees 720)
     :notice-nav-radius (meters 3)
     :frustration-distance (meters 8)

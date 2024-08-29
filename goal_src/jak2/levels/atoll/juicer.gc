@@ -562,11 +562,11 @@
       penetrate-63
       )
     :movement-gravity (meters -100)
-    :friction 0.9
+    :friction 1.9
     :attack-shove-back (meters 3)
     :attack-shove-up (meters 2)
     :attack-mode 'shock-red
-    :attack-damage 2
+    :attack-damage 20
     :recover-gnd-collide-with (collide-spec backgnd crate obstacle hit-by-others-list pusher)
     :jump-height-min (meters 3)
     :jump-height-factor 0.5

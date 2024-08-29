@@ -25,46 +25,43 @@
       :attack-force-scale 1.0
       )
     :name '*race-bike-a-constants*
-    :flags #x311
-    :object-type #xd
+    :flags #x70
+    :object-type #xb
     :guard-type #x7
-    :max-engine-thrust (meters 50)
-    :inv-max-engine-thrust 0.0000048828124
+    :max-engine-thrust (meters 150)
+    :inv-max-engine-thrust 0.1000048828124
     :engine-response-rate 32.0
     :engine-intake-factor 1.0
-    :brake-factor 2.0
+    :brake-factor 7.0
     :turbo-boost-factor 0.5
     :max-xz-speed (meters 100)
     :ground-probe-distance (meters 5)
     :ground-probe-offset (meters 0.5)
     :cos-ground-effect-angle -0.00000004371139
     :spring-lift-factor 0.35
-    :air-drag-factor 1.2
-    :steering-fin-angle 1820.4445
-    :steering-thruster-factor 6.0
-    :steering-thruster-max-gain 2.0
-    :steering-thruster-half-gain-speed (meters 80)
-    :tire-steering-angle 1274.3112
-    :tire-static-friction 0.5
-    :tire-static-friction-speed (meters 1)
-    :tire-dynamic-friction 0.25
-    :tire-dynamic-friction-speed (meters 3)
-    :tire-inv-max-friction-speed 0.000024414063
-    :airfoil-factor 8.0
+    :air-drag-factor 50.0
+    :steering-thruster-factor 7.0
+    :steering-thruster-max-gain 6.0
+    :steering-thruster-half-gain-speed (meters 58)
+    :tire-friction-factor 0.5
+    :tire-static-friction 0.55
+    :tire-dynamic-friction 0.4
+    :tire-dynamic-friction-speed (meters 2)
+    :tire-inv-max-friction-speed 0.000034877234
     :drag-force-factor 1.0
     :speed-limiting-drag 0.75
     :pitch-control-factor 0.5
     :roll-control-factor 1.0
     :roll-angle 7281.778
-    :jump-thrust-factor 0.625
+    :jump-thrust-factor 1.625
     :buoyancy-factor 1.0
     :player-weight 163840.0
     :player-shift-x (meters 0.6)
     :player-shift-z (meters 0.125)
     :target-speed-offset (meters 4)
     :turning-accel (meters 20)
-    :toughness-factor 2.0
-    :damage-factor 4.0
+    :toughness-factor 22.0
+    :damage-factor 24.0
     :camera-string-min-height (meters 2.5)
     :camera-string-max-height (meters 2.5)
     :camera-string-min-length (meters 5)
@@ -212,38 +209,35 @@
       :attack-force-scale 1.0
       )
     :name '*race-bike-b-constants*
-    :flags #x311
-    :object-type #xd
+    :flags #x70
+    :object-type #xb
     :guard-type #x7
-    :max-engine-thrust (meters 50)
-    :inv-max-engine-thrust 0.0000048828124
+    :max-engine-thrust (meters 150)
+    :inv-max-engine-thrust 0.1000048828124
     :engine-response-rate 32.0
     :engine-intake-factor 1.0
-    :brake-factor 2.0
+    :brake-factor 7.0
     :turbo-boost-factor 0.5
     :max-xz-speed (meters 100)
     :ground-probe-distance (meters 5)
     :ground-probe-offset (meters 0.5)
     :cos-ground-effect-angle -0.00000004371139
     :spring-lift-factor 0.35
-    :air-drag-factor 1.2
-    :steering-fin-angle 1820.4445
-    :steering-thruster-factor 6.0
-    :steering-thruster-max-gain 2.0
-    :steering-thruster-half-gain-speed (meters 80)
-    :tire-steering-angle 1274.3112
-    :tire-static-friction 0.5
-    :tire-static-friction-speed (meters 1)
-    :tire-dynamic-friction 0.25
-    :tire-dynamic-friction-speed (meters 3)
-    :tire-inv-max-friction-speed 0.000024414063
-    :airfoil-factor 8.0
+    :air-drag-factor 50.0
+    :steering-thruster-factor 7.0
+    :steering-thruster-max-gain 6.0
+    :steering-thruster-half-gain-speed (meters 58)
+    :tire-friction-factor 0.5
+    :tire-static-friction 0.55
+    :tire-dynamic-friction 0.4
+    :tire-dynamic-friction-speed (meters 2)
+    :tire-inv-max-friction-speed 0.000034877234
     :drag-force-factor 1.0
     :speed-limiting-drag 0.75
     :pitch-control-factor 0.5
     :roll-control-factor 1.0
     :roll-angle 7281.778
-    :jump-thrust-factor 0.625
+    :jump-thrust-factor 1.625
     :buoyancy-factor 1.0
     :player-weight 163840.0
     :player-shift-x (meters 0.6)
@@ -262,16 +256,12 @@
     :camera-foot-offset -4096.0
     :camera-air-max-angle-offset 5461.3335
     :camera-max-lookaround-speed 40960.0
-    :seat-count 2
+    :seat-count 1
     :section-count 2
     :grab-rail-array #f
     :seat-array (new 'static 'inline-array vehicle-seat-info 4
-      (new 'static 'vehicle-seat-info
-        :position (new 'static 'vector :y 757.76 :z 1175.552 :w (the-as float #x10000))
-        )
-      (new 'static 'vehicle-seat-info
-        :position (new 'static 'vector :y 2048.0 :z -4096.0 :w (the-as float #x40000))
-        )
+      (new 'static 'vehicle-seat-info :position (new 'static 'vector :w (the-as float #x10000)))
+      (new 'static 'vehicle-seat-info)
       (new 'static 'vehicle-seat-info)
       (new 'static 'vehicle-seat-info)
       )
@@ -280,12 +270,12 @@
       (new 'static 'vector :x -2457.6 :y 409.6 :z 4710.4 :w 1.0)
       )
     :section-bike-front (new 'static 'vehicle-section-info
-      :damage-seg-array (new 'static 'array uint64 3 #x20 #x8 #x2)
+      :damage-seg-array (new 'static 'array uint64 3 #x10 #x8 #x2)
       :damage-seg-count 3
       )
     :section-bike-rear (new 'static 'vehicle-section-info
-      :damage-seg-array (new 'static 'array uint64 3 #x40 #x10 #x4)
-      :damage-seg-count 3
+      :damage-seg-array (new 'static 'array uint64 3 #x20 #x4 #x0)
+      :damage-seg-count 2
       )
     :explosion #f
     :engine-pitch-scale 0.25

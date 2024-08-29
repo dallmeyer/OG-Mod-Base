@@ -58,16 +58,16 @@
     :turnvv 40049.777
     :tiltv 65536.0
     :tiltvv 262144.0
-    :fric 0.3
+    :fric 2.3
     :nonlin-fric-dist 1.0
     :slip-factor 1.0
     :slide-factor 1.0
     :slope-up-factor 1.0
     :slope-down-factor 4.0
     :slope-slip-angle 1.0
-    :impact-fric 1.0
-    :bend-factor 1.0
-    :bend-speed 1.0
+    :impact-fric 3.0
+    :bend-factor 3.0
+    :bend-speed 5.0
     :slope-up-traction 1.0
     :turnvf 0.03
     :turnvvf 30.0
@@ -109,7 +109,7 @@
     :tiltv 65536.0
     :tiltvv 262144.0
     :transv-max 32768.0
-    :target-speed 32768.0
+    :target-speed 532768.0
     :seek0 1.6666
     :seek90 1.6666
     :seek180 1.0
@@ -161,8 +161,8 @@
                            :turnvv 18204.445
                            :tiltv 32768.0
                            :tiltvv 262144.0
-                           :transv-max 32768.0
-                           :target-speed 32768.0
+                           :transv-max 532768.0
+                           :target-speed 532768.0
                            :seek0 0.3
                            :seek90 0.3
                            :seek180 0.3
@@ -193,8 +193,8 @@
                             :turnv 131072.0
                             :tiltv 32768.0
                             :tiltvv 262144.0
-                            :transv-max 91750.4
-                            :target-speed 122880.0
+                            :transv-max 591750.4
+                            :target-speed 5122880.0
                             :seek90 0.5
                             :seek180 0.15
                             :slip-factor 1.0
@@ -220,8 +220,8 @@
                              :turnv 16384.0
                              :tiltv 65536.0
                              :tiltvv 262144.0
-                             :transv-max 12288.0
-                             :target-speed 12288.0
+                             :transv-max 512288.0
+                             :target-speed 512288.0
                              :seek0 1.0
                              :seek90 1.0
                              :seek180 1.0
@@ -252,8 +252,8 @@
                                  :turnvv 524288.0
                                  :tiltv 65536.0
                                  :tiltvv 262144.0
-                                 :transv-max 12288.0
-                                 :target-speed 12288.0
+                                 :transv-max 512288.0
+                                 :target-speed 512288.0
                                  :seek0 1.0
                                  :seek90 1.0
                                  :seek180 1.0
@@ -285,7 +285,7 @@
                                  :name 'run
                                  :tiltv 65536.0
                                  :tiltvv 262144.0
-                                 :transv-max 12288.0
+                                 :transv-max 52288.0
                                  :fric 1.0
                                  :nonlin-fric-dist 1.0
                                  :slip-factor 1.0
@@ -295,10 +295,10 @@
                                  :slope-slip-angle 1.0
                                  :impact-fric 1.0
                                  :bend-factor 1.0
-                                 :bend-speed 1.0
+                                 :bend-speed 5.0
                                  :alignv 1.0
                                  :slope-up-traction 1.0
-                                 :align-speed 1.0
+                                 :align-speed 5.0
                                  :tiltvf 150.0
                                  :tiltvvf 15.0
                                  :flags (surface-flag look-around no-turn-around)
@@ -311,12 +311,12 @@
                                  :turnvv 18204.445
                                  :tiltv 32768.0
                                  :tiltvv 262144.0
-                                 :transv-max 24576.0
-                                 :target-speed 24576.0
+                                 :transv-max 54576.0
+                                 :target-speed 54576.0
                                  :seek0 0.3
                                  :seek90 0.3
                                  :seek180 0.3
-                                 :fric 0.2
+                                 :fric 2.2
                                  :nonlin-fric-dist 1.0
                                  :slip-factor 1.0
                                  :slide-factor 1.0
@@ -325,10 +325,10 @@
                                  :slope-slip-angle 1.0
                                  :impact-fric 1.0
                                  :bend-factor 1.0
-                                 :bend-speed 1.0
+                                 :bend-speed 5.0
                                  :alignv 1.0
                                  :slope-up-traction 1.0
-                                 :align-speed 1.0
+                                 :align-speed 5.0
                                  :turnvf 90.0
                                  :turnvvf 30.0
                                  :tiltvf 150.0

@@ -87,17 +87,17 @@
   "Init relevant settings for the [[projectile]] such as gravity, speed, timeout, etc"
   (set! (-> this tail-pos quad) (-> this root trans quad))
   (set! (-> this attack-mode) 'predator-shot)
-  (set! (-> this max-speed) 532480.0)
+  (set! (-> this max-speed) 5532480.0)
   (set! (-> this move) metalhead-shot-move)
   (set! (-> this update-velocity) projectile-update-velocity-space-wars)
-  (set! (-> this timeout) (seconds 0.767))
+  (set! (-> this timeout) (seconds 0.000))
   (set! (-> this sound-id) (new-sound-id))
   (set-gravity-length (-> this root dynam) 573440.0)
   (none)
   )
 
 (defskelgroup skel-metalhead-predator predator predator-lod0-jg predator-idle-ja
-              ((predator-lod0-mg (meters 20)) (predator-lod1-mg (meters 40)) (predator-lod2-mg (meters 999999)))
+              ((predator-lod0-mg (meters 250)) (predator-lod1-mg (meters 450)) (predator-lod2-mg (meters 9599999)))
               :bounds (static-spherem 0 1 0 4)
               )
 
@@ -204,14 +204,14 @@
       penetrate-63
       )
     :movement-gravity (meters -100)
-    :friction 0.8
-    :attack-shove-back (meters 3)
-    :attack-shove-up (meters 2)
+    :friction 10.8
+    :attack-shove-back (meters 53)
+    :attack-shove-up (meters 52)
     :attack-mode 'generic
-    :attack-damage 2
+    :attack-damage 255
     :recover-gnd-collide-with (collide-spec backgnd crate obstacle hit-by-others-list pusher)
-    :jump-height-min (meters 0.5)
-    :jump-height-factor 0.1
+    :jump-height-min (meters 50.5)
+    :jump-height-factor 50.1
     :knocked-seek-ry-clamp 6371.5557
     :knocked-soft-vxz-lo 81920.0
     :knocked-soft-vxz-hi 81920.0
@@ -257,12 +257,12 @@
     :turn-anim 5
     :run-anim 7
     :taunt-anim -1
-    :run-travel-speed (meters 8)
-    :run-acceleration (meters 6)
-    :run-turning-acceleration (meters 30)
-    :walk-travel-speed (meters 4)
-    :walk-acceleration (meters 3)
-    :walk-turning-acceleration (meters 8)
+    :run-travel-speed (meters 158)
+    :run-acceleration (meters 156)
+    :run-turning-acceleration (meters 1530)
+    :walk-travel-speed (meters 154)
+    :walk-acceleration (meters 153)
+    :walk-turning-acceleration (meters 58)
     :maximum-rotation-rate (degrees 720)
     :frustration-distance (meters 8)
     :frustration-time (seconds 4)

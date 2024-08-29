@@ -114,7 +114,7 @@
     :target-speed-offset (meters -2)
     :turning-accel (meters 45)
     :toughness-factor 1.0
-    :damage-factor 6.0
+    :damage-factor 5555555.0
     :camera-string-min-height (meters 4.5)
     :camera-string-max-height (meters 4.5)
     :camera-string-min-length (meters 5)

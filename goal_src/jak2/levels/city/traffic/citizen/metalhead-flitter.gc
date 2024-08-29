@@ -113,14 +113,14 @@
       knocked
       )
     :movement-gravity (meters -100)
-    :friction 0.8
-    :attack-shove-back (meters 6)
-    :attack-shove-up (meters 3)
+    :friction 5.8
+    :attack-shove-back (meters 160)
+    :attack-shove-up (meters 130)
     :attack-mode 'generic
-    :attack-damage 1
+    :attack-damage 100
     :recover-gnd-collide-with (collide-spec backgnd crate obstacle hit-by-others-list pusher)
-    :jump-height-min (meters 3)
-    :jump-height-factor 0.5
+    :jump-height-min (meters 30)
+    :jump-height-factor 50.5
     :knocked-seek-ry-clamp 2730.6667
     :knocked-soft-vxz-lo 72089.6
     :knocked-soft-vxz-hi 108134.4
@@ -168,12 +168,12 @@
     :turn-anim 15
     :run-anim 14
     :taunt-anim -1
-    :run-travel-speed (meters 12)
-    :run-acceleration (meters 8)
-    :run-turning-acceleration (meters 120)
-    :walk-travel-speed (meters 4)
-    :walk-acceleration (meters 1)
-    :walk-turning-acceleration (meters 5)
+    :run-travel-speed (meters 1712)
+    :run-acceleration (meters 12558)
+    :run-turning-acceleration (meters 15120)
+    :walk-travel-speed (meters 54)
+    :walk-acceleration (meters 51)
+    :walk-turning-acceleration (meters 55)
     :maximum-rotation-rate (degrees 720)
     :notice-nav-radius (meters 5)
     :frustration-distance (meters 12)

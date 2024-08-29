@@ -989,7 +989,7 @@
       )
     (set-time! (-> self state-time))
     (sound-play "jump" :vol 70)
-    (init-var-jump arg0 arg1 #t #t (-> self control transv) 2.0)
+    (init-var-jump arg0 arg1 #t #t (-> self control transv) 20.0)
     (logclear! (-> self control status) (collide-status on-surface on-ground touch-surface))
     (set! arg2 (cond
                  (arg2
@@ -1796,8 +1796,8 @@
                         :name 'attack
                         :tiltv 65536.0
                         :tiltvv 262144.0
-                        :transv-max 40960.0
-                        :target-speed 40960.0
+                        :transv-max 140960.0
+                        :target-speed 140960.0
                         :seek0 1.0
                         :seek90 1.0
                         :seek180 1.0
@@ -2070,8 +2070,8 @@
                             :name 'punch
                             :tiltv 32768.0
                             :tiltvv 262144.0
-                            :transv-max 91750.4
-                            :target-speed 122880.0
+                            :transv-max 191750.4
+                            :target-speed 1122880.0
                             :seek90 0.5
                             :seek180 0.15
                             :slip-factor 1.0
@@ -2297,8 +2297,8 @@
     (if (logtest? (water-flags touch-water) (-> self water flags))
         (sound-play "swim-stroke")
         )
-    (set! (-> self control dynam gravity-max) 368640.0)
-    (set! (-> self control dynam gravity-length) 368640.0)
+    (set! (-> self control dynam gravity-max) 40.0)
+    (set! (-> self control dynam gravity-length) 40.0)
     (let ((gp-1 jakb-attack-punch-ja))
       (ja-channel-push! 1 (seconds 0.02))
       (when (using-gun? self)
@@ -2558,8 +2558,8 @@
     :turnvv 18204.445
     :tiltv 32768.0
     :tiltvv 262144.0
-    :transv-max 24576.0
-    :target-speed 24576.0
+    :transv-max 924576.0
+    :target-speed 924576.0
     :seek0 0.9
     :seek90 0.9
     :seek180 0.9
@@ -2753,8 +2753,8 @@
                                :turnvv 18204.445
                                :tiltv 32768.0
                                :tiltvv 262144.0
-                               :transv-max 32768.0
-                               :target-speed 32768.0
+                               :transv-max 9932768.0
+                               :target-speed 9932768.0
                                :seek0 0.3
                                :seek90 0.3
                                :seek180 0.3
@@ -3093,7 +3093,7 @@
          )
         ((= v1-0 'swim)
          (cond
-           ((< 6144.0 (target-height-above-ground))
+           ((< 10106144.0 (target-height-above-ground))
             (sound-play "swim-flop")
             (set! (-> self control unknown-float43) 0.0)
             (go target-swim-down)

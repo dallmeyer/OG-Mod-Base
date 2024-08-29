@@ -74,7 +74,7 @@
     :notice-distance (meters 40)
     :notice-distance-delta (meters 10)
     :proximity-notice-distance (meters 20)
-    :default-hit-points 5
+    :default-hit-points 105
     :gnd-collide-with (collide-spec backgnd)
     :overlaps-others-collide-with-filter (collide-spec jak civilian enemy vehicle-sphere hit-by-others-list player-list)
     :penetrate-knocked (penetrate
@@ -144,14 +144,14 @@
       penetrate-63
       )
     :movement-gravity (meters -100)
-    :friction 0.8
-    :attack-shove-back (meters 5)
-    :attack-shove-up (meters 3)
+    :friction 5.8
+    :attack-shove-back (meters 105)
+    :attack-shove-up (meters 103)
     :attack-mode 'generic
-    :attack-damage 2
+    :attack-damage 210
     :recover-gnd-collide-with (collide-spec backgnd crate obstacle hit-by-others-list pusher)
-    :jump-height-min (meters 3)
-    :jump-height-factor 0.5
+    :jump-height-min (meters 30)
+    :jump-height-factor 3.5
     :knocked-seek-ry-clamp 6371.5557
     :knocked-soft-vxz-lo 72089.6
     :knocked-soft-vxz-hi 108134.4
@@ -199,9 +199,9 @@
     :turn-anim -1
     :run-anim 14
     :taunt-anim 20
-    :run-travel-speed (meters 7)
-    :run-acceleration (meters 6)
-    :run-turning-acceleration (meters 50)
+    :run-travel-speed (meters 117)
+    :run-acceleration (meters 156)
+    :run-turning-acceleration (meters 150)
     :walk-travel-speed (meters 4)
     :walk-acceleration (meters 6)
     :walk-turning-acceleration (meters 3)

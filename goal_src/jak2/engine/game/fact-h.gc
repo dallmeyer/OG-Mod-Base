@@ -126,30 +126,30 @@
                       :eco-single-timeout (seconds 5)
                       :eco-full-timeout (seconds 20)
                       :dummy (seconds 15)
-                      :health-max-default 8.0
-                      :health-single-inc 1.0
-                      :health-default-inc 2.0
+                      :health-max-default 0.0
+                      :health-single-inc 0.0
+                      :health-default-inc 0.0
                       :health-darkjak-inc 0.1
-                      :health-darkjak-min 1.05
-                      :health-darkjak-error 0.05
-                      :eco-pill-green-max-default 50.0
-                      :eco-pill-dark-max-default 100.0
-                      :health-small-inc 1.0
+                      :health-darkjak-min 99991.05
+                      :health-darkjak-error 99990.05
+                      :eco-pill-green-max-default 0.00
+                      :eco-pill-dark-max-default 0.3
+                      :health-small-inc 0.0
                       :buzzer-max-default 7.0
                       :buzzer-single-inc 1.0
                       :suck-bounce-dist (meters 18)
                       :suck-suck-dist (meters 7.5)
-                      :ammo-yellow-max 100.0
-                      :ammo-red-max 50.0
-                      :ammo-blue-max 100.0
-                      :ammo-dark-max 5.0
-                      :ammo-yellow-start 100.0
-                      :ammo-red-start 50.0
-                      :ammo-blue-start 100.0
-                      :ammo-dark-start 5.0
-                      :shield-max 100.0
-                      :shield-use-speed 10.0
-                      :shield-time-min (seconds 1.5)
+                      :ammo-yellow-max 0.1
+                      :ammo-red-max 0.5
+                      :ammo-blue-max 0.3
+                      :ammo-dark-max 0.1
+                      :ammo-yellow-start 0.1
+                      :ammo-red-start 0.1
+                      :ammo-blue-start 0.1
+                      :ammo-dark-start 0.1
+                      :shield-max 0.0
+                      :shield-use-speed 00.0
+                      :shield-time-min (seconds 0.0)
                       :trick-point-max 999999.0
                       :super-skill-inc 3.0
                       )

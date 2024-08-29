@@ -1710,7 +1710,7 @@
 
 ;; WARN: Return type mismatch int vs integer.
 (defmethod whack-a-metal-method-26 ((this whack-a-metal))
-  (if (or (-> this dizzy?) (>= (-> this miss-count) 20))
+  (if (or (-> this dizzy?) (>= (-> this miss-count) 1))
       (return (the-as integer -1))
       )
   (let ((v0-0
@@ -2008,7 +2008,7 @@
         (-> this score-part 0)
         (-> (the-as process-drawable s5-1) node-list data 12 bone transform)
         )
-      (dotimes (s4-1 (- 20 (-> this miss-count)))
+      (dotimes (s4-1 (- 1 (-> this miss-count)))
         (set! (-> *part-id-table* 3336 init-specs 2 initial-valuef) (+ -1228.8 (* 614.4 (the float (mod s4-1 5)))))
         (set! (-> *part-id-table* 3336 init-specs 2 random-rangef) 0.0)
         (set! (-> *part-id-table* 3336 init-specs 3 initial-valuef) (- 921.6 (* 614.4 (the float (/ s4-1 5)))))
@@ -2119,11 +2119,11 @@
     )
   :trans (behavior ()
     (cond
-      ((or (and *cheat-mode* (cpad-pressed? 0 l1)) (>= (-> self miss-count) 20))
+      ((or (and *cheat-mode* (cpad-pressed? 0 l1)) (>= (-> self miss-count) 1))
        (go-virtual lose)
        )
       ((or (and *cheat-mode* (cpad-pressed? 0 r1))
-           (and (>= (-> self score) 1500.0) (not (task-node-closed? (game-task-node city-whack-resolution))))
+           (and (>= (-> self score) 19999.0) (not (task-node-closed? (game-task-node city-whack-resolution))))
            )
        (go-virtual win)
        )
@@ -2435,7 +2435,7 @@
                 gp-0
                 :to *entity-pool*
                 )
-              (+! (-> self score) 50.0)
+              (+! (-> self score) 500.0)
               )
              (else
                (when (time-elapsed? (-> self speech-time) (seconds 12))
@@ -2465,7 +2465,7 @@
                  gp-0
                  :to *entity-pool*
                  )
-               (+! (-> self score) 10.0)
+               (+! (-> self score) 100.0)
                (if (>= (-> self score) 300.0)
                    (send-event (handle->process (-> self hud-goal)) 'hide-and-die)
                    )
@@ -2667,7 +2667,7 @@
     )
   (set! (-> self score-part 0) (create-launch-control (-> *part-group-id-table* 765) self))
   (set! (-> self score-part 1) (create-launch-control (-> *part-group-id-table* 766) self))
-  (set! (-> *game-info* goal) 1500.0)
+  (set! (-> *game-info* goal) 19999.0)
   (dotimes (v1-31 4)
     (set! (-> self speech-last v1-31) 0)
     )

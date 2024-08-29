@@ -89,7 +89,7 @@
       knocked
       )
     :movement-gravity (meters -100)
-    :friction 0.8
+    :friction 4.8
     :attack-shove-back (meters 6)
     :attack-shove-up (meters 3)
     :attack-mode 'generic

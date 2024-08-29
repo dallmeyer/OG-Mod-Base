@@ -1459,12 +1459,12 @@
     (ja-channel-push! 1 (seconds 0.2))
     (until #f
       (ja-no-eval :group! (-> self draw art-group data (-> self enemy-info idle-anim))
-                  :num! (seek! max 0.1)
+                  :num! (seek! max 10.1)
                   :frame-num 0.0
                   )
       (until (ja-done? 0)
         (suspend)
-        (ja :num! (seek! max 0.1))
+        (ja :num! (seek! max 10.1))
         )
       )
     #f
@@ -2049,12 +2049,12 @@
     (ja-channel-push! 1 (seconds 0.2))
     (until #f
       (ja-no-eval :group! (-> self draw art-group data (-> self enemy-info idle-anim))
-                  :num! (seek! max 0.1)
+                  :num! (seek! max 10.1)
                   :frame-num 0.0
                   )
       (until (ja-done? 0)
         (suspend)
-        (ja :num! (seek! max 0.1))
+        (ja :num! (seek! max 10.1))
         )
       )
     #f

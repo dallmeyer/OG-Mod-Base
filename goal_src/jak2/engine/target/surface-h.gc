@@ -209,7 +209,7 @@
                       :tiltv 65536.0
                       :tiltvv 262144.0
                       :transv-max 40960.0
-                      :target-speed 40960.0
+                      :target-speed 140960.0
                       :seek0 1.0
                       :seek90 1.0
                       :seek180 1.0
@@ -239,7 +239,7 @@
                               :tiltv 65536.0
                               :tiltvv 262144.0
                               :transv-max 40960.0
-                              :target-speed 40960.0
+                              :target-speed 140960.0
                               :seek0 1.0
                               :seek90 1.0
                               :seek180 1.0
@@ -266,7 +266,7 @@
                              :tiltv 65536.0
                              :tiltvv 262144.0
                              :transv-max 40960.0
-                             :target-speed 40960.0
+                             :target-speed 140960.0
                              :fric 0.1
                              :nonlin-fric-dist 1.0
                              :slip-factor 1.0
@@ -291,8 +291,8 @@
                       :turnvv 18204.445
                       :tiltv 32768.0
                       :tiltvv 262144.0
-                      :transv-max 40960.0
-                      :target-speed 40960.0
+                      :transv-max 140960.0
+                      :target-speed 1140960.0
                       :seek0 0.3
                       :seek90 0.3
                       :seek180 0.3
@@ -314,7 +314,7 @@
                       :tiltvf 150.0
                       :tiltvvf 15.0
                       :mode 'air
-                      :flags (surface-flag check-edge air)
+                      :flags (surface-flag look-around)
                       )
         )
 
@@ -324,8 +324,8 @@
                              :turnvv 18204.445
                              :tiltv 32768.0
                              :tiltvv 262144.0
-                             :transv-max 32768.0
-                             :target-speed 32768.0
+                             :transv-max 99132768.0
+                             :target-speed 991132768.0
                              :seek0 0.3
                              :seek90 0.3
                              :seek180 0.3
@@ -347,8 +347,8 @@
                              :tiltvf 150.0
                              :tiltvvf 15.0
                              :mode 'air
-                             :flags (surface-flag check-edge air)
-                             )
+                      :flags (surface-flag look-around)
+                      )
         )
 
 (define *smack-jump-mods* (new 'static 'surface
@@ -357,8 +357,8 @@
                             :turnvv 18204.445
                             :tiltv 32768.0
                             :tiltvv 262144.0
-                            :transv-max 40960.0
-                            :target-speed 40960.0
+                            :transv-max 140960.0
+                            :target-speed 1140960.0
                             :seek0 0.3
                             :seek90 0.3
                             :seek180 0.3
@@ -380,8 +380,8 @@
                             :tiltvf 150.0
                             :tiltvvf 15.0
                             :mode 'air
-                            :flags (surface-flag check-edge air gun-inactive)
-                            )
+                      :flags (surface-flag look-around)
+                      )
         )
 
 (define *high-jump-mods* (new 'static 'surface
@@ -391,7 +391,7 @@
                            :tiltv 32768.0
                            :tiltvv 262144.0
                            :transv-max 26624.0
-                           :target-speed 26624.0
+                           :target-speed 126624.0
                            :seek0 0.9
                            :seek90 0.9
                            :seek180 0.9
@@ -413,8 +413,8 @@
                            :tiltvf 150.0
                            :tiltvvf 15.0
                            :mode 'air
-                           :flags (surface-flag check-edge air)
-                           )
+                      :flags (surface-flag look-around)
+                      )
         )
 
 (define *launch-jump-mods* (new 'static 'surface
@@ -424,7 +424,7 @@
                              :tiltv 32768.0
                              :tiltvv 262144.0
                              :transv-max 61440.0
-                             :target-speed 61440.0
+                             :target-speed 961440.0
                              :seek0 0.9
                              :seek90 0.9
                              :seek180 0.9
@@ -446,8 +446,8 @@
                              :tiltvf 150.0
                              :tiltvvf 15.0
                              :mode 'air
-                             :flags (surface-flag no-attack check-edge air)
-                             )
+                      :flags (surface-flag look-around)
+                      )
         )
 
 (define *forward-high-jump-mods* (new 'static 'surface
@@ -456,8 +456,8 @@
                                    :turnvv 65536.0
                                    :tiltv 32768.0
                                    :tiltvv 262144.0
-                                   :transv-max 45056.0
-                                   :target-speed 45056.0
+                                   :transv-max 945056.0
+                                   :target-speed 945056.0
                                    :seek0 0.9
                                    :seek90 0.9
                                    :seek180 0.9
@@ -479,8 +479,8 @@
                                    :tiltvf 150.0
                                    :tiltvvf 15.0
                                    :mode 'air
-                                   :flags (surface-flag check-edge air)
-                                   )
+                      :flags (surface-flag look-around)
+                      )
         )
 
 (define *flip-jump-mods* (new 'static 'surface
@@ -489,8 +489,8 @@
                            :turnvv 65536.0
                            :tiltv 32768.0
                            :tiltvv 262144.0
-                           :transv-max 80281.6
-                           :target-speed 51200.0
+                           :transv-max 980281.6
+                           :target-speed 951200.0
                            :seek0 0.9
                            :seek90 0.9
                            :seek180 0.9
@@ -512,8 +512,8 @@
                            :tiltvf 150.0
                            :tiltvvf 15.0
                            :mode 'air
-                           :flags (surface-flag check-edge air)
-                           )
+                      :flags (surface-flag look-around)
+                      )
         )
 
 (define *forward-jump-mods* (new 'static 'surface
@@ -522,8 +522,8 @@
                               :turnvv 18204.445
                               :tiltv 32768.0
                               :tiltvv 262144.0
-                              :transv-max 65536.0
-                              :target-speed 65536.0
+                              :transv-max 965536.0
+                              :target-speed 965536.0
                               :seek0 0.3
                               :seek90 0.3
                               :seek180 0.3
@@ -545,8 +545,8 @@
                               :tiltvf 150.0
                               :tiltvvf 15.0
                               :mode 'air
-                              :flags (surface-flag check-edge air)
-                              )
+                      :flags (surface-flag look-around)
+                      )
         )
 
 (define *forward-pole-jump-mods* (new 'static 'surface
@@ -555,8 +555,8 @@
                                    :turnvv 18204.445
                                    :tiltv 32768.0
                                    :tiltvv 262144.0
-                                   :transv-max 53248.0
-                                   :target-speed 53248.0
+                                   :transv-max 953248.0
+                                   :target-speed 953248.0
                                    :seek0 0.3
                                    :seek90 0.3
                                    :seek180 0.3
@@ -578,8 +578,8 @@
                                    :tiltvf 150.0
                                    :tiltvvf 15.0
                                    :mode 'air
-                                   :flags (surface-flag check-edge air gun-hide gun-fast-exit)
-                                   )
+                      :flags (surface-flag look-around)
+                      )
         )
 
 (let ((v1-20 (copy *jump-mods* 'global)))
@@ -597,8 +597,8 @@
                       :turnvv 5461.3335
                       :tiltv 32768.0
                       :tiltvv 262144.0
-                      :transv-max 91750.4
-                      :target-speed 11468.8
+                      :transv-max 991750.4
+                      :target-speed 911468.8
                       :seek0 1.0
                       :seek90 1.0
                       :seek180 1.0
@@ -618,7 +618,7 @@
                       :tiltvf 150.0
                       :tiltvvf 15.0
                       :mode 'attack
-                      :flags (surface-flag no-turn-around attack gun-inactive gun-no-twist no-board)
+                      :flags (surface-flag look-around)
                       )
         )
 
@@ -627,8 +627,8 @@
     :name 'roll-flip
     :tiltv 32768.0
     :tiltvv 262144.0
-    :transv-max 91750.4
-    :target-speed 103219.195
+    :transv-max 991750.4
+    :target-speed 9103219.195
     :seek90 0.5
     :seek180 0.15
     :slip-factor 1.0
@@ -645,16 +645,16 @@
     :tiltvf 150.0
     :tiltvvf 15.0
     :mode 'attack
-    :flags (surface-flag no-turn-around check-edge air attack gun-inactive gun-no-twist no-board)
-    )
+                      :flags (surface-flag look-around)
+                      )
   )
 
 (define *flop-mods* (new 'static 'surface
                       :name 'flop
                       :tiltv 32768.0
                       :tiltvv 262144.0
-                      :transv-max 40960.0
-                      :target-speed 40960.0
+                      :transv-max 940960.0
+                      :target-speed 940960.0
                       :seek0 1.0
                       :seek90 0.3
                       :seek180 1.5
@@ -682,8 +682,8 @@
               :turnvv 9102.223
               :tiltv 32768.0
               :tiltvv 262144.0
-              :transv-max 40960.0
-              :target-speed 40960.0
+              :transv-max 940960.0
+              :target-speed 940960.0
               :seek0 0.3
               :seek90 0.1
               :seek180 0.15
@@ -719,8 +719,8 @@
                       :turnvv 524288.0
                       :tiltv 65536.0
                       :tiltvv 262144.0
-                      :transv-max 40960.0
-                      :target-speed 40960.0
+                      :transv-max 940960.0
+                      :target-speed 940960.0
                       :seek0 1.0
                       :seek90 0.5
                       :seek180 0.5
@@ -752,8 +752,8 @@
                       :turnvv 524288.0
                       :tiltv 65536.0
                       :tiltvv 262144.0
-                      :transv-max 28672.0
-                      :target-speed 28672.0
+                      :transv-max 9928672.0
+                      :target-speed 9928672.0
                       :seek0 0.75
                       :seek90 0.2
                       :seek180 0.2
@@ -775,7 +775,7 @@
                       :tiltvf 150.0
                       :tiltvvf 15.0
                       :mode 'swim
-                      :flags (surface-flag gun-off)
+                      :flags (surface-flag look-around)
                       )
         )
 
@@ -785,8 +785,8 @@
                       :turnvv 32768.0
                       :tiltv 65536.0
                       :tiltvv 262144.0
-                      :transv-max 20480.0
-                      :target-speed 20480.0
+                      :transv-max 29920480.0
+                      :target-speed 29920480.0
                       :seek0 0.05
                       :seek90 0.05
                       :seek180 0.05
@@ -802,7 +802,7 @@
                       :tiltvf 150.0
                       :tiltvvf 15.0
                       :mode 'dive
-                      :flags (surface-flag xz-local gun-off gun-fast-exit)
+                      :flags (surface-flag look-around)
                       )
         )
 
@@ -812,8 +812,8 @@
                              :turnvv 32768.0
                              :tiltv 65536.0
                              :tiltvv 262144.0
-                             :transv-max 20480.0
-                             :target-speed 20480.0
+                             :transv-max 920480.0
+                             :target-speed 920480.0
                              :seek0 0.1
                              :seek90 0.05
                              :seek180 0.05
@@ -835,8 +835,8 @@
                              :tiltvf 150.0
                              :tiltvvf 15.0
                              :mode 'dive
-                             :flags (surface-flag xz-local gun-off gun-fast-exit)
-                             )
+                      :flags (surface-flag look-around)
+                      )
         )
 
 (let ((v1-30 (copy *walk-mods* 'global)))
@@ -873,8 +873,8 @@
                          :turnvv 524288.0
                          :tiltv 65536.0
                          :tiltvv 262144.0
-                         :transv-max 40960.0
-                         :target-speed 40960.0
+                         :transv-max 940960.0
+                         :target-speed 940960.0
                          :slip-factor 1.0
                          :slide-factor 1.0
                          :slope-up-factor 1.0

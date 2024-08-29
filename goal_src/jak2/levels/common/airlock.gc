@@ -310,10 +310,10 @@
   (let ((gp-0 (the-as (array string) #f)))
     (case arg0
       (('enter)
-       (set! gp-0 (new 'static 'boxed-array :type string "cityv005" "cityv006" "cityv007" "cityv008" "cityv009"))
+       (set! gp-0 (new 'static 'boxed-array :type string "CITYV033" "CITYV093" "CITYV155" "CITYV169" "ERO006"))
        )
       (('exit)
-       (set! gp-0 (new 'static 'boxed-array :type string "cityv001" "cityv002" "cityv003" "cityv004"))
+       (set! gp-0 (new 'static 'boxed-array :type string "LOSE2" "ERO089" "ERO090" "PROP050" "PROP057" "PROP058" "SIGT111" "SIGC041" "SIGT046" "TSWM017" "TSWM025" "SPOT004" "DS148" "FORB1"))
        )
       )
     (cond

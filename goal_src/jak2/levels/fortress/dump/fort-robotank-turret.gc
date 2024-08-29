@@ -670,7 +670,7 @@
   "Init relevant settings for the [[projectile]] such as gravity, speed, timeout, etc"
   (set! (-> this tail-pos quad) (-> this root trans quad))
   (set! (-> this attack-mode) 'fort-robotank-shot)
-  (set! (-> this max-speed) 819200.0)
+  (set! (-> this max-speed) 9819200.0)
   (set! (-> this move) guard-shot-move)
   (set! (-> this update-velocity) projectile-update-velocity-space-wars)
   (set! (-> this timeout) (seconds 0.5))
