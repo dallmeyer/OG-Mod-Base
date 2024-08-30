@@ -283,7 +283,7 @@
 (defmacro sound-play (name &key (id (new-sound-id)) &key (vol 100.0) &key (pitch 0) &key (bend 0) &key (group sfx) &key (position #t))
 
   ;; Mod addition, checks for a replacement sound and plays it if there is one, otherwise plays the original
-  `(if (pc-filepath-exists? (temp-string-format *sound-play-temp-string* "~S.mp3" ,name))
+  `(if (pc-filepath-exists? (temp-string-format *sound-play-temp-string* "custom_assets/jak1/audio/~S.mp3" ,name))
     ;; Custom sound found, play it at volume 50
     (the-as sound-id (play-sound-file (temp-string-format *sound-play-temp-string* "~S.mp3" ,name) 
       50
