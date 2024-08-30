@@ -280,27 +280,29 @@
     ,temp-str)
 )
 
-(defmacro sound-play (name &key (id (new-sound-id)) &key (vol 100.0) &key (pitch 0) &key (bend 0) &key (group sfx) &key (position #t))
-
-  ;; Mod addition, checks for a replacement sound and plays it if there is one, otherwise plays the original
-  `(if (pc-filepath-exists? (temp-string-format *sound-play-temp-string* "custom_assets/jak1/audio/~S.mp3" ,name))
-    ;; Custom sound found, play it at volume 50
-    (the-as sound-id (play-sound-file (temp-string-format *sound-play-temp-string* "~S.mp3" ,name) 
-      50
+(defmacro try-play-custom-sound-file (name)
+  `(cond
+    ((pc-filepath-exists? (temp-string-format *sound-play-temp-string* "custom_assets/jak1/audio/~S.mp3" ,name))
       ;; optional argument for volume, not used by default because most custom sounds will be far too loud if using the vanilla volume
-      ;;(the int (* (/ 1024.0 100.0) ,vol))
-      ))
-    ;; Custom sound not found, play the original instead
+      (play-sound-file (temp-string-format *sound-play-temp-string* "~S.mp3" ,name) 50)
+      ;; successfully played sound, return true
+      #t
+      )
+    (else
+      ;; return false
+      #f)))
 
-    (begin 
-    ;;(format 0 "Custom file not found at /custom_assets/jak1/audio/~S~%" *sound-play-temp-string*)
+(defmacro sound-play (name &key (id (new-sound-id)) &key (vol 100.0) &key (pitch 0) &key (bend 0) &key (group sfx) &key (position #t))
+  ;; Mod addition, checks for a replacement sound and plays it if there is one, otherwise plays the original
+  `(if (not (try-play-custom-sound-file ,name))
+    ;; Custom sound not found, play the original instead
     (sound-play-by-name (static-sound-name ,name)
                       ,id
                       (the int (* (/ 1024.0 100.0) ,vol))
                       (the int (* 1524.0 ,pitch))
                       ,bend
                       (sound-group ,group)
-                      ,position))
+                      ,position)
   )
 )
 

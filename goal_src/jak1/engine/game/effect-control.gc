@@ -11,6 +11,9 @@
 
 (define *debug-effect-control* #f)
 
+(defun sound-name-string-with-material ((arg0 symbol) (arg1 pat-surface) (arg2 string))
+  (string-format "~S-~S~S" arg0 (enum->string pat-material (-> arg1 material)) arg2))
+
 (defun sound-name-with-material ((arg0 symbol) (arg1 pat-surface) (arg2 string))
   (string->sound-name (string-format "~S-~S~S" arg0 (enum->string pat-material (-> arg1 material)) arg2)))
 
@@ -181,7 +184,7 @@
                     t3-0)))
                (-> s4-1 ppointer)))))
         ((= arg0 'camera-shake) (activate! *camera-smush-control* 819.2 37 600 1.0 0.995))
-        ((zero? s3-0) (effect-control-method-12 this arg0 arg1 s5-0 (-> this res) (string->sound-name (symbol->string arg0))))
+        ((zero? s3-0) (effect-control-method-12-string this arg0 arg1 s5-0 (-> this res) (symbol->string arg0)))
         ((= (-> (the-as basic s3-0) type) sparticle-launcher)
          (if *debug-effect-control*
            (format #t "(~5D) effect part  ~A ~A frame ~F joint ~D~%" (current-time) (-> this process name) arg0 arg1 s5-0))
@@ -237,10 +240,11 @@
                   (s1-3 (method-of-object s2-5 effect-control-method-12))
                   (s0-3 (-> (the-as death-info s3-0) sound)))
              (set! sv-288 (-> this res))
-             (let ((t1-11 (string->sound-name (symbol->string (-> (the-as death-info s3-0) sound)))))
-               (s1-3 s2-5 s0-3 arg1 s5-0 sv-288 t1-11))))
+             (let ((t1-11 (symbol->string (-> (the-as death-info s3-0) sound))))
+              ;;  (s1-3 s2-5 s0-3 arg1 s5-0 sv-288 t1-11))))
+               (effect-control-method-12-string s2-5 s0-3 arg1 s5-0 sv-288 t1-11))))
          (send-event (-> this process) 'death-start (the-as death-info s3-0)))
-        (else (effect-control-method-12 this arg0 arg1 s5-0 (-> this res) (string->sound-name (symbol->string arg0)))))))
+        (else (effect-control-method-12-string this arg0 arg1 s5-0 (-> this res) (symbol->string arg0))))))
   0)
 
 (defmethod effect-control-method-11 ((this effect-control) (arg0 symbol) (arg1 float) (arg2 int) (arg3 basic) (arg4 pat-surface))
@@ -249,17 +253,17 @@
     (sv-64 sparticle-system)
     (sv-80 (function sparticle-system sparticle-launcher vector sparticle-launch-state sparticle-launch-control float none))
     (sv-96 sparticle-system))
-  (let ((s1-0 (the-as sound-name #f)))
+  (let ((s1-0 (the-as string #f)))
     (let ((a0-4 (-> *display* frames (-> *display* last-screen) frame run-time)))
       (case arg0
-        (('effect-walk-step-left 'effect-run-step-left) (set! s1-0 (sound-name-with-material 'walk arg4 "1")))
-        (('effect-walk-step-right 'effect-run-step-right) (set! s1-0 (sound-name-with-material 'walk arg4 "2")))
-        (('effect-roll) (set! s1-0 (sound-name-with-material 'roll arg4 "")))
-        (('effect-slide) (set! s1-0 (sound-name-with-material 'slide arg4 "")))
-        (('effect-land) (set! s1-0 (sound-name-with-material 'land arg4 "")))
-        (('effect-zoom-land) (set! s1-0 (sound-name-with-material 'zoom-land arg4 "")))
-        (('effect-zoom-hit) (set! s1-0 (sound-name-with-material 'zoom-hit arg4 "")))
-        (('effect-flut-land) (set! s1-0 (sound-name-with-material 'flut-land arg4 "")))
+        (('effect-walk-step-left 'effect-run-step-left) (set! s1-0 (sound-name-string-with-material 'walk arg4 "1")))
+        (('effect-walk-step-right 'effect-run-step-right) (set! s1-0 (sound-name-string-with-material 'walk arg4 "2")))
+        (('effect-roll) (set! s1-0 (sound-name-string-with-material 'roll arg4 "")))
+        (('effect-slide) (set! s1-0 (sound-name-string-with-material 'slide arg4 "")))
+        (('effect-land) (set! s1-0 (sound-name-string-with-material 'land arg4 "")))
+        (('effect-zoom-land) (set! s1-0 (sound-name-string-with-material 'zoom-land arg4 "")))
+        (('effect-zoom-hit) (set! s1-0 (sound-name-string-with-material 'zoom-hit arg4 "")))
+        (('effect-flut-land) (set! s1-0 (sound-name-string-with-material 'flut-land arg4 "")))
         (('effect-land-poof)
          (when (< a0-4 9000)
            (let* ((a0-13 this)
@@ -444,9 +448,16 @@
                    (t0-2 #f)
                    (t1-2 1.0))
                (sv-80 sv-96 s0-1 a2-37 (the-as sparticle-launch-state a3-7) (the-as sparticle-launch-control t0-2) t1-2)))))))
-    (if s1-0 (effect-control-method-12 this arg0 arg1 arg2 arg3 s1-0)))
+    (if s1-0 (effect-control-method-12-string this arg0 arg1 arg2 arg3 s1-0)))
   0
   (none))
+
+(defun effect-control-method-12-string ((this effect-control) (arg0 symbol) (arg1 float) (arg2 int) (arg3 basic) (arg4 string))
+  (when (not (try-play-custom-sound-file arg4))
+    ;; Custom sound not found, play the original instead
+    (effect-control-method-12 this arg0 arg1 arg2 arg3 (string->sound-name arg4))
+    )
+  )
 
 (defmethod effect-control-method-12 ((this effect-control) (arg0 symbol) (arg1 float) (arg2 int) (arg3 basic) (arg4 sound-name))
   (local-vars (sv-112 res-tag) (sv-128 sound-name) (sv-144 basic) (sv-160 (function vector vector float)))

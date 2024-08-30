@@ -3,6 +3,7 @@
 (bundles "ENGINE.CGO" "GAME.CGO")
 (require "engine/target/logic-target.gc")
 (define-extern target-powerup-effect (function symbol none :behavior target))
+(define-extern effect-control-method-12-string (function effect-control symbol float int basic string int))
 
 ;; DECOMP BEGINS
 
@@ -301,12 +302,12 @@
                          t3-0)))
                     (-> s4-0 ppointer))))
                (else (effect-control-method-10 (-> self skel effect) 'group-spin-hit (the-as float -1.0) 74)))
-             (effect-control-method-12 (-> self skel effect)
+             (effect-control-method-12-string (-> self skel effect)
                                        (-> self control unknown-symbol30)
                                        (the-as float -1.0)
                                        74
                                        #f
-                                       (static-sound-name "spin-hit"))
+                                      "spin-hit")
              (cpad-set-buzz! (-> *cpad-list* cpads 0) 1 127 (seconds 0.2)))
             ((= v1-5 'punch)
              (set! sv-128 (prims-touching? arg2 (-> self control) (the-as uint 64)))
@@ -359,20 +360,20 @@
                          sv-400
                          t3-2)))
                     (-> s4-2 ppointer)))))
-             (effect-control-method-12 (-> self skel effect)
+             (effect-control-method-12-string (-> self skel effect)
                                        (-> self control unknown-symbol30)
                                        (the-as float -1.0)
                                        23
                                        #f
-                                       (static-sound-name "punch-hit"))
+                                      "punch-hit")
              (cpad-set-buzz! (-> *cpad-list* cpads 0) 1 178 (seconds 0.1)))
             ((= v1-5 'flip)
-             (effect-control-method-12 (-> self skel effect)
+             (effect-control-method-12-string (-> self skel effect)
                                        (-> self control unknown-symbol30)
                                        (the-as float -1.0)
                                        74
                                        #f
-                                       (static-sound-name "punch-hit"))
+                                       "punch-hit")
              (cpad-set-buzz! (-> *cpad-list* cpads 0) 1 127 (seconds 0.1)))
             ((= v1-5 'uppercut)
              (set! sv-176 (prims-touching? arg2 (-> self control) (the-as uint 64)))
@@ -426,30 +427,30 @@
                          t3-4)))
                     (-> s4-4 ppointer)))))
              (effect-control-method-10 (-> self skel effect) 'group-uppercut-hit (the-as float -1.0) 23)
-             (effect-control-method-12 (-> self skel effect)
+             (effect-control-method-12-string (-> self skel effect)
                                        (-> self control unknown-symbol30)
                                        (the-as float -1.0)
                                        23
                                        #f
-                                       (static-sound-name "uppercut-hit"))
+                                       "uppercut-hit")
              (cpad-set-buzz! (-> *cpad-list* cpads 0) 1 178 (seconds 0.1)))
             ((or (= v1-5 'flop) (= v1-5 'flop-down))
              (effect-control-method-10 (-> self skel effect) 'group-flop-hit (the-as float -1.0) 23)
              (effect-control-method-10 (-> self skel effect) 'group-flop-hit (the-as float -1.0) 17)
-             (effect-control-method-12 (-> self skel effect)
+             (effect-control-method-12-string (-> self skel effect)
                                        (-> self control unknown-symbol30)
                                        (the-as float -1.0)
                                        23
                                        #f
-                                       (static-sound-name "flop-hit"))
+                                       "flop-hit")
              (cpad-set-buzz! (-> *cpad-list* cpads 0) 1 178 (seconds 0.1)))
             ((= v1-5 'flut-attack)
-             (effect-control-method-12 (-> self skel effect)
+             (effect-control-method-12-string (-> self skel effect)
                                        (-> self control unknown-symbol30)
                                        (the-as float -1.0)
                                        23
                                        #f
-                                       (static-sound-name "punch-hit"))
+                                       "punch-hit")
              (cpad-set-buzz! (-> *cpad-list* cpads 0) 1 255 (seconds 0.2))))))
       (the-as symbol gp-0))))
 
