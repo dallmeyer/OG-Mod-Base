@@ -144,7 +144,7 @@
   (case (-> *speedrun-info* category)
     (((speedrun-category full-game))
       ;; spawn at the geyser warp gate checkpoint
-      (initialize! *game-info* 'game (the-as game-save #f) "game-start")
+      (initialize! *game-info* 'game (the-as game-save #f) "afoniddwr-warp")
       )
     (((speedrun-category il-training))
       ;; spawn at the geyser warp gate checkpoint
@@ -232,7 +232,7 @@
       ;; don't allow cutscene skips
       (set! (-> *pc-settings* skip-movies?) #f)
       ;; spawn at the geyser warp gate checkpoint
-      (initialize! *game-info* 'game (the-as game-save #f) "intro-start")
+      (initialize! *game-info* 'game (the-as game-save #f) "afoniddwr-warp")
       )
     (else
       (format 0 "start-speedrun: unrecognized category ~S~%" (enum->string speedrun-category (-> *speedrun-info* category)))
