@@ -29,11 +29,7 @@ jobs:
       metadataAuthors: "Cuttlefish"
       metadataTags: "custom-level"
       metadataWebsiteUrl: "https://github.com/Cuttlefishthesage/OG-Mod-Base/blob/main/README.md"
-      skipMacOS: true
-      skipLinux: true
-      toolingBinaryDir: "out/build/Release/bin"
+      toolingRepo: "OpenGOAL-Mods/OG-Mod-Base"
       gameAssetsDir: "game/assets"
-      customAssetsDir: "./custom_levels"
-      copyEntireBinaryDir: true
     secrets:
       token: ${{ secrets.GITHUB_TOKEN }}

@@ -1,158 +1,262 @@
 ;;-*-Lisp-*-
 (in-package goal)
-
-;; name: progress-static.gc
-;; name in dgo: progress-static
-;; dgos: GAME, ENGINE
+(bundles "ENGINE.CGO" "GAME.CGO")
+(require "engine/ui/progress/progress-h.gc")
+(require "engine/ui/text-h.gc")
+(require "engine/game/task/game-task-h.gc")
 
 ;; This file contains the layouts for all of the menus.
 
 ;; options in the start menu options
 (define *main-options*
-  (new 'static 'boxed-array :type game-option
-    (new 'static 'game-option :option-type (game-option-type menu) :name (text-id game-options) :scale #t :param3 (game-option-menu game-settings))
-    (new 'static 'game-option :option-type (game-option-type menu) :name (text-id graphic-options) :scale #t :param3 (game-option-menu graphic-settings))
-    (new 'static 'game-option :option-type (game-option-type menu) :name (text-id sound-options) :scale #t :param3 (game-option-menu sound-settings))
-    (new 'static 'game-option :option-type (game-option-type menu) :name (text-id load-game) :scale #t :param3 (game-option-menu load-game))
-    (new 'static 'game-option :option-type (game-option-type menu) :name (text-id save-game) :scale #t :param3 (game-option-menu save-game))
-    (new 'static 'game-option :option-type (game-option-type menu) :name (text-id quit-game) :scale #t :param3 (game-option-menu quit))
-    (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)
-    )
-  )
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id game-options)
+            :scale #t
+            :param3 (game-option-menu game-settings))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id graphic-options)
+            :scale #t
+            :param3 (game-option-menu graphic-settings))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id sound-options)
+            :scale #t
+            :param3 (game-option-menu sound-settings))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id load-game)
+            :scale #t
+            :param3 (game-option-menu load-game))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id save-game)
+            :scale #t
+            :param3 (game-option-menu save-game))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id quit-game)
+            :scale #t
+            :param3 (game-option-menu quit))
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
 
 (define *title*
-  (new 'static 'boxed-array :type game-option
-    (new 'static 'game-option :option-type (game-option-type menu) :name (text-id new-game) :scale #t :param3 (game-option-menu save-game-title))
-    (new 'static 'game-option :option-type (game-option-type menu) :name (text-id load-game) :scale #t :param3 (game-option-menu load-game))
-    (new 'static 'game-option :option-type (game-option-type menu) :name (text-id options) :scale #t :param3 (game-option-menu settings-title))
-    (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)
-    )
-  )
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id new-game)
+            :scale #t
+            :param3 (game-option-menu save-game-title))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id load-game)
+            :scale #t
+            :param3 (game-option-menu load-game))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id options)
+            :scale #t
+            :param3 (game-option-menu settings-title))
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
 
 (define *options*
-  (new 'static 'boxed-array :type game-option
-    (new 'static 'game-option :option-type (game-option-type menu) :name (text-id game-options) :scale #t :param3 (game-option-menu game-settings))
-    (new 'static 'game-option :option-type (game-option-type menu) :name (text-id graphic-options) :scale #t :param3 (game-option-menu graphic-settings))
-    (new 'static 'game-option :option-type (game-option-type menu) :name (text-id sound-options) :scale #t :param3 (game-option-menu sound-settings))
-    (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)
-    )
-  )
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id game-options)
+            :scale #t
+            :param3 (game-option-menu game-settings))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id graphic-options)
+            :scale #t
+            :param3 (game-option-menu graphic-settings))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id sound-options)
+            :scale #t
+            :param3 (game-option-menu sound-settings))
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
 
 (define *main-options-demo*
-  (new 'static 'boxed-array :type game-option
-    (new 'static 'game-option :option-type (game-option-type menu) :name (text-id game-options) :scale #t :param3 (game-option-menu game-settings))
-    (new 'static 'game-option :option-type (game-option-type menu) :name (text-id graphic-options) :scale #t :param3 (game-option-menu graphic-settings))
-    (new 'static 'game-option :option-type (game-option-type menu) :name (text-id sound-options) :scale #t :param3 (game-option-menu sound-settings))
-    (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)
-    )
-  )
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id game-options)
+            :scale #t
+            :param3 (game-option-menu game-settings))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id graphic-options)
+            :scale #t
+            :param3 (game-option-menu graphic-settings))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id sound-options)
+            :scale #t
+            :param3 (game-option-menu sound-settings))
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
 
 (define *main-options-demo-shared*
-  (new 'static 'boxed-array :type game-option
-    (new 'static 'game-option :option-type (game-option-type menu) :name (text-id game-options) :scale #t :param3 (game-option-menu game-settings))
-    (new 'static 'game-option :option-type (game-option-type menu) :name (text-id graphic-options) :scale #t :param3 (game-option-menu graphic-settings))
-    (new 'static 'game-option :option-type (game-option-type menu) :name (text-id sound-options) :scale #t :param3 (game-option-menu sound-settings))
-    (new 'static 'game-option :option-type (game-option-type button) :name (text-id exit-demo) :scale #t)
-    (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)
-    )
-  )
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id game-options)
+            :scale #t
+            :param3 (game-option-menu game-settings))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id graphic-options)
+            :scale #t
+            :param3 (game-option-menu graphic-settings))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id sound-options)
+            :scale #t
+            :param3 (game-option-menu sound-settings))
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id exit-demo) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
 
 (define *game-options*
-  (new 'static 'boxed-array :type game-option
-    (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id vibrations) :scale #t)
-    (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id play-hints) :scale #t)
-    (new 'static 'game-option :option-type (game-option-type language) :name (text-id language) :scale #t)
-    (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)
-    )
-  )
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id vibrations) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id play-hints) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type language) :name (text-id language) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
 
 (define *game-options-japan*
-  (new 'static 'boxed-array :type game-option
-    (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id vibrations) :scale #t)
-    (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id play-hints) :scale #t)
-    (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)
-    )
-  )
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id vibrations) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id play-hints) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
 
 (define *game-options-demo*
-  (new 'static 'boxed-array :type game-option
-    (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id vibrations) :scale #t)
-    (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id play-hints) :scale #t)
-    (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)
-    )
-  )
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id vibrations) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id play-hints) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
 
 (define *graphic-options*
-  (new 'static 'boxed-array :type game-option
-    (new 'static 'game-option :option-type (game-option-type center-screen) :name (text-id center-screen) :scale #t)
-    (new 'static 'game-option :option-type (game-option-type aspect-ratio) :name (text-id aspect-ratio) :scale #t)
-    (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)
-    )
-  )
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static 'game-option :option-type (game-option-type center-screen) :name (text-id center-screen) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type aspect-ratio) :name (text-id aspect-ratio) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
 
 (define *graphic-title-options-pal*
-  (new 'static 'boxed-array :type game-option
-    (new 'static 'game-option :option-type (game-option-type center-screen) :name (text-id center-screen) :scale #t)
-    (new 'static 'game-option :option-type (game-option-type video-mode) :name (text-id video-mode) :scale #t)
-    (new 'static 'game-option :option-type (game-option-type aspect-ratio) :name (text-id aspect-ratio) :scale #t)
-    (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)
-    )
-  )
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static 'game-option :option-type (game-option-type center-screen) :name (text-id center-screen) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type video-mode) :name (text-id video-mode) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type aspect-ratio) :name (text-id aspect-ratio) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
 
 (define *sound-options*
-  (new 'static 'boxed-array :type game-option
-    (new 'static 'game-option :name (text-id sfx-volume) :scale #t :param2 100.0)
-    (new 'static 'game-option :name (text-id music-volume) :scale #t :param2 100.0)
-    (new 'static 'game-option :name (text-id speech-volume) :scale #t :param2 100.0)
-    (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)
-    )
-  )
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static 'game-option :name (text-id sfx-volume) :scale #t :param2 100.0)
+       (new 'static 'game-option :name (text-id music-volume) :scale #t :param2 100.0)
+       (new 'static 'game-option :name (text-id speech-volume) :scale #t :param2 100.0)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
 
-(define *yes-no-options* (new 'static 'boxed-array :type game-option
-                           (new 'static 'game-option :option-type (game-option-type yes-no) :scale #f)
-                           )
-        )
+(define *yes-no-options*
+  (new 'static 'boxed-array :type game-option (new 'static 'game-option :option-type (game-option-type yes-no) :scale #f)))
 
 (define *ok-options*
-  (new 'static 'boxed-array :type game-option
-    (new 'static 'game-option :option-type (game-option-type button) :name (text-id ok) :scale #f)
-    )
-  )
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id ok) :scale #f)))
 
 (define *load-options*
-  (new 'static 'boxed-array :type game-option
-    (new 'static 'game-option :option-type (game-option-type button) :scale #f)
-    (new 'static 'game-option :option-type (game-option-type button) :scale #f)
-    (new 'static 'game-option :option-type (game-option-type button) :scale #f)
-    (new 'static 'game-option :option-type (game-option-type button) :scale #f)
-    (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #f)
-    )
-  )
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static 'game-option :option-type (game-option-type button) :scale #f)
+       (new 'static 'game-option :option-type (game-option-type button) :scale #f)
+       (new 'static 'game-option :option-type (game-option-type button) :scale #f)
+       (new 'static 'game-option :option-type (game-option-type button) :scale #f)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #f)))
 
 (define *save-options*
-  (new 'static 'boxed-array :type game-option
-    (new 'static 'game-option :option-type (game-option-type button) :scale #f)
-    (new 'static 'game-option :option-type (game-option-type button) :scale #f)
-    (new 'static 'game-option :option-type (game-option-type button) :scale #f)
-    (new 'static 'game-option :option-type (game-option-type button) :scale #f)
-    (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #f)
-    )
-  )
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static 'game-option :option-type (game-option-type button) :scale #f)
+       (new 'static 'game-option :option-type (game-option-type button) :scale #f)
+       (new 'static 'game-option :option-type (game-option-type button) :scale #f)
+       (new 'static 'game-option :option-type (game-option-type button) :scale #f)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #f)))
 
 (define *save-options-title*
-  (new 'static 'boxed-array :type game-option
-    (new 'static 'game-option :option-type (game-option-type button) :scale #f)
-    (new 'static 'game-option :option-type (game-option-type button) :scale #f)
-    (new 'static 'game-option :option-type (game-option-type button) :scale #f)
-    (new 'static 'game-option :option-type (game-option-type button) :scale #f)
-    (new 'static 'game-option :option-type (game-option-type button) :name (text-id continue-without-saving) :scale #f)
-    (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #f)
-    )
-  )
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static 'game-option :option-type (game-option-type button) :scale #f)
+       (new 'static 'game-option :option-type (game-option-type button) :scale #f)
+       (new 'static 'game-option :option-type (game-option-type button) :scale #f)
+       (new 'static 'game-option :option-type (game-option-type button) :scale #f)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id continue-without-saving) :scale #f)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #f)))
 
 ;; maps options to a progress screen
 ;; the length matches with `(progress-screen max)`
-(define *options-remap* (new 'static 'boxed-array :type (array game-option) :length 0 :allocated-length (#if (not PC_PORT) 35 68)))
+(define *options-remap*
+  (new 'static 'boxed-array :type (array game-option) :length 0 :allocated-length (#if (not PC_PORT) 35 68)))
 
 ;; added in PC port
 (defenum level-task-data-index
@@ -209,15 +313,16 @@
 
 ;; maps goal language ID to its name string ID
 (define *language-name-remap*
-    (new 'static 'boxed-array :type text-id
-         (text-id english)
-         (text-id french)
-         (text-id german)
-         (text-id spanish)
-         (text-id italian)
-         (text-id japanese)
-         )
-  )
+  (new 'static
+       'boxed-array
+       :type
+       text-id
+       (text-id english)
+       (text-id french)
+       (text-id german)
+       (text-id spanish)
+       (text-id italian)
+       (text-id japanese)))
 
 ;; all level tasks
 (define *level-task-data*
@@ -1431,19 +1536,7 @@
   )
 
 ;; goes down by 24 or 23 every time
-(define *task-egg-starting-x*
-    (new 'static 'boxed-array :type int32
-         218
-         194
-         171
-         147
-         124
-         100
-         77
-         53
-         30
-         )
-  )
+(define *task-egg-starting-x* (new 'static 'boxed-array :type int32 218 194 171 147 124 100 77 53 30))
 
 ;(define *game-counts* (the-as game-count-info #f))
 

@@ -153,10 +153,21 @@
     )
   )
 
-(defun custom-level-cgo (output-name desc-file-name)
-  "Add a CGO with the given output name (in $OUT/iso) and input name (in custom_levels/jak1/)"
+(defun custom-actor-cgo (output-name desc-file-name)
+  "Add a CGO with the given output name (in $OUT/iso) and input name (in custom_assets/jak1/models/)"
   (let ((out-name (string-append "$OUT/iso/" output-name)))
-    (defstep :in (string-append "custom_levels/jak1/" desc-file-name)
+    (defstep :in (string-append "custom_assets/jak1/models/" desc-file-name)
+      :tool 'dgo
+      :out `(,out-name)
+      )
+    (set! *all-cgos* (cons out-name *all-cgos*))
+    )
+  )
+
+(defun custom-level-cgo (output-name desc-file-name)
+  "Add a CGO with the given output name (in $OUT/iso) and input name (in custom_assets/jak1/levels/)"
+  (let ((out-name (string-append "$OUT/iso/" output-name)))
+    (defstep :in (string-append "custom_assets/jak1/levels/" desc-file-name)
       :tool 'dgo
       :out `(,out-name)
       )
@@ -208,11 +219,16 @@
   )
 
 (defmacro build-custom-level (name)
-  (let* ((path (string-append "custom_levels/jak1/" name "/" name ".jsonc")))
+  (let* ((path (string-append "custom_assets/jak1/levels/" name "/" name ".jsonc")))
     `(defstep :in ,path
               :tool 'build-level
               :out '(,(string-append "$OUT/obj/" name ".go")))))
 
+(defmacro build-actor (name &key (gen-mesh #f))
+  (let* ((path (string-append "custom_assets/jak1/models/custom_levels/" name ".glb")))
+    `(defstep :in '(,path ,(symbol->string gen-mesh))
+              :tool 'build-actor
+              :out '(,(string-append "$OUT/obj/" name "-ag.go")))))
 
 (defun copy-iso-file (name subdir ext)
   (let* ((path (string-append "$ISO/" subdir name ext))
@@ -476,6 +492,7 @@
    "village_common/oracle.gc"
 
    "common/blocking-plane.gc"
+   "common/blocking-plane-b.gc" ;; mod-base-change
    "common/launcherdoor.gc"
    "common/battlecontroller.gc"
 
@@ -1636,11 +1653,16 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Set up the build system to build the level geometry
-;; this path is relative to the custom_levels/jak1 folder
+;; this path is relative to the custom_assets/jak1/levels/ folder
 ;; it should point to the .jsonc file that specifies the level.
 (build-custom-level "afoniddwr")
 ;; the DGO file
 (custom-level-cgo "AFO.DGO" "afoniddwr/afoniddwr.gd")
+
+;; generate the art group for a custom actor.
+;; requires a .glb model file in custom_assets/jak1/models/custom_levels
+;; to also generate a collide-mesh, add :gen-mesh #t
+(build-actor "test-actor" :gen-mesh #t)
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;; Game Engine Code
@@ -1727,7 +1749,7 @@
  :deps
  ("$OUT/obj/display.o"
   "$OUT/obj/decomp-h.o")
- 
+
  "engine/connect.gc"
  "ui/text-h.gc"
  "game/settings-h.gc"
@@ -2106,4 +2128,3 @@
 (group-list "all-code"
   `(,@(reverse *all-gc*))
   )
-
