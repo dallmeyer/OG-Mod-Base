@@ -33,6 +33,7 @@ jobs:
       skipLinux: true
       toolingBinaryDir: "out/build/Release/bin"
       gameAssetsDir: "game/assets"
+      customAssetsDir: "./custom_levels"
       copyEntireBinaryDir: true
     secrets:
       token: ${{ secrets.GITHUB_TOKEN }}
