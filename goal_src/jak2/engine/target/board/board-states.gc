@@ -25,6 +25,8 @@
 (define-extern target-hit-orient (function attack-info vector symbol :behavior target))
 (define-extern target-hit-move (function attack-info symbol (function none :behavior target) float none :behavior target))
 
+(define-extern *target-board-hold-tricks* int)
+
 (declare-type grenade projectile)
 
 ;; DECOMP BEGINS
@@ -120,7 +122,6 @@
   (none)
   )
 
-(define-extern *target-board-hold-tricks* int)
 
 ;; WARN: Return type mismatch object vs none.
 (defbehavior target-board-spin-check target ()
@@ -996,7 +997,7 @@
     (set! (-> self control unknown-float36)
           (fmax
             (-> self control unknown-float36)
-            (* 0.003921569 (the float (-> *cpad-list* cpads (-> self control cpad number) abutton 6)))
+            (* 0.003921569 (the float (-> *cpad-list* cpads (-> self control cpad number) abutton (abutton-idx x)))) ;; og:preserve-this abutton indexing
             )
           )
     (mod-var-jump #t #f (cpad-hold? (-> self control cpad number) x) (-> self control transv))
@@ -1544,7 +1545,7 @@
         (set! (-> self control unknown-float36)
               (fmax
                 (-> self control unknown-float36)
-                (* 0.003921569 (the float (-> *cpad-list* cpads (-> self control cpad number) abutton 6)))
+                (* 0.003921569 (the float (-> *cpad-list* cpads (-> self control cpad number) abutton (abutton-idx x)))) ;; og:preserve-this abutton indexing
                 )
               )
         (mod-var-jump #t #f (cpad-hold? (-> self control cpad number) x) (-> self control transv))
@@ -1699,7 +1700,7 @@
         (set! (-> self control unknown-float36)
               (fmax
                 (-> self control unknown-float36)
-                (* 0.003921569 (the float (-> *cpad-list* cpads (-> self control cpad number) abutton 6)))
+                (* 0.003921569 (the float (-> *cpad-list* cpads (-> self control cpad number) abutton (abutton-idx x)))) ;; og:preserve-this abutton indexing
                 )
               )
         (mod-var-jump #t #f (cpad-hold? (-> self control cpad number) x) (-> self control transv))
@@ -1836,7 +1837,7 @@
       (set! (-> self control unknown-float36)
             (fmax
               (-> self control unknown-float36)
-              (* 0.003921569 (the float (-> *cpad-list* cpads (-> self control cpad number) abutton 6)))
+              (* 0.003921569 (the float (-> *cpad-list* cpads (-> self control cpad number) abutton (abutton-idx x)))) ;; og:preserve-this abutton indexing
               )
             )
       (mod-var-jump #t #f (cpad-hold? (-> self control cpad number) x) (-> self control transv))
