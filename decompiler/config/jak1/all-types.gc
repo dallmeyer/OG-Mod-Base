@@ -876,7 +876,8 @@
   (plunger-lurker-hit 113)
   (leaving-misty 114)
   (assistant-village3 115)
-  (max 116)
+  (platformia-cell 116)
+  (max 117)
   )
 
 (defenum text-id
@@ -1695,6 +1696,9 @@
   (input-opts-binds-unknown #x1615)
   (progress-no-other-resolution-options #x1616)
   (input-opts-controller-led-reflect-heat #x1617)
+  (platformia #x1618)
+  (platformia-cell #x1619)
+
 ;; GAME-TEXT-ID ENUM ENDS
   )
 
