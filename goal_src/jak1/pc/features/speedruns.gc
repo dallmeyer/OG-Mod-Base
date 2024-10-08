@@ -202,10 +202,10 @@
   (case (-> *speedrun-info* category)
     (((speedrun-category full-game))
      ;; spawn at the geyser warp gate checkpoint
-     (initialize! *game-info* 'game (the-as game-save #f) "game-start"))
-    (((speedrun-category il-training))
+     (initialize! *game-info* 'game (the-as game-save #f) "plat-start"))
+    (((speedrun-category platformia))
      ;; spawn at the geyser warp gate checkpoint
-     (initialize! *game-info* 'game (the-as game-save #f) "game-start"))
+     (initialize! *game-info* 'game (the-as game-save #f) "plat-start"))
     (((speedrun-category il-village1))
      ;; spawn at the green sage hut warp gate
      (initialize! *game-info* 'game (the-as game-save #f) "village1-warp"))
@@ -269,7 +269,7 @@
      ;; don't allow cutscene skips
      (set! (-> *pc-settings* skip-movies?) #f)
      ;; spawn at the geyser warp gate checkpoint
-     (initialize! *game-info* 'game (the-as game-save #f) "intro-start"))
+     (initialize! *game-info* 'game (the-as game-save #f) "plat-start"))
     (else
      (format 0 "start-speedrun: unrecognized category ~S~%" (enum->string speedrun-category (-> *speedrun-info* category)))))
   (enforce-speedrun-pc-settings)
@@ -285,7 +285,7 @@
       (((speedrun-category full-game))
        ;; skip intro cutscene
        (close-specific-task! (game-task intro) (task-status need-resolution)))
-      (((speedrun-category il-training))
+      (((speedrun-category platformia))
        ;; skip intro cutscene
        (close-specific-task! (game-task intro) (task-status need-resolution))
        (mark-text-as-seen *game-info* (text-id training-level-name)))
@@ -456,7 +456,7 @@
                    (= (-> *target* next-state name) 'target-hit-ground)))
       (true! *has-landed?*))
     (with-dma-buffer-add-bucket ((buf (-> (current-frame) global-buf)) (bucket-id subtitle))
-      (draw-string-xy (string-format "Speedrunner Mode ~%ModBase ~S / ~S ~%Category: ~S ~%Cutscene Skips ~A~%Has Landed? ~A"
+      (draw-string-xy (string-format "Speedrunner Mode ~%Platformia ~S / ~S ~%Category: ~S ~%Cutscene Skips ~A~%Has Landed? ~A"
                                      *pc-settings-built-sha* *mod-version-text*
                                      (enum->string speedrun-category (-> *speedrun-info* category))
                                      (-> *pc-settings* skip-movies?)
