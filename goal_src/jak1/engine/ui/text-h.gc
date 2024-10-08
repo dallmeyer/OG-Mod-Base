@@ -790,6 +790,8 @@
   (input-opts-binds-unknown #x1615)
   (progress-no-other-resolution-options #x1616)
   (input-opts-controller-led-reflect-heat #x1617)
+  (platformia #x1618)
+  (platformia-cell #x1619)
   ;; mod text mod-base-change
   (pad-triangle #x2000)
   (pad-circle #x2001)
