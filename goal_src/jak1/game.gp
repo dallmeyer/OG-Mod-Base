@@ -1658,6 +1658,16 @@
 (build-custom-level "test-zone")
 ;; the DGO file
 (custom-level-cgo "TSZ.DGO" "test-zone/testzone.gd")
+(build-custom-level "plat-0")
+(custom-level-cgo "PL0.DGO" "plat-0/plat0.gd")
+(build-custom-level "plat-1")
+(custom-level-cgo "PL1.DGO" "plat-1/plat1.gd")
+(build-custom-level "plat-2")
+(custom-level-cgo "PL2.DGO" "plat-2/plat2.gd")
+(build-custom-level "plat-3")
+(custom-level-cgo "PL3.DGO" "plat-3/plat3.gd")
+(build-custom-level "plat-4")
+(custom-level-cgo "PL4.DGO" "plat-4/plat4.gd")
 
 ;; generate the art group for a custom actor.
 ;; requires a .glb model file in custom_assets/jak1/models/custom_levels
@@ -2050,6 +2060,7 @@
  "common-obs/linear-plat.gc"
  "common-obs/ropebridge.gc"
  "common-obs/ticky.gc"
+ "common-obs/plat-obs.gc"
  )
 
 (copy-mus-files "DANGER")
