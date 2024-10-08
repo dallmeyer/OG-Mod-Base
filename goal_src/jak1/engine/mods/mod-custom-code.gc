@@ -78,10 +78,17 @@
       ))
   (none))
 
+(define music-playing? #f)
+
 (defun runs-on-jak-spawn ()
-  ;; Code here runs every time jak spawns (loading a file new game or death)
-  ;;uncomment this to use custom music for custom levels - the function is in mod-common-functions.gc
-  ;;(process-spawn-function process music-manager-proc)
+  (cond
+    ((or (= (-> *level* level0 name) 'plat-2) (= (-> *level* level1 name) 'plat-2))
+      (when (not music-playing?)
+        (play-main-music "theme.wav" (the int (* (-> *setting-control* default music-volume) 1.5)))
+        (set! music-playing? #t)))
+    (else
+      (play-main-music "" (the int (-> *setting-control* default music-volume)))
+      (set! music-playing? #f)))
   (none))
 
 (defun runs-on-jak-death ((death-event symbol))
