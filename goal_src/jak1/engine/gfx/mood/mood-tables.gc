@@ -495,7 +495,7 @@
                  :fog-color
                  (new 'static 'vector :x 160.0 :y 150.0 :z 200.0 :w 128.0)
                  :fog-dists
-                 (new 'static 'vector :x 262144.0 :y 6717440.0 :z 255.0 :w 25.5)
+                 (new 'static 'vector :x 262144.0 :y 2252800000.0 :z 255.0 :w 25.5)
                  :erase-color
                  (new 'static 'vector :w 128.0))
             (new 'static
@@ -503,7 +503,7 @@
                  :fog-color
                  (new 'static 'vector :x 150.0 :y 165.0 :z 220.0 :w 128.0)
                  :fog-dists
-                 (new 'static 'vector :x 262144.0 :y 6717440.0 :z 255.0 :w 25.5)
+                 (new 'static 'vector :x 262144.0 :y 2252800000.0 :z 255.0 :w 25.5)
                  :erase-color
                  (new 'static 'vector :w 128.0))
             (new 'static
@@ -511,7 +511,7 @@
                  :fog-color
                  (new 'static 'vector :x 128.0 :y 180.0 :z 243.0 :w 128.0)
                  :fog-dists
-                 (new 'static 'vector :x 262144.0 :y 6717440.0 :z 255.0 :w 25.5)
+                 (new 'static 'vector :x 262144.0 :y 2252800000.0 :z 255.0 :w 25.5)
                  :erase-color
                  (new 'static 'vector :w 128.0))
             (new 'static
@@ -519,7 +519,7 @@
                  :fog-color
                  (new 'static 'vector :x 150.0 :y 165.0 :z 220.0 :w 128.0)
                  :fog-dists
-                 (new 'static 'vector :x 262144.0 :y 6717440.0 :z 255.0 :w 25.5)
+                 (new 'static 'vector :x 262144.0 :y 2252800000.0 :z 255.0 :w 25.5)
                  :erase-color
                  (new 'static 'vector :w 128.0))
             (new 'static
@@ -527,7 +527,7 @@
                  :fog-color
                  (new 'static 'vector :x 160.0 :y 150.0 :z 200.0 :w 128.0)
                  :fog-dists
-                 (new 'static 'vector :x 262144.0 :y 6717440.0 :z 255.0 :w 25.5)
+                 (new 'static 'vector :x 262144.0 :y 2252800000.0 :z 255.0 :w 25.5)
                  :erase-color
                  (new 'static 'vector :w 128.0))
             (new 'static
@@ -535,7 +535,7 @@
                  :fog-color
                  (new 'static 'vector :x 16.0 :y 32.0 :z 100.0 :w 128.0)
                  :fog-dists
-                 (new 'static 'vector :x 262144.0 :y 6717440.0 :z 255.0 :w 25.5)
+                 (new 'static 'vector :x 262144.0 :y 2252800000.0 :z 255.0 :w 25.5)
                  :erase-color
                  (new 'static 'vector :w 128.0))
             (new 'static
@@ -543,7 +543,7 @@
                  :fog-color
                  (new 'static 'vector :w 128.0)
                  :fog-dists
-                 (new 'static 'vector :x 262144.0 :y 4984832.0 :z 255.0 :w 51.0)
+                 (new 'static 'vector :x 262144.0 :y 2252800000.0 :z 255.0 :w 51.0)
                  :erase-color
                  (new 'static 'vector :w 128.0))
             (new 'static
@@ -551,7 +551,7 @@
                  :fog-color
                  (new 'static 'vector :y 80.0 :z 64.0 :w 128.0)
                  :fog-dists
-                 (new 'static 'vector :x 262144.0 :y 3690496.0 :z 255.0 :w 25.5)
+                 (new 'static 'vector :x 262144.0 :y 2252800000.0 :z 255.0 :w 25.5)
                  :erase-color
                  (new 'static 'vector :w 128.0)))))
 
