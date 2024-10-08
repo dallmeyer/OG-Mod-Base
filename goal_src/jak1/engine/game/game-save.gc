@@ -1174,10 +1174,7 @@
            (set! (-> self state-time) (-> *display* real-frame-counter))
            (while (< (- (-> *display* real-frame-counter) (-> self state-time)) (seconds 0.2))
              (if (not (progress-allowed?)) (set! (-> self state-time) (-> *display* real-frame-counter)))
-             (suspend))
-           ;; Don't display the auto-save warning prompt if speedrunning
-           (when (= (-> *pc-settings* speedrunner-mode?) #f)
-             (activate-progress *dproc* (progress-screen auto-save))))))))
+             (suspend)))))))
 
 (defun auto-save-command ((arg0 symbol) (arg1 int) (arg2 int) (arg3 process-tree))
   (process-spawn auto-save arg0 arg3 arg1 arg2)

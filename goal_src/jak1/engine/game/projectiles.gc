@@ -844,7 +844,6 @@
 
 (defmethod projectile-method-27 ((this projectile-blue))
   (cpad-set-buzz! (-> *cpad-list* cpads 0) 1 204 (seconds 0.1))
-  (sound-play "blue-eco-on")
   (set! (-> this mode) 2)
   (set! (-> this max-speed) (-> *TARGET-bank* yellow-projectile-speed))
   (set! (-> this update-velocity) projectile-update-velocity-space-wars)
