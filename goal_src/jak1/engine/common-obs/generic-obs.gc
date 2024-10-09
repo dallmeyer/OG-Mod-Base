@@ -1194,8 +1194,7 @@
           ((send-event *target* 'query 'powerup (pickup-type eco-blue)) (go launcher-active))
           (else (let ((gp-0 'target-launch)) (if (= (send-event *target* 'query 'mode) gp-0) (send-event *target* 'end-mode)))))
         (if (and (and *target* (>= 32768.0 (vector-vector-distance (-> self root trans) (-> *target* control trans))))
-                 (not (send-event *target* 'query 'powerup (pickup-type eco-blue))))
-          (level-hint-spawn (text-id sidekick-hint-launcher) "sksp0035" (the-as entity #f) *entity-pool* (game-task none)))))
+                 (not (send-event *target* 'query 'powerup (pickup-type eco-blue)))))))
   :code anim-loop)
 
 (defstate launcher-active (launcher)
