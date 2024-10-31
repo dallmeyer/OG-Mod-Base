@@ -595,6 +595,7 @@
 
 
 (defun update-mood-lava ((arg0 mood-context) (arg1 int) (arg2 int) (arg3 float) (arg4 float) (arg5 float) (arg6 float) (arg7 float))
+  (set! (-> *time-of-day-proc* 0 time-ratio) 0.0) (set! (-> *time-of-day-proc* 0 hour) 23)
   (let ((gp-0 (+ (+ arg2 1840) (the-as int arg0))))
     (let ((f0-1 (cos (-> (the-as (pointer float) gp-0)))))
       (set! (-> arg0 times arg1 w) (+ arg3 (* f0-1 arg4)))
@@ -607,6 +608,7 @@
   )
 
 (defun update-mood-flicker ((arg0 mood-context) (arg1 int) (arg2 int))
+  (set! (-> *time-of-day-proc* 0 time-ratio) 0.0) (set! (-> *time-of-day-proc* 0 hour) 23)
   (let ((gp-0 (the-as flicker-state (+ (+ arg2 1840) (the-as int arg0)))))
     (cond
       ((nonzero? (-> gp-0 flicker-on))
@@ -633,6 +635,7 @@
   )
 
 (defun update-mood-florescent ((arg0 mood-context) (arg1 int) (arg2 int))
+  (set! (-> *time-of-day-proc* 0 time-ratio) 0.0) (set! (-> *time-of-day-proc* 0 hour) 23)
   (let ((gp-0 (the-as florescent-state (+ (+ arg2 1840) (the-as int arg0)))))
     (set! (-> arg0 times arg1 w) (-> gp-0 value))
     (when (not (paused?))

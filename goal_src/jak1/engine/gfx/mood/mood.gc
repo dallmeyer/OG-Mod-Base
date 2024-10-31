@@ -629,6 +629,7 @@
    (time1  light-time-state :inline)))
 
 (defun update-mood-misty ((arg0 mood-context) (arg1 float) (arg2 int))
+  (set! (-> *time-of-day-proc* 0 time-ratio) 0.0) (set! (-> *time-of-day-proc* 0 hour) 23)
   (update-mood-fog arg0 arg1)
   (update-mood-sky-texture arg0 arg1)
   (clear-mood-times arg0)
@@ -666,6 +667,7 @@
    (lightning lightning-state :inline)))
 
 (defun update-mood-village2 ((arg0 mood-context) (arg1 float) (arg2 int))
+  (set! (-> *time-of-day-proc* 0 time-ratio) 0.0) (set! (-> *time-of-day-proc* 0 hour) 23)
   (update-mood-fog arg0 arg1)
   (update-mood-sky-texture arg0 arg1)
   (clear-mood-times arg0)
@@ -736,6 +738,7 @@
   (none))
 
 (defun update-mood-swamp ((arg0 mood-context) (arg1 float) (arg2 int))
+  (set! (-> *time-of-day-proc* 0 time-ratio) 0.0) (set! (-> *time-of-day-proc* 0 hour) 23)
   (update-mood-fog arg0 arg1)
   (update-mood-sky-texture arg0 arg1)
   (clear-mood-times arg0)
@@ -758,6 +761,7 @@
   ((flames flames-state :inline)))
 
 (defun update-mood-village1 ((arg0 mood-context) (arg1 float) (arg2 int))
+  (set! (-> *time-of-day-proc* 0 time-ratio) 0.0) (set! (-> *time-of-day-proc* 0 hour) 23)
   (update-mood-fog arg0 arg1)
   (update-mood-sky-texture arg0 arg1)
   (clear-mood-times arg0)
@@ -830,6 +834,7 @@
    (one-shot uint8)))
 
 (defun update-mood-jungle ((arg0 mood-context) (arg1 float) (arg2 int))
+  (set! (-> *time-of-day-proc* 0 time-ratio) 0.0) (set! (-> *time-of-day-proc* 0 hour) 23)
   (update-mood-fog arg0 arg1)
   (update-mood-sky-texture arg0 arg1)
   (clear-mood-times arg0)
@@ -872,6 +877,7 @@
   (none))
 
 (defun update-mood-jungleb ((arg0 mood-context) (arg1 float) (arg2 int))
+  (set! (-> *time-of-day-proc* 0 time-ratio) 0.0) (set! (-> *time-of-day-proc* 0 hour) 23)
   (update-mood-sky-texture arg0 arg1)
   (clear-mood-times arg0)
   (set! (-> arg0 times 0 w) 1.0)
@@ -1128,6 +1134,7 @@
 (define *rolling-spheres-light4* (new 'static 'vector :x -688128.0 :y 217088.0 :z -5697536.0 :w 143360.0))
 
 (defun update-mood-rolling ((arg0 mood-context) (arg1 float) (arg2 int))
+  (set! (-> *time-of-day-proc* 0 time-ratio) 0.0) (set! (-> *time-of-day-proc* 0 hour) 23)
   (update-mood-fog arg0 arg1)
   (update-mood-sky-texture arg0 arg1)
   (clear-mood-times arg0)
@@ -1194,6 +1201,7 @@
   ((lava lava-state :inline)))
 
 (defun update-mood-firecanyon ((arg0 mood-context) (arg1 float) (arg2 int))
+  (set! (-> *time-of-day-proc* 0 time-ratio) 0.0) (set! (-> *time-of-day-proc* 0 hour) 23)
   (update-mood-fog arg0 arg1)
   (update-mood-sky-texture arg0 arg1)
   (clear-mood-times arg0)
@@ -1208,6 +1216,7 @@
    (time  light-time-state :inline)))
 
 (defun update-mood-training ((arg0 mood-context) (arg1 float) (arg2 int))
+  (set! (-> *time-of-day-proc* 0 time-ratio) 0.0) (set! (-> *time-of-day-proc* 0 hour) 23)
   (update-mood-fog arg0 arg1)
   (update-mood-sky-texture arg0 arg1)
   (clear-mood-times arg0)
@@ -1312,6 +1321,7 @@
    (interp   float)))
 
 (defun update-mood-snow ((arg0 mood-context) (arg1 float) (arg2 int))
+  (set! (-> *time-of-day-proc* 0 time-ratio) 0.0) (set! (-> *time-of-day-proc* 0 hour) 23)
   (update-mood-fog arg0 arg1)
   (update-mood-sky-texture arg0 arg1)
   (clear-mood-times arg0)
@@ -1353,6 +1363,7 @@
    (time      uint8)))
 
 (defun update-mood-village3 ((arg0 mood-context) (arg1 float) (arg2 int))
+  (set! (-> *time-of-day-proc* 0 time-ratio) 0.0) (set! (-> *time-of-day-proc* 0 hour) 23)
   (update-mood-fog arg0 arg1)
   (update-mood-sky-texture arg0 arg1)
   (clear-mood-times arg0)
@@ -1479,6 +1490,7 @@
 (set! (-> *lavatube-mood* state 18) (the-as uint 255))
 
 (defun update-mood-lavatube ((arg0 mood-context) (arg1 float) (arg2 int))
+  (set! (-> *time-of-day-proc* 0 time-ratio) 0.0) (set! (-> *time-of-day-proc* 0 hour) 23)
   (clear-mood-times arg0)
   (set! (-> arg0 times 0 w) 1.0)
   (when *time-of-day-effects*
@@ -1498,6 +1510,7 @@
    (lava-fade float)))
 
 (defun update-mood-ogre ((arg0 mood-context) (arg1 float) (arg2 int))
+  (set! (-> *time-of-day-proc* 0 time-ratio) 0.0) (set! (-> *time-of-day-proc* 0 hour) 23)
   (update-mood-fog arg0 arg1)
   (update-mood-sky-texture arg0 arg1)
   (clear-mood-times arg0)
@@ -1615,6 +1628,7 @@
    (secret-time time-frame)))
 
 (defun update-mood-finalboss ((arg0 mood-context) (arg1 float) (arg2 int))
+  (set! (-> *time-of-day-proc* 0 time-ratio) 0.0) (set! (-> *time-of-day-proc* 0 hour) 23)
   (clear-mood-times arg0)
   (set! (-> arg0 light-group 0 dir2 levels x) 0.0)
   (set! (-> *finalboss2-mood* light-group 0 dir2 levels x) 0.0)

@@ -595,7 +595,10 @@
           (set! (-> (the-as process-drawable (-> s4-0 0)) draw dma-add-func) dma-add-process-drawable-hud)
           (set-vector! (-> (the-as process-drawable (-> s4-0 0)) root trans) 0.0 0.0 0.0 1.0)
           (set-vector! (-> (the-as process-drawable (-> s4-0 0)) root scale) 0.0095 -0.011 0.0095 1.0)
-          (if #f (send-event (ppointer->process s4-0) 'trans-hook #f)))
+          (send-event (ppointer->process s4-0)
+                      'trans-hook
+                      (lambda :behavior process-drawable ()
+                        (logior! (-> self draw status) (draw-status hidden)))))
         (set! (-> this icons s5-0 icon) (the-as (pointer manipy) s4-0))
         (when s4-0
           (logior! (-> s4-0 0 mask) (process-mask pause))
