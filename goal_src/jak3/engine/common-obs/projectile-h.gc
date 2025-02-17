@@ -9,38 +9,38 @@
 (defenum projectile-options
   :bitfield #t
   :type uint64
-  (po0 0)
-  (po1 1)
-  (po2 2)
-  (po3 3)
-  (po4 4)
-  (po5 5)
-  (po6 6)
-  (po7 7)
-  (po8 8)
-  (po9 9)
-  (po10 10)
-  (po11 11)
-  (po12 12)
-  (po13 13)
-  (po14 14)
-  (po15 15)
-  (po16 16)
-  (po17 17)
-  (po18 18)
-  (po19 19)
-  (po20 20)
-  (po21 21)
-  (po22 22)
-  (po23 23)
-  (po24 24)
-  (po25 25)
-  (po26 26)
-  (po27 27)
-  (po28 28)
-  (po29 29)
-  (po30 30)
-  (po31 31)
+  (po0 0) ;; space wars fixed Y position -10m? idk
+  (po1 1) ;; controls if we tween towards target-pos
+  (po2 2) ;; unused?
+  (po3 3) ;; unused?
+  (po4 4) ;; controls if projectile impacts when touch-wall
+  (po5 5) ;; unused?
+  (po6 6) ;; unused?
+  (po7 7) 
+  (po8 8) ;; unused?
+  (po9 9) ;; unused?
+  (po10 10) ;; unused?
+  (po11 11) ;; unused?
+  (po12 12) ;; unused?
+  (po13 13) ;; controls whether attack should inherit attacker-velocity
+  (po14 14) ;; controls whether we use requested damage or default of 2.0
+  (po15 15) ;; controls whether we use requested vehicle-damage-factor or default of 1.0
+  (po16 16) ;; same as ^^ but for vehicle-impulse-factor
+  (po17 17) ;; controls whether projectile makes impact (at all?)
+  (po18 18) ;; controls whether we set invinc-time
+  (po19 19) ;; controls whether we send attack-invinc or attack event
+  (po20 20) ;; something specifically for v-scorp-shot?
+  (po21 21) ;; unused?
+  (po22 22) ;; unused?
+  (po23 23) ;; unused?
+  (po24 24) ;; unused?
+  (po25 25) ;; unused?
+  (po26 26) ;; unused?
+  (po27 27) ;; unused?
+  (po28 28) ;; unused?
+  (po29 29) ;; unused?
+  (po30 30) ;; unused?
+  (po31 31) ;; unused?
   )
 ;; ---projectile-options
 
