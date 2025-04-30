@@ -162,8 +162,8 @@
    (res-lavatube-balls           uint8)
    (res-intro                    uint8)
    ;; misc other tasks
-   (int-finalboss-movies uint8)
-   (unk-finalboss-movies uint8)
+   (int-finalboss-movies         uint8)
+   (unk-finalboss-movies         uint8)
    (int-jungle-fishgame          uint8)
    (com-jungle-lurkerm           uint8)
    (com-misty-muse               uint8)

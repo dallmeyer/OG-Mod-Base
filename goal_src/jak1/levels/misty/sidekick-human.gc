@@ -25,7 +25,7 @@
 
 (defpart 2665
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 1.0)
    (:x (meters -2.5) (meters 5))
    (:y (meters -1.5) (meters 3))
@@ -40,7 +40,7 @@
 
 (defpart 2663
   :init-specs
-  ((:texture (new 'static 'texture-id :index #xf :page #x2))
+  ((:texture (hotdot effects))
    (:num 1.0)
    (:x (meters 0) (meters 16))
    (:y (meters 0) (meters 16))
@@ -62,7 +62,7 @@
 
 (defpart 2664
   :init-specs
-  ((:texture (new 'static 'texture-id :index #xf :page #x2))
+  ((:texture (hotdot effects))
    (:num 1.0)
    (:scale-x (meters 0.5) (meters 0.3))
    (:scale-y :copy scale-x)
@@ -80,7 +80,7 @@
 
 (defpart 2667
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x36 :page #x2))
+  ((:texture (p-white effects))
    (:num 1.0)
    (:z (meters -3.90625))
    (:scale-x (meters 15))
@@ -94,7 +94,7 @@
 
 (defpart 2666
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.3)
    (:x (meters -4) (meters 8))
    (:y (meters -3) (meters 6))
@@ -387,7 +387,7 @@
 
 (defpart 2349
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.5)
    (:x (meters 0) (meters 0.1))
    (:y (meters -1) (meters 4))
@@ -410,7 +410,7 @@
 
 (defpart 2350
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.5)
    (:x (meters 0) (meters 0.1))
    (:y (meters -1) (meters 4))
@@ -433,7 +433,7 @@
 
 (defpart 2351
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.5)
    (:x (meters 0) (meters 0.3))
    (:y (meters 0) (meters 2))
@@ -456,7 +456,7 @@
 
 (defpart 2352
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.5)
    (:x (meters 0) (meters 0.5))
    (:y (meters -0.5) (meters 1))
@@ -479,7 +479,7 @@
 
 (defpart 2344
   :init-specs
-  ((:texture (new 'static 'texture-id :index #xf :page #x2))
+  ((:texture (hotdot effects))
    (:num 1.0)
    (:x (meters 0) (meters 16))
    (:y (meters 0) (meters 16))
@@ -508,7 +508,7 @@
 
 (defpart 2345
   :init-specs
-  ((:texture (new 'static 'texture-id :index #xf :page #x2))
+  ((:texture (hotdot effects))
    (:num 32.0)
    (:y (meters 1) (meters 2))
    (:scale-x (meters 0.1) (meters 0.2))
@@ -538,7 +538,7 @@
 
 (defpart 2346
   :init-specs
-  ((:texture (new 'static 'texture-id :index #xf :page #x2))
+  ((:texture (hotdot effects))
    (:num 32.0)
    (:y (meters 0) (meters 3))
    (:scale-x (meters 0.1) (meters 0.4))
@@ -565,7 +565,7 @@
 
 (defpart 2347
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 1.0)
    (:y (meters 2))
    (:scale-x (meters 28) (meters 4))
@@ -581,7 +581,7 @@
 
 (defpart 2348
   :init-specs
-  ((:texture (new 'static 'texture-id :index #xf :page #x2))
+  ((:texture (hotdot effects))
    (:num 2.0)
    (:y (meters 0.5) (meters 2))
    (:scale-x (meters 0.25) (meters 0.1))
@@ -685,7 +685,7 @@
 
 (defpart 2386
   :init-specs
-  ((:texture (new 'static 'texture-id :index #xf :page #x2))
+  ((:texture (hotdot effects))
    (:num 1.0)
    (:y (meters 0.25) (meters 1.5))
    (:scale-x (meters 0.2) (meters 0.5))
@@ -698,7 +698,7 @@
 
 (defpart 2385
   :init-specs
-  ((:texture (new 'static 'texture-id :index #xf :page #x2))
+  ((:texture (hotdot effects))
    (:num 1.0)
    (:x (meters 0) (meters 16))
    (:y (meters 0))
@@ -735,7 +735,7 @@
 
 (defpart 2384
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 0.1)
    (:scale-x (meters 0.4) (meters 0.2))
    (:rot-z (degrees 0) (degrees 360))
@@ -761,7 +761,7 @@
 
 (defpart 2298
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.0)
    (:x (meters -0.25) (meters 0.5))
    (:y (meters -0.25) (meters 0.5))
@@ -857,7 +857,7 @@
 
 (defpart 2830
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 32.0)
    (:x (meters -2) (meters 4))
    (:y (meters 1) (meters 2))
@@ -875,7 +875,7 @@
 
 (defpart 2786
   :init-specs
-  ((:texture (new 'static 'texture-id :index #xf :page #x2))
+  ((:texture (hotdot effects))
    (:num 12.0)
    (:y (meters -1.5) (meters 3))
    (:scale-x (meters 0.4) (meters 0.8))
@@ -902,7 +902,7 @@
 
 (defpart 2788
   :init-specs
-  ((:texture (new 'static 'texture-id :index #xf :page #x2))
+  ((:texture (hotdot effects))
    (:num 12.0)
    (:scale-x (meters 0.3))
    (:rot-z (degrees 0) (degrees 180))
@@ -918,7 +918,7 @@
 
 (defpart 2785
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 1.0)
    (:scale-x (meters 24))
    (:scale-y :copy scale-x)
@@ -932,7 +932,7 @@
 
 (defpart 2787
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 16.0)
    (:y (meters -1.5) (meters 3))
    (:scale-x (meters 3) (meters 1.5))
@@ -1008,7 +1008,7 @@
 
 (defpart 2790
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 1.0)
    (:scale-x (meters 0.1) (meters 0.1))
    (:rot-z (degrees 0) (degrees 360))

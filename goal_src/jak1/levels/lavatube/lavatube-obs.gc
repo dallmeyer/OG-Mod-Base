@@ -103,7 +103,7 @@
 
 (defpart 1932
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 1.0)
    (:x (meters -2) (meters 4))
    (:y (meters 4) (meters 2))
@@ -202,7 +202,7 @@
 
 (defpart 2166
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 8.0)
    (:x (meters -2) (meters 4))
    (:y (meters -2) (meters 4))
@@ -220,7 +220,7 @@
 
 (defpart 2126
   :init-specs
-  ((:texture (new 'static 'texture-id :index #xf :page #x2))
+  ((:texture (hotdot effects))
    (:num 8.0)
    (:y (meters 0))
    (:scale-x (meters 0.4) (meters 0.8))
@@ -247,7 +247,7 @@
 
 (defpart 2128
   :init-specs
-  ((:texture (new 'static 'texture-id :index #xf :page #x2))
+  ((:texture (hotdot effects))
    (:num 6.0)
    (:y (meters 0))
    (:scale-x (meters 0.4))
@@ -264,7 +264,7 @@
 
 (defpart 2125
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 1.0)
    (:y (meters 0))
    (:scale-x (meters 32))
@@ -279,7 +279,7 @@
 
 (defpart 2127
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 16.0)
    (:x (meters -1) (meters 2))
    (:y (meters -1) (meters 2))
@@ -332,9 +332,10 @@
   (:states
    darkecobarrel-spawner))
 
-(defmethod relocate ((this darkecobarrel) (arg0 int))
-  (if (nonzero? (-> this spawn-array)) (&+! (-> this spawn-array) arg0))
-  (call-parent-method this arg0))
+
+(defmethod relocate ((this darkecobarrel) (offset int))
+  (if (nonzero? (-> this spawn-array)) (&+! (-> this spawn-array) offset))
+  (call-parent-method this offset))
 
 (defskelgroup *darkecobarrel-sg*
   darkecobarrel
@@ -665,7 +666,7 @@
 
 (defpart 2133
   :init-specs
-  ((:texture (new 'static 'texture-id :index #xf :page #x2))
+  ((:texture (hotdot effects))
    (:num 8.0)
    (:y (meters 0))
    (:scale-x (meters 0.4) (meters 0.8))
@@ -694,7 +695,7 @@
 
 (defpart 2135
   :init-specs
-  ((:texture (new 'static 'texture-id :index #xf :page #x2))
+  ((:texture (hotdot effects))
    (:num 6.0)
    (:y (meters 0))
    (:scale-x (meters 0.4))
@@ -713,7 +714,7 @@
 
 (defpart 2132
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 1.0)
    (:y (meters 0))
    (:scale-x (meters 32))
@@ -728,7 +729,7 @@
 
 (defpart 2134
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 16.0)
    (:scale-x (meters 4) (meters 2))
    (:rot-z (degrees 0) (degrees 360))
@@ -855,7 +856,7 @@
 
 (defpart 1988
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 8.0)
    (:x (meters -1) (meters 2))
    (:y (meters 1) (meters 2))
@@ -874,7 +875,7 @@
 
 (defpart 1989
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 16.0)
    (:y (meters 2))
    (:scale-x (meters 0.5) (meters 1))
@@ -896,7 +897,7 @@
 
 (defpart 1987
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 1.0)
    (:y (meters 2))
    (:scale-x (meters 12))

@@ -26,10 +26,10 @@
    billy-done
    billy-playing))
 
-(defmethod relocate ((this billy) (arg0 int))
+(defmethod relocate ((this billy) (offset int))
   (countdown (v1-0 3)
-    (if (nonzero? (-> this path-data v1-0)) (&+! (-> this path-data v1-0) arg0)))
-  (call-parent-method this arg0))
+    (if (nonzero? (-> this path-data v1-0)) (&+! (-> this path-data v1-0) offset)))
+  (call-parent-method this offset))
 
 (deftype billy-snack (process-drawable)
   ((num-rats int32))
@@ -152,7 +152,7 @@
   :virtual #t
   :enter
     (behavior ()
-      (let ((t9-1 (-> (find-parent-state) enter))) (if t9-1 (t9-1)))
+      (call-parent-state-handler enter)
       (when (logtest? (nav-control-flags navcf19) (-> self nav flags))
         (logclear! (-> self nav flags) (nav-control-flags navcf19))
         (if (rat-about-to-eat? self (-> self billy 0))

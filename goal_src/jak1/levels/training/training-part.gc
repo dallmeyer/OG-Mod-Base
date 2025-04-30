@@ -130,7 +130,7 @@
 
 (defpart 752
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x19 :page #x2))
+  ((:texture (falls-particle-02 effects))
    (:num 0.2)
    (:sound (static-sound-spec "geyser" :num 0.1 :fo-min 50 :fo-max 200))
    (:x (meters 0) (meters 1))
@@ -158,7 +158,7 @@
 
 (defpart 753
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x18 :page #x2))
+  ((:texture (falls-particle effects))
    (:num 0.15)
    (:x (meters 0) (meters 1))
    (:y (meters 85) (meters 10))
@@ -198,7 +198,7 @@
 
 (defpart 754
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x18 :page #x2))
+  ((:texture (falls-particle effects))
    (:num 0.035)
    (:x (meters 0) (meters 1))
    (:y (meters 85) (meters 10))
@@ -229,7 +229,7 @@
 
 (defpart 763
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x9 :page #x2))
+  ((:texture (lakedrop effects))
    (:num 0.0 1 1.0)
    (:scale-x (meters 0.05) (meters 0.075))
    (:scale-y :copy scale-x)
@@ -247,7 +247,7 @@
 
 (defpart 764
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x1e :page #x2))
+  ((:texture (water-ring effects))
    (:num 1.0)
    (:y (meters 0.02))
    (:scale-x (meters 1) (meters 1))
@@ -276,7 +276,7 @@
 
 (defpart 759
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x4 :page #x2))
+  ((:texture (middot effects))
    (:num 2.0)
    (:x (meters 0) (meters 40))
    (:y (meters 10) (meters 20))
@@ -295,7 +295,7 @@
 
 (defpart 760
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x4 :page #x2))
+  ((:texture (middot effects))
    (:num 4.0)
    (:x (meters 0) (meters 40))
    (:y (meters 10) (meters 20))
@@ -312,7 +312,7 @@
 
 (defpart 757
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x4 :page #x2))
+  ((:texture (middot effects))
    (:num 2.0)
    (:x (meters 0) (meters 40))
    (:y (meters 4) (meters 8))
@@ -331,7 +331,7 @@
 
 (defpart 758
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x4 :page #x2))
+  ((:texture (middot effects))
    (:num 4.0)
    (:x (meters 0) (meters 40))
    (:y (meters 4) (meters 10))
@@ -348,7 +348,7 @@
 
 (defpart 755
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x4 :page #x2))
+  ((:texture (middot effects))
    (:num 2.0)
    (:x (meters 0) (meters 40))
    (:y (meters 10) (meters 10))
@@ -367,7 +367,7 @@
 
 (defpart 756
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x4 :page #x2))
+  ((:texture (middot effects))
    (:num 4.0)
    (:x (meters 0) (meters 40))
    (:y (meters 10) (meters 20))
@@ -561,7 +561,7 @@
 
 (defpart 770
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x3 :page #x2))
+  ((:texture (harddot effects))
    (:num 0.5)
    (:x (meters 0))
    (:scale-x (meters 5))
@@ -577,7 +577,7 @@
 
 (defpart 769
   :init-specs
-  ((:texture (new 'static 'texture-id :index #xf :page #x2))
+  ((:texture (hotdot effects))
    (:num 0.25)
    (:x (meters -2))
    (:scale-x (meters 0.25))
@@ -591,7 +591,7 @@
 
 (defpart 766
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x4 :page #x2))
+  ((:texture (middot effects))
    (:num 1.0)
    (:x (meters -0.6666667))
    (:y (meters 4))
@@ -629,7 +629,7 @@
 
 (defpart 768
   :init-specs
-  ((:texture (new 'static 'texture-id :index #xf :page #x2))
+  ((:texture (hotdot effects))
    (:num 1.0)
    (:scale-x (meters 0.25))
    (:scale-y :copy scale-x)
@@ -642,7 +642,7 @@
 
 (defpart 765
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 1.0)
    (:x (meters -0.6666667))
    (:y (meters 4))
@@ -698,7 +698,7 @@
 
 (defpart 773
   :init-specs
-  ((:texture (new 'static 'texture-id :index #xf :page #x2))
+  ((:texture (hotdot effects))
    (:num 1.0)
    (:x (meters 0) (meters 7.5))
    (:y (meters 14) (meters 3))
@@ -722,7 +722,7 @@
 
 (defpart 771
   :init-specs
-  ((:texture (new 'static 'texture-id :index #xf :page #x2))
+  ((:texture (hotdot effects))
    (:num 1.0)
    (:x (meters 0) (meters 16))
    (:y (meters 0) (meters 16))
@@ -752,7 +752,7 @@
 
 (defpart 772
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x22 :page #x2))
+  ((:texture (butterfly-wing effects))
    (:birth-func 'birth-func-copy-rot-color)
    (:num 2.0)
    (:scale-x (meters 0.9))
@@ -789,7 +789,7 @@
 
 (defpart 779
   :init-specs
-  ((:texture (new 'static 'texture-id :index #xf :page #x2))
+  ((:texture (hotdot effects))
    (:birth-func 'birth-func-random-next-time)
    (:num 1.0)
    (:x (meters -15) (meters 30))
@@ -811,7 +811,7 @@
 
 (defpart 777
   :init-specs
-  ((:texture (new 'static 'texture-id :index #xf :page #x2))
+  ((:texture (hotdot effects))
    (:birth-func 'birth-func-copy-omega-to-z)
    (:num 1.0)
    (:x (meters 0))
@@ -851,7 +851,7 @@
 
 (defpart 778
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x1c :page #x2))
+  ((:texture (hummingbird-wing effects))
    (:birth-func 'birth-func-copy2-rot-color)
    (:num 2.0)
    (:scale-x (meters 4))
@@ -883,7 +883,7 @@
 
 (defpart 782
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x18 :page #x2))
+  ((:texture (falls-particle effects))
    (:num 0.9)
    (:x (meters -9) (meters 1))
    (:y (meters 47))
@@ -910,7 +910,7 @@
 
 (defpart 783
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x18 :page #x2))
+  ((:texture (falls-particle effects))
    (:num 0.9)
    (:x (meters -9) (meters 1))
    (:y (meters 39) (meters 5))
@@ -937,7 +937,7 @@
 
 (defpart 784
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x18 :page #x2))
+  ((:texture (falls-particle effects))
    (:num 1.0)
    (:x (meters -2) (meters 3))
    (:y (meters 24) (meters 6))
@@ -963,7 +963,7 @@
 
 (defpart 785
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x4 :page #x2))
+  ((:texture (middot effects))
    (:num 1.0)
    (:x (meters -9) (meters 1))
    (:y (meters 47))
@@ -988,7 +988,7 @@
 
 (defpart 786
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.5 0.4)
    (:x (meters -7) (meters 3.5))
    (:y (meters 47))
@@ -1016,7 +1016,7 @@
 
 (defpart 787
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x19 :page #x2))
+  ((:texture (falls-particle-02 effects))
    (:num 0.133)
    (:x (meters 0) (meters 6))
    (:y (meters -3.5))
@@ -1057,7 +1057,7 @@
 
 (defpart 792
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x18 :page #x2))
+  ((:texture (falls-particle effects))
    (:num 1.0)
    (:x (meters -6) (meters 1))
    (:y (meters 15.5))
@@ -1084,7 +1084,7 @@
 
 (defpart 793
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x18 :page #x2))
+  ((:texture (falls-particle effects))
    (:num 1.4)
    (:x (meters -4) (meters 1))
    (:y (meters 15.5))
@@ -1111,7 +1111,7 @@
 
 (defpart 794
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.5 0.4)
    (:x (meters -6) (meters 1))
    (:y (meters 15.5))
@@ -1139,7 +1139,7 @@
 
 (defpart 795
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.5 0.4)
    (:x (meters -4) (meters 1))
    (:y (meters 15.5))
@@ -1167,7 +1167,7 @@
 
 (defpart 796
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x19 :page #x2))
+  ((:texture (falls-particle-02 effects))
    (:num 0.133)
    (:x (meters 0) (meters 6))
    (:y (meters -3.5))
@@ -1196,7 +1196,7 @@
 
 (defpart 797
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x1e :page #x2))
+  ((:texture (water-ring effects))
    (:num 0.05)
    (:x (meters 0) (meters 5))
    (:z (meters -8) (meters 8))

@@ -43,7 +43,7 @@
 
 (defpart 1012
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.15)
    (:x (meters -9) (meters 19))
    (:y (meters 0.5))
@@ -67,7 +67,7 @@
 
 (defpart 1014
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 1.0)
    (:x (meters -8) (meters 17))
    (:y (meters 0.5))
@@ -86,7 +86,7 @@
 
 (defpart 1013
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x4 :page #x2))
+  ((:texture (middot effects))
    (:num 0.03 0.03)
    (:x (meters -8) (meters 17))
    (:y (meters 0.5))
@@ -155,7 +155,7 @@
 
 (defpart 1018
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.2)
    (:x (meters -10) (meters 19))
    (:y (meters 0.5))
@@ -179,7 +179,7 @@
 
 (defpart 1020
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 1.0)
    (:x (meters -9) (meters 17))
    (:y (meters 0.5))
@@ -198,7 +198,7 @@
 
 (defpart 1019
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x4 :page #x2))
+  ((:texture (middot effects))
    (:num 0.05 0.05)
    (:x (meters -9) (meters 17))
    (:y (meters 0.5))
@@ -267,7 +267,7 @@
 
 (defpart 1022
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.4)
    (:x (meters -10.5) (meters 20))
    (:y (meters 0.5))
@@ -291,7 +291,7 @@
 
 (defpart 1024
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 1.5)
    (:x (meters -9.5) (meters 18))
    (:y (meters 0.5))
@@ -310,7 +310,7 @@
 
 (defpart 1023
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x4 :page #x2))
+  ((:texture (middot effects))
    (:num 0.05 0.05)
    (:x (meters -9.5) (meters 18))
    (:y (meters 0.5))
@@ -379,7 +379,7 @@
 
 (defpart 1028
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 1.0)
    (:x (meters -6) (meters 13))
    (:y (meters 0))
@@ -398,7 +398,7 @@
 
 (defpart 1010
   :init-specs
-  ((:texture (new 'static 'texture-id :index #xf :page #x2))
+  ((:texture (hotdot effects))
    (:num 1.0 6.0)
    (:scale-x (meters 0.2) (meters 0.5))
    (:scale-y :copy scale-x)
@@ -416,7 +416,7 @@
 
 (defpart 1027
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x4 :page #x2))
+  ((:texture (middot effects))
    (:num 0.05 0.05)
    (:x (meters -6) (meters 13))
    (:y (meters 0))
@@ -437,7 +437,7 @@
 
 (defpart 1009
   :init-specs
-  ((:texture (new 'static 'texture-id :index #xf :page #x2))
+  ((:texture (hotdot effects))
    (:num 1.0)
    (:scale-x (meters 0.5) (meters 0.2))
    (:scale-y :copy scale-x)
@@ -473,7 +473,7 @@
 
 (defpart 1026
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.2)
    (:x (meters -8) (meters 16))
    (:y (meters -0.5))
@@ -537,7 +537,7 @@
 
 (defpart 1034
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 1.0)
    (:x (meters -5) (meters 17))
    (:y (meters 0.5))
@@ -556,7 +556,7 @@
 
 (defpart 1032
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.2)
    (:x (meters -6) (meters 19))
    (:y (meters 0.5))
@@ -580,7 +580,7 @@
 
 (defpart 1033
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x4 :page #x2))
+  ((:texture (middot effects))
    (:num 0.05 0.05)
    (:x (meters -5) (meters 17))
    (:y (meters 0.5))
@@ -649,7 +649,7 @@
 
 (defpart 1036
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.2)
    (:x (meters -6.5) (meters 12))
    (:y (meters 0.5))
@@ -673,7 +673,7 @@
 
 (defpart 1038
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 1.0)
    (:x (meters -5.5) (meters 10))
    (:y (meters 0.5))
@@ -692,7 +692,7 @@
 
 (defpart 1037
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x4 :page #x2))
+  ((:texture (middot effects))
    (:num 0.05 0.05)
    (:x (meters -5.5) (meters 10))
    (:y (meters 0.5))
@@ -761,7 +761,7 @@
 
 (defpart 1040
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.2)
    (:x (meters -9.5) (meters 14))
    (:y (meters 0.5))
@@ -785,7 +785,7 @@
 
 (defpart 1042
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 1.0)
    (:x (meters -8.5) (meters 12))
    (:y (meters 0.5))
@@ -804,7 +804,7 @@
 
 (defpart 1041
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x4 :page #x2))
+  ((:texture (middot effects))
    (:num 0.05 0.05)
    (:x (meters -8.5) (meters 12))
    (:y (meters 0.5))
@@ -873,7 +873,7 @@
 
 (defpart 1044
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.08)
    (:x (meters -3.5) (meters 7))
    (:y (meters 0.5))
@@ -897,7 +897,7 @@
 
 (defpart 1046
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 0.6)
    (:x (meters -2.5) (meters 5))
    (:y (meters 0.5))
@@ -916,7 +916,7 @@
 
 (defpart 1045
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x4 :page #x2))
+  ((:texture (middot effects))
    (:num 0.03 0.03)
    (:x (meters -2.5) (meters 5))
    (:y (meters 0.5))
@@ -985,7 +985,7 @@
 
 (defpart 1048
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.2)
    (:x (meters -13.5) (meters 20))
    (:y (meters 0.5))
@@ -1009,7 +1009,7 @@
 
 (defpart 1050
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 1.0)
    (:x (meters -12.5) (meters 18))
    (:y (meters 0.5))
@@ -1028,7 +1028,7 @@
 
 (defpart 1049
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x4 :page #x2))
+  ((:texture (middot effects))
    (:num 0.05 0.05)
    (:x (meters -12.5) (meters 18))
    (:y (meters 0.5))
@@ -1097,7 +1097,7 @@
 
 (defpart 1052
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.2)
    (:x (meters -10.5) (meters 12))
    (:y (meters 0.5))
@@ -1121,7 +1121,7 @@
 
 (defpart 1054
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 1.0)
    (:x (meters -9.5) (meters 10))
    (:y (meters 0.5))
@@ -1140,7 +1140,7 @@
 
 (defpart 1053
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x4 :page #x2))
+  ((:texture (middot effects))
    (:num 0.05 0.05)
    (:x (meters -9.5) (meters 10))
    (:y (meters 0.5))
@@ -1209,7 +1209,7 @@
 
 (defpart 1056
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.2)
    (:x (meters -17.5) (meters 25))
    (:y (meters 0.5))
@@ -1233,7 +1233,7 @@
 
 (defpart 1058
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 1.0)
    (:x (meters -16.5) (meters 23))
    (:y (meters 0.5))
@@ -1252,7 +1252,7 @@
 
 (defpart 1057
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x4 :page #x2))
+  ((:texture (middot effects))
    (:num 0.05 0.05)
    (:x (meters -16.5) (meters 23))
    (:y (meters 0.5))
@@ -1321,7 +1321,7 @@
 
 (defpart 1060
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.15)
    (:x (meters -10.5) (meters 12))
    (:y (meters 0.5))
@@ -1345,7 +1345,7 @@
 
 (defpart 1062
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 1.0)
    (:x (meters -9.5) (meters 10))
    (:y (meters 0.5))
@@ -1364,7 +1364,7 @@
 
 (defpart 1061
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x4 :page #x2))
+  ((:texture (middot effects))
    (:num 0.04 0.04)
    (:x (meters -9.5) (meters 10))
    (:y (meters 0.5))
@@ -1433,7 +1433,7 @@
 
 (defpart 1064
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.2)
    (:x (meters -9.5) (meters 16))
    (:y (meters 0.5))
@@ -1457,7 +1457,7 @@
 
 (defpart 1066
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 1.0)
    (:x (meters -8.5) (meters 14))
    (:y (meters 0.5))
@@ -1476,7 +1476,7 @@
 
 (defpart 1065
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x4 :page #x2))
+  ((:texture (middot effects))
    (:num 0.05 0.05)
    (:x (meters -8.5) (meters 14))
    (:y (meters 0.5))
@@ -1545,7 +1545,7 @@
 
 (defpart 1068
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.5)
    (:x (meters -11) (meters 24))
    (:y (meters 0.5))
@@ -1569,7 +1569,7 @@
 
 (defpart 1070
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 2.0)
    (:x (meters -10) (meters 22))
    (:y (meters 0.5))
@@ -1588,7 +1588,7 @@
 
 (defpart 1069
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x4 :page #x2))
+  ((:texture (middot effects))
    (:num 0.07 0.07)
    (:x (meters -10) (meters 22))
    (:y (meters 0.5))
@@ -1657,7 +1657,7 @@
 
 (defpart 1072
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.3)
    (:x (meters -10) (meters 23))
    (:y (meters 0.5))
@@ -1681,7 +1681,7 @@
 
 (defpart 1074
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 1.5)
    (:x (meters -9) (meters 21))
    (:y (meters 0.5))
@@ -1700,7 +1700,7 @@
 
 (defpart 1073
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x4 :page #x2))
+  ((:texture (middot effects))
    (:num 0.05 0.05)
    (:x (meters -9) (meters 21))
    (:y (meters 0.5))
@@ -1769,7 +1769,7 @@
 
 (defpart 1076
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.17)
    (:x (meters -23) (meters 32))
    (:y (meters 0.5))
@@ -1793,7 +1793,7 @@
 
 (defpart 1078
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 0.8)
    (:x (meters -22) (meters 30))
    (:y (meters 0.5))
@@ -1812,7 +1812,7 @@
 
 (defpart 1077
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x4 :page #x2))
+  ((:texture (middot effects))
    (:num 0.03 0.03)
    (:x (meters -22) (meters 30))
    (:y (meters 0.5))
@@ -1881,7 +1881,7 @@
 
 (defpart 1080
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.2)
    (:x (meters -7) (meters 25))
    (:y (meters 0.5))
@@ -1905,7 +1905,7 @@
 
 (defpart 1082
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 1.0)
    (:x (meters -6) (meters 23))
    (:y (meters 0.5))
@@ -1924,7 +1924,7 @@
 
 (defpart 1081
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x4 :page #x2))
+  ((:texture (middot effects))
    (:num 0.05 0.05)
    (:x (meters -6) (meters 23))
    (:y (meters 0.5))
@@ -1993,7 +1993,7 @@
 
 (defpart 1084
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.2)
    (:x (meters -11) (meters 21))
    (:y (meters 0.5))
@@ -2017,7 +2017,7 @@
 
 (defpart 1086
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 1.3)
    (:x (meters -10) (meters 19))
    (:y (meters 0.5))
@@ -2036,7 +2036,7 @@
 
 (defpart 1085
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x4 :page #x2))
+  ((:texture (middot effects))
    (:num 0.05 0.05)
    (:x (meters -10) (meters 19))
    (:y (meters 0.5))
@@ -2105,7 +2105,7 @@
 
 (defpart 1088
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.15)
    (:x (meters -9) (meters 17))
    (:y (meters 0.5))
@@ -2129,7 +2129,7 @@
 
 (defpart 1090
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 1.0)
    (:x (meters -8) (meters 15))
    (:y (meters 0.5))
@@ -2148,7 +2148,7 @@
 
 (defpart 1089
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x4 :page #x2))
+  ((:texture (middot effects))
    (:num 0.04 0.04)
    (:x (meters -8) (meters 15))
    (:y (meters 0.5))
@@ -2217,7 +2217,7 @@
 
 (defpart 1092
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.15)
    (:x (meters -8) (meters 12))
    (:y (meters 0.5))
@@ -2241,7 +2241,7 @@
 
 (defpart 1094
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 1.0)
    (:x (meters -7) (meters 10))
    (:y (meters 0.5))
@@ -2260,7 +2260,7 @@
 
 (defpart 1093
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x4 :page #x2))
+  ((:texture (middot effects))
    (:num 0.04 0.04)
    (:x (meters -7) (meters 10))
    (:y (meters 0.5))
@@ -2329,7 +2329,7 @@
 
 (defpart 1096
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.1)
    (:x (meters -3) (meters 10))
    (:y (meters 0.5))
@@ -2353,7 +2353,7 @@
 
 (defpart 1098
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 0.6)
    (:x (meters -2) (meters 8))
    (:y (meters 0.5))
@@ -2372,7 +2372,7 @@
 
 (defpart 1097
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x4 :page #x2))
+  ((:texture (middot effects))
    (:num 0.02 0.02)
    (:x (meters -2) (meters 8))
    (:y (meters 0.5))
@@ -2417,7 +2417,7 @@
 
 (defpart 1100
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.2)
    (:x (meters 0) (meters 14))
    (:y (meters -6))
@@ -2466,7 +2466,7 @@
 
 (defpart 1102
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.2)
    (:x (meters 0) (meters 12))
    (:y (meters -6))
@@ -2515,7 +2515,7 @@
 
 (defpart 1104
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.1)
    (:x (meters -3) (meters 5))
    (:y (meters -6))
@@ -2564,7 +2564,7 @@
 
 (defpart 1106
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.08)
    (:x (meters 2) (meters 5))
    (:y (meters -6))
@@ -2613,7 +2613,7 @@
 
 (defpart 1108
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.4)
    (:x (meters -13) (meters 17))
    (:y (meters -6))
@@ -2662,7 +2662,7 @@
 
 (defpart 1110
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.15)
    (:x (meters -6) (meters 1))
    (:y (meters -6))
@@ -2711,7 +2711,7 @@
 
 (defpart 1112
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.15)
    (:x (meters -12) (meters 18))
    (:y (meters -6))
@@ -2760,7 +2760,7 @@
 
 (defpart 1114
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.15)
    (:x (meters -10) (meters 18))
    (:y (meters -6))
@@ -2809,7 +2809,7 @@
 
 (defpart 1116
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.3)
    (:x (meters -10) (meters 13))
    (:y (meters -6))
@@ -2858,7 +2858,7 @@
 
 (defpart 1118
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.35)
    (:x (meters -3) (meters 10))
    (:y (meters -6))
@@ -2907,7 +2907,7 @@
 
 (defpart 1120
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.2)
    (:x (meters -7) (meters 16))
    (:y (meters -6))
@@ -2956,7 +2956,7 @@
 
 (defpart 1122
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.15)
    (:x (meters -6) (meters 8))
    (:y (meters -6))
@@ -3005,7 +3005,7 @@
 
 (defpart 1124
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.15)
    (:x (meters -1) (meters 8))
    (:y (meters -6))
@@ -3054,7 +3054,7 @@
 
 (defpart 1126
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 0.15)
    (:x (meters -2) (meters 4))
    (:y (meters -6))

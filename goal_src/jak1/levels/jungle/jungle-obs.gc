@@ -139,11 +139,11 @@
   :code
     (behavior ()
       (loop
-        (ja-no-eval :group! lurkerm-tall-sail-idle-ja :num! (seek! max (* 0.5 (-> self speed))) :frame-num 0.0)
+        (ja-no-eval :group! lurkerm-tall-sail-idle-ja :num! (seek! max (/ (-> self speed) 2)) :frame-num 0.0)
         (until (ja-done? 0)
           (quaternion-rotate-local-y! (-> self root quat) (-> self root quat) (* 12743.111 (seconds-per-frame) (-> self speed)))
           (suspend)
-          (ja :num! (seek! max (* 0.5 (-> self speed)))))))
+          (ja :num! (seek! max (/ (-> self speed) 2))))))
   :post rider-post)
 
 (defmethod init-from-entity! ((this lurkerm-tall-sail) (arg0 entity-actor))
@@ -205,11 +205,11 @@
   :code
     (behavior ()
       (loop
-        (ja-no-eval :group! (-> self draw art-group data 4) :num! (seek! max (* 0.5 (-> self speed))) :frame-num 0.0)
+        (ja-no-eval :group! (-> self draw art-group data 4) :num! (seek! max (/ (-> self speed) 2)) :frame-num 0.0)
         (until (ja-done? 0)
           (quaternion-rotate-local-y! (-> self root quat) (-> self root quat) (* -12743.111 (seconds-per-frame) (-> self speed)))
           (suspend)
-          (ja :num! (seek! max (* 0.5 (-> self speed)))))))
+          (ja :num! (seek! max (/ (-> self speed) 2))))))
   :post rider-post)
 
 (defmethod init-from-entity! ((this lurkerm-short-sail) (arg0 entity-actor))
@@ -807,9 +807,10 @@
   (:states
    jngpusher-idle))
 
-(defmethod relocate ((this jngpusher) (arg0 int))
-  (if (nonzero? (-> this back-prim)) (&+! (-> this back-prim) arg0))
-  (call-parent-method this arg0))
+
+(defmethod relocate ((this jngpusher) (offset int))
+  (if (nonzero? (-> this back-prim)) (&+! (-> this back-prim) offset))
+  (call-parent-method this offset))
 
 (defskelgroup *jngpusher-sg*
   jngpusher

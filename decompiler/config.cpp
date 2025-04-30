@@ -6,7 +6,7 @@
 
 #include "decompiler/util/config_parsers.h"
 
-#include "fmt/core.h"
+#include "fmt/format.h"
 
 namespace decompiler {
 
@@ -327,6 +327,10 @@ Config make_config_via_json(nlohmann::json& json) {
   if (inputs_json.contains("animated_textures")) {
     config.animated_textures =
         inputs_json.at("animated_textures").get<std::unordered_set<std::string>>();
+  }
+
+  if (json.contains("common_art_groups")) {
+    config.common_art_groups = json.at("common_art_groups").get<std::unordered_set<std::string>>();
   }
 
   if (inputs_json.contains("common_tpages")) {

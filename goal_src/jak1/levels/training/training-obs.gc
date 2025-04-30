@@ -54,9 +54,10 @@
   (:state-methods
    idle))
 
-(defmethod relocate ((this training-cam) (arg0 int))
-  (if (nonzero? (-> this root)) (&+! (-> this root) arg0))
-  (the-as training-cam ((method-of-type process relocate) this arg0)))
+
+(defmethod relocate ((this training-cam) (offset int))
+  (if (nonzero? (-> this root)) (&+! (-> this root) offset))
+  (the-as training-cam ((method-of-type process relocate) this offset)))
 
 (defstate idle (training-cam)
   :virtual #t
@@ -125,7 +126,7 @@
                  (when (not (task-complete? *game-info* (game-task training-climb)))
                    (clear-text-seen! *game-info* (text-id training-double-jump))
                    (level-hint-spawn (text-id training-double-jump) "sagevb27" (the-as entity #f) *entity-pool* (game-task none))
-                   (let ((gp-8 (current-time))) (until (time-elapsed? gp-8 (seconds 30)) (suspend)))
+                   (suspend-for (seconds 30))
                    (process-entity-status! self (entity-perm-status bit-3) #f)
                    (go-virtual idle)))))
             (while (-> self child)
@@ -293,7 +294,7 @@
 
 (defpart 2912
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 16.0)
    (:y (meters 2.5) (meters 1))
    (:scale-x (meters 2.5) (meters 1.5))
@@ -324,7 +325,7 @@
 
 (defpart 2913
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x2 :page #x2))
+  ((:texture (flare effects))
    (:num 4.0)
    (:y (meters 2.5))
    (:scale-x (meters 6) (meters 3))
@@ -350,7 +351,7 @@
 
 (defpart 2914
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 2.5)
    (:y (meters 1.5))
    (:scale-x (meters 12))
@@ -365,7 +366,7 @@
 
 (defpart 2915
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x6 :page #x2))
+  ((:texture (crate-wood-01-splinter effects))
    (:num 8.0 8.0)
    (:x (meters -0.5) (meters 1))
    (:y (meters 2.5) (meters 1.5))
@@ -395,7 +396,7 @@
 
 (defpart 2916
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x5 :page #x2))
+  ((:texture (crate-metalbolt-splinter effects))
    (:num 8.0 8.0)
    (:x (meters -0.5) (meters 1))
    (:y (meters 2.5) (meters 1.5))

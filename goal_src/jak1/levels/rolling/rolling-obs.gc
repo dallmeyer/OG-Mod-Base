@@ -280,7 +280,7 @@
 
 (defpart 2356
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 1.0)
    (:y (meters 2))
    (:scale-x (meters 12))
@@ -297,7 +297,7 @@
 
 (defpart 1764
   :init-specs
-  ((:texture (new 'static 'texture-id :index #xf :page #x2))
+  ((:texture (hotdot effects))
    (:num 128.0)
    (:scale-x (meters 0.2) (meters 0.4))
    (:scale-y :copy scale-x)
@@ -470,9 +470,9 @@
 (defun seconds->race-time ((arg0 race-time) (arg1 time-frame))
   (let* ((v1-1 (max 0 (min #x2bf1d arg1)))
          (f0-1 (* 0.0033333334 (the float v1-1))))
-    (set! (-> arg0 digit 0) (the int (* 0.016666668 f0-1)))
+    (set! (-> arg0 digit 0) (the int (/ f0-1 60)))
     (let ((f0-2 (- f0-1 (* 60.0 (the float (-> arg0 digit 0))))))
-      (set! (-> arg0 digit 1) (the int (* 0.1 f0-2)))
+      (set! (-> arg0 digit 1) (the int (/ f0-2 10)))
       (let ((f0-3 (- f0-2 (* 10.0 (the float (-> arg0 digit 1))))))
         (set! (-> arg0 digit 2) (the int f0-3))
         (let ((f0-4 (- f0-3 (the float (-> arg0 digit 2)))))
@@ -614,9 +614,11 @@
   (:states
    gorge-finish-idle))
 
+
 (deftype gorge-abort (gorge) ()
   (:states
    gorge-abort-idle))
+
 
 (defun gorge-behind ((arg0 gorge))
   (if (not *target*) (return #f))
@@ -877,32 +879,27 @@
        )
       )
     )
-  :enter (behavior ()
-    (logior! (-> self mask) (process-mask actor-pause))
-    (process-entity-status! self (entity-perm-status bit-3) #f)
-    )
-  :exit (behavior ()
-    (logclear! (-> self mask) (process-mask actor-pause))
-    (process-entity-status! self (entity-perm-status bit-3) #t)
-    )
-  :trans (behavior ()
-    (gorge-start-launch-start-banner)
-    (gorge-trans)
-    )
-  :code (behavior ()
-    (loop
-      (suspend)
-      (seekl! (-> self timer-pos-offset) 100 (the int (* 5.0 (-> *display* time-adjust-ratio))))
-      (when (= (-> self timer-pos-offset) 100)
-        (send-event (ppointer->process (-> *hud-parts* fuel-cell)) 'enable)
-        (send-event (ppointer->process (-> *hud-parts* money)) 'enable)
-        )
-      (if (gorge-in-front self)
-          (go gorge-start-ready)
-          )
-      )
-    )
-  )
+  :enter
+    (behavior ()
+      (logior! (-> self mask) (process-mask actor-pause))
+      (process-entity-status! self (entity-perm-status bit-3) #f))
+  :exit
+    (behavior ()
+      (logclear! (-> self mask) (process-mask actor-pause))
+      (process-entity-status! self (entity-perm-status bit-3) #t))
+  :trans
+    (behavior ()
+      (gorge-start-launch-start-banner)
+      (gorge-trans))
+  :code
+    (behavior ()
+      (loop
+        (suspend)
+        (seekl! (-> self timer-pos-offset) 100 (the int (* 5.0 (-> *display* time-adjust-ratio))))
+        (when (= (-> self timer-pos-offset) 100)
+          (send-event (ppointer->process (-> *hud-parts* fuel-cell)) 'enable)
+          (send-event (ppointer->process (-> *hud-parts* money)) 'enable))
+        (if (gorge-in-front self) (go gorge-start-ready)))))
 
 (defmethod init-from-entity! ((this gorge-start) (arg0 entity-actor))
   (set! (-> this root) (the-as collide-shape-moving (new 'process 'trsqv)))

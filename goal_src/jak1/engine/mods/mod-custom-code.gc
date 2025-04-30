@@ -9,15 +9,13 @@
 ;; What is this file for.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; What is this file for.
-;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-#| This file contains function defenitions that are pre placed in the mod base,
-so if you place custom code inside of these functions, it will exectue based on
-the name of the function, for example, if you place (set! (-> *game-info* fuel) (+ (-> *game-info* fuel) 1))
-to the function named runs-on-orb-pickup, then jaks powercell count will increase each time you collect
-an orb |#
+#|
+ This file contains function defenitions that are pre placed in the mod base,
+    so if you place custom code inside of these functions, it will exectue based on
+    the name of the function, for example, if you place (set! (-> *game-info* fuel) (+ (-> *game-info* fuel) 1))
+    to the function named runs-on-orb-pickup, then jaks powercell count will increase each time you collect
+    an orb
+|#
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Begin function defintions.

@@ -185,7 +185,6 @@
                     (cond
                       (continue-point-override (empty) continue-point-override)
                       ((!= *kernel-boot-message* 'play) "demo-start")
-                      ((and *debug-segment* (not (string= startingDebugContinuePoint "village1-hut"))) startingDebugContinuePoint) ;; mod-base-change
                       (*debug-segment* "village1-hut")
                       (else "title-start")))
      (set! (-> this auto-save-count) 0)

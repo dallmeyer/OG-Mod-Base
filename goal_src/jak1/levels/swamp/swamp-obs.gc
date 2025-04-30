@@ -27,7 +27,7 @@
 
 (defpart 1325
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 16.0)
    (:x (meters -2) 2 (meters 2))
    (:y (meters 0.75))
@@ -54,7 +54,7 @@
 
 (defpart 1326
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 16.0)
    (:x (meters -2) 2 (meters 2))
    (:y (meters -0.75))
@@ -78,7 +78,7 @@
 
 (defpart 1327
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x1d :page #x2))
+  ((:texture (rockbit effects))
    (:num 8.0)
    (:x (meters -2) 2 (meters 2))
    (:y (meters 0.25))
@@ -419,7 +419,7 @@
 
 (defpart 1331
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 1.0)
    (:scale-x (meters 15))
    (:scale-y :copy scale-x)
@@ -433,7 +433,7 @@
 
 (defpart 1330
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x1d :page #x2))
+  ((:texture (rockbit effects))
    (:num 16.0 16.0)
    (:scale-x (meters 0.1) (meters 0.3))
    (:rot-z (degrees 0) (degrees 360))
@@ -455,7 +455,7 @@
 
 (defpart 1332
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 16.0)
    (:y (meters 0.5) (meters 1))
    (:scale-x (meters 2.5) (meters 1.5))

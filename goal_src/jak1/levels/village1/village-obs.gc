@@ -105,7 +105,7 @@
 
 (defpart 368
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 2.5)
    (:x (meters 0.8))
    (:scale-x (meters 1.7))
@@ -125,7 +125,7 @@
 
 (defpart 369
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 3.0)
    (:x (meters 4))
    (:scale-x (meters 0.5))
@@ -151,7 +151,7 @@
 
 (defpart 370
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 5.0)
    (:x (meters 4))
    (:scale-x (meters 1.7))
@@ -176,7 +176,7 @@
 
 (defpart 371
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 3.8)
    (:x (meters 5.5))
    (:scale-x (meters 1) (meters 1))
@@ -208,9 +208,10 @@
   (:states
    windmill-sail-idle))
 
-(defmethod relocate ((this windmill-sail) (arg0 int))
-  (if (nonzero? (-> this part2)) (&+! (-> this part2) arg0))
-  (the-as windmill-sail ((method-of-type process-drawable relocate) this arg0)))
+
+(defmethod relocate ((this windmill-sail) (offset int))
+  (if (nonzero? (-> this part2)) (&+! (-> this part2) offset))
+  (the-as windmill-sail ((method-of-type process-drawable relocate) this offset)))
 
 (defmethod deactivate ((this windmill-sail))
   (if (nonzero? (-> this part2)) (kill-and-free-particles (-> this part2)))
@@ -723,9 +724,10 @@
   (:states
    hutlamp-idle))
 
-(defmethod relocate ((this hutlamp) (arg0 int))
-  (if (nonzero? (-> this pivot)) (&+! (-> this pivot) arg0))
-  (call-parent-method this arg0))
+
+(defmethod relocate ((this hutlamp) (offset int))
+  (if (nonzero? (-> this pivot)) (&+! (-> this pivot) offset))
+  (call-parent-method this offset))
 
 (defskelgroup *hutlamp-sg*
   hutlamp

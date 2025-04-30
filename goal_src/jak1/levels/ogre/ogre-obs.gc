@@ -27,7 +27,7 @@
 
 (defpart 2236
   :init-specs
-  ((:texture (new 'static 'texture-id :index #xf :page #x2))
+  ((:texture (hotdot effects))
    (:num 32.0)
    (:y (meters 0) (meters 1))
    (:scale-x (meters 2.4) (meters 1.8))
@@ -56,7 +56,7 @@
 
 (defpart 2238
   :init-specs
-  ((:texture (new 'static 'texture-id :index #xf :page #x2))
+  ((:texture (hotdot effects))
    (:num 6.0)
    (:y (meters 0) (meters 1))
    (:scale-x (meters 0.5))
@@ -75,7 +75,7 @@
 
 (defpart 2234
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 1.0)
    (:y (meters 2))
    (:scale-x (meters 128))
@@ -89,7 +89,7 @@
 
 (defpart 2235
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 1.0)
    (:y (meters 2))
    (:scale-x (meters 32))
@@ -103,7 +103,7 @@
 
 (defpart 2237
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 48.0)
    (:y (meters 0) (meters 1))
    (:scale-x (meters 16) (meters 10))
@@ -156,7 +156,7 @@
 
 (defpart 2080
   :init-specs
-  ((:texture (new 'static 'texture-id :index #xf :page #x2))
+  ((:texture (hotdot effects))
    (:num 8.0)
    (:y (meters 0) (meters 1))
    (:scale-x (meters 0.4) (meters 0.8))
@@ -185,7 +185,7 @@
 
 (defpart 2082
   :init-specs
-  ((:texture (new 'static 'texture-id :index #xf :page #x2))
+  ((:texture (hotdot effects))
    (:num 6.0)
    (:y (meters 0) (meters 1))
    (:scale-x (meters 0.3))
@@ -204,7 +204,7 @@
 
 (defpart 2079
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 1.0)
    (:y (meters 2))
    (:scale-x (meters 24))
@@ -219,7 +219,7 @@
 
 (defpart 2081
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 16.0)
    (:y (meters 0) (meters 1))
    (:scale-x (meters 3) (meters 1.5))
@@ -656,10 +656,10 @@
    ogre-bridge-break
    ogre-bridge-idle))
 
-(defmethod relocate ((this ogre-bridge) (arg0 int))
+(defmethod relocate ((this ogre-bridge) (offset int))
   (dotimes (v1-0 8)
-    (if (nonzero? (-> this joint-mod-array v1-0)) (&+! (-> this joint-mod-array v1-0) arg0)))
-  (call-parent-method this arg0))
+    (if (nonzero? (-> this joint-mod-array v1-0)) (&+! (-> this joint-mod-array v1-0) offset)))
+  (call-parent-method this offset))
 
 (defbehavior ogre-bridge-update-joints ogre-bridge ()
   (let ((v1-1 (min 8 (-> self dead-joint-count))))
@@ -1042,7 +1042,7 @@
 
 (defpart 2150
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x12 :page #x2))
+  ((:texture (starflash effects))
    (:num 1.0)
    (:scale-x (meters 15))
    (:scale-y :copy scale-x)
@@ -1056,7 +1056,7 @@
 
 (defpart 2149
   :init-specs
-  ((:texture (new 'static 'texture-id :index #x1d :page #x2))
+  ((:texture (rockbit effects))
    (:num 16.0 16.0)
    (:scale-x (meters 0.1) (meters 0.3))
    (:rot-z (degrees 0) (degrees 360))
@@ -1078,7 +1078,7 @@
 
 (defpart 2151
   :init-specs
-  ((:texture (new 'static 'texture-id :page #x2))
+  ((:texture (bigpuff effects))
    (:num 16.0)
    (:y (meters 0.5) (meters 1))
    (:scale-x (meters 2.5) (meters 1.5))
