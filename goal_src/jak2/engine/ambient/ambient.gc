@@ -212,7 +212,7 @@
     ;; ap:preserve-this overwrite name for vag stream for our custom talkers
     (case name
       (("lens001" "ruby001") ;; etc
-        (set! name "miss006)))
+        (set! name "miss006")))
     (let ((v1-2 (shr (the-as int (-> arg0 channel)) 4)))
       (if (not (or (or (= v1-2 4) (= v1-2 5))
                    (or (not (-> *setting-control* user-current play-hints))
