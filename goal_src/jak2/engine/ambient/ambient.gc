@@ -208,37 +208,43 @@
 
 (defbehavior talker-init talker ((arg0 talker-speech-class) (arg1 vector) (arg2 region))
   (set! (-> self trans quad) (-> arg1 quad))
-  (let ((v1-2 (shr (the-as int (-> arg0 channel)) 4)))
-    (if (not (or (or (= v1-2 4) (= v1-2 5))
-                 (or (not (-> *setting-control* user-current play-hints))
-                     (= (-> *setting-control* user-current dialog-volume) 0.0)
-                     )
-                 )
+  (let ((name (-> arg0 name)))
+    ;; ap:preserve-this overwrite name for vag stream for our custom talkers
+    (case name
+      (("lens001" "ruby001") ;; etc
+        (set! name "miss006)))
+    (let ((v1-2 (shr (the-as int (-> arg0 channel)) 4)))
+      (if (not (or (or (= v1-2 4) (= v1-2 5))
+                   (or (not (-> *setting-control* user-current play-hints))
+                       (= (-> *setting-control* user-current dialog-volume) 0.0)
+                       )
+                   )
+               )
+          (set! (-> self voice-id)
+                (add-process *gui-control* self (-> arg0 channel) (gui-action queue) name 81920.0 0)
+                )
+          )
+      )
+    (when (nonzero? (-> arg0 text-message))
+      (let* ((a0-6 *gui-control*)
+             (t9-1 (method-of-object a0-6 add-process))
+             (a1-3 self)
+             (v1-15 (shr (the-as int (-> arg0 channel)) 4))
              )
-        (set! (-> self voice-id)
-              (add-process *gui-control* self (-> arg0 channel) (gui-action queue) (-> arg0 name) 81920.0 0)
+        (set! (-> self message-id) (t9-1
+                                     a0-6
+                                     a1-3
+                                     (if (or (= v1-15 4) (= v1-15 5))
+                                         (the-as gui-channel (the-as int (-> arg0 channel)))
+                                         (gui-channel message)
+                                         )
+                                     (gui-action play)
+                                     name
+                                     81920.0
+                                     0
+                                     )
               )
         )
-    )
-  (when (nonzero? (-> arg0 text-message))
-    (let* ((a0-6 *gui-control*)
-           (t9-1 (method-of-object a0-6 add-process))
-           (a1-3 self)
-           (v1-15 (shr (the-as int (-> arg0 channel)) 4))
-           )
-      (set! (-> self message-id) (t9-1
-                                   a0-6
-                                   a1-3
-                                   (if (or (= v1-15 4) (= v1-15 5))
-                                       (the-as gui-channel (the-as int (-> arg0 channel)))
-                                       (gui-channel message)
-                                       )
-                                   (gui-action play)
-                                   (-> arg0 name)
-                                   81920.0
-                                   0
-                                   )
-            )
       )
     )
   (set! (-> self message) arg0)
