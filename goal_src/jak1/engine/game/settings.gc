@@ -223,11 +223,12 @@
       (seek! (-> gp-0 bg-a) (-> s5-1 bg-a) (* (-> s5-1 bg-a-speed) (seconds-per-frame))))
     (let ((v1-60 (-> *display* frames (-> *display* on-screen) display))
           (f0-39 (-> gp-0 bg-a)))
-      (if (!= (-> gp-0 bg-a-force) 0.0) (set! f0-39 (-> gp-0 bg-a-force)))
+      ;; (if (!= (-> gp-0 bg-a-force) 0.0) (set! f0-39 (-> gp-0 bg-a-force)))
       (set! (-> v1-60 bgcolor r) (the int (* 255.0 (-> gp-0 bg-r))))
       (set! (-> v1-60 bgcolor g) (the int (* 255.0 (-> gp-0 bg-g))))
       (set! (-> v1-60 bgcolor b) (the int (* 255.0 (-> gp-0 bg-b))))
-      (set! (-> v1-60 pmode alp) (the int (* 255.0 (- 1.0 f0-39)))))
+      ;; (set! (-> v1-60 pmode alp) (the int (* 255.0 (- 1.0 f0-39))))
+      )
     ;; ??
     (set! (-> *level* border?) (-> gp-0 border-mode))
     ;; common pool texture page mask
