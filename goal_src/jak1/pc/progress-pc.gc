@@ -116,6 +116,7 @@
        :type
        game-option
        (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id skip-fuel-cell-anim) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id show-speed) :scale #t)
        (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
 
 (define *main-options-pc*
@@ -2211,6 +2212,7 @@
   (set! (-> *sound-options-pc* 2 value-to-modify) (&-> *pc-settings* memcard-volume-dialog))
   ;; og:j1-board added
   (set! (-> *mod-options* 0 value-to-modify) (&-> *pc-settings* skip-fuel-cell-anim?))
+  (set! (-> *mod-options* 1 value-to-modify) (&-> *pc-settings* show-speed?))
   (dotimes (i (1- (-> *cheats* length)))
     (set! (-> *cheats* i value-to-modify) (&-> *progress-carousell* symbol-backup)))
   ;(set! (-> *sound-options-pc* 3 value-to-modify) (&-> *pc-settings* music-fadein?))
